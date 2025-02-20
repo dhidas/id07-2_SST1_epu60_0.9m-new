@@ -6,7 +6,11 @@
 #define P_LowerGirderModeReq    P203    // Lower girder mode setpoint
 #define P_LowerGirderMode       P204    // Lower girder mode readback
 
+#define P_MovementInProgress    P200    // Movement is in progress
+#define P_MIPCounter            P215    // Motor Moving Light counter
+
 #define P_StopAllReq            P300    // Request stop all
+#define P_StopAllStat           P301    // Stop all active
 
 #define P_GapMotor1Offset       P1011   // Gap motor 1 GU offset
 #define P_GapMotor3Offset       P1013   // Gap motor 3 GL offset

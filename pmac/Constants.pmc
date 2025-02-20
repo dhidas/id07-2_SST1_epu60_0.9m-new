@@ -3,6 +3,8 @@
 
 #define kTRUE                   1
 #define kFALSE                  0
+#define kON                     1
+#define kOFF                    0
 
 #define kMilliSecond            (8388608/I10)
 #define kSecond           (1000*kMilliSecond)

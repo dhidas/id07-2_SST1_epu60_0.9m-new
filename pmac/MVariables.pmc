@@ -3,16 +3,38 @@
 
 #include "MVariableDefs.pmc"
 
-#define M_Mtr1_Amp_Enable   M33
-#define M_Mtr3_Amp_Enable   M35
-#define M_Mtr5_Amp_Enable   M37
-#define M_Mtr6_Amp_Enable   M38
-#define M_Mtr7_Amp_Enable   M39
-#define M_Mtr8_Amp_Enable   M40
+#define M_Mtr1_Amp_Enable         M33
+#define M_Mtr3_Amp_Enable         M35
+#define M_Mtr5_Amp_Enable         M37
+#define M_Mtr6_Amp_Enable         M38
+#define M_Mtr7_Amp_Enable         M39
+#define M_Mtr8_Amp_Enable         M40
+#define M_MachineErrorLight       M41
+#define M_MotorMovingLight        M42
+#define M_MotorReadyLight         M43
+
+#define M_Mtr1Moving      M137
+#define M_Amp1Enabled     M139
+
+#define M_Mtr3Moving      M337
+#define M_Amp3Enabled     M339
+
+#define M_Mtr5Moving      M537
+#define M_Amp5Enabled     M539
+
+#define M_Mtr6Moving      M637
+#define M_Amp6Enabled     M639
+
+#define M_Mtr7Moving      M737
+#define M_Amp7Enabled     M739
+
+#define M_Mtr8Moving      M837
+#define M_Amp8Enabled     M839
 
 
-
-
+#define M_CS1Running      M5180
+#define M_CS2Running      M5280
+#define M_CS6Running      M5680
 
 
 

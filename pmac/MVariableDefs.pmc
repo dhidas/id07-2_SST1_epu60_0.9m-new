@@ -9,7 +9,33 @@ M37->Y:$078802,4,1    ; Output 5 J6   Pin#16    Pin#34  Phase A motor M5  -  tur
 M38->Y:$078802,5,1    ; Output 6 J6   Pin#17    Pin#35  Phase B motor M6  -  turns off brake
 M39->Y:$078802,6,1    ; Output 7 J6   Pin#18    Pin#36  Phase C motor M7  -  turns off brake
 M40->Y:$078802,7,1    ; Output 8 J6   Pin#19    Pin#37  Phase D motor M8  -  turns off brake
+M41->Y:$078805,0,1    ; Output 09 J7  Pin#12    Pin#30  (Machine error red light output)
+M42->Y:$078805,1,1    ; Output 10 J7  Pin#13    Pin#31  (Machine moving orange light output)
+M43->Y:$078805,2,1    ; Output 11 J7  Pin#14    Pin#32  (Machine ready green light output)
 
+M137->X:$0000B0,17,1 ; #1 Running-program bit
+M139->X:$0000B0,19,1 ; #1 Amplifier-enabled status bit
+
+M337->X:$0001B0,17,1 ; #3 Running-program bit
+M339->X:$0001B0,19,1 ; #3 Amplifier-enabled status bit
+
+M537->X:$0002B0,17,1 ; #5 Running-program bit
+M539->X:$0002B0,19,1 ; #5 Amplifier-enabled status bit
+
+M637->X:$000330,17,1 ; #6 Running-program bit
+M639->X:$000330,19,1 ; #6 Amplifier-enabled status bit
+
+M737->X:$0003B0,17,1 ; #7 Running-program bit
+M739->X:$0003B0,19,1 ; #7 Amplifier-enabled status bit
+
+M837->X:$000430,17,1 ; #8 Running-program bit
+M839->X:$000430,19,1 ; #8 Amplifier-enabled status bit
+
+
+
+M5180->X:$002040,0,1 ; &1 Program-running bit
+M5280->X:$002140,0,1 ; &2 Program-running bit
+M5680->X:$002540,0,1 ; &6 Program-running bit
 
 
 #endi

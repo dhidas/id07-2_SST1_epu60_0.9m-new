@@ -1,0 +1,76 @@
+#ifndef PLC02_MovementInProgress_pmc
+#define PLC02_MovementInProgress_pmc
+
+// ******************************************************************************
+// PLC 2 - PLC_MovementInProgress
+//
+// Checks if there is movement on any of the motors / or coordinate systems
+// and sets:
+//  P_MovementInProgress
+//
+// Checks if all the amplifiers are enabled and sets:
+//  M_MotorMovingLight  Yellow
+//  M_MotorReadyLight   Green
+//
+// Also handles the lights.
+// ******************************************************************************
+
+#include "PVariables.pmc"
+#include "Constants.pmc"
+#include "MVariables.pmc"
+
+
+Open PLC 2 Clear
+
+if (P_MIPCounter > 500)
+  P_MIPCounter = 0
+endif
+P_MIPCounter = P_MIPCounter + 1
+
+  // Check if there is movement commanded / motion program running
+if (M_Mtr1Moving = 1)
+OR (M_Mtr3Moving = 1)
+OR (M_Mtr5Moving = 1)
+OR (M_Mtr6Moving = 1)
+OR (M_Mtr7Moving = 1)
+OR (M_Mtr8Moving = 1)
+OR (M_CS1Running = 1)
+OR (M_CS2Running = 1)
+OR (M_CS6Running = 1)
+  P_MovementInProgress = kTRUE
+
+  if (P_MIPCounter > 250)
+    M_MotorMovingLight = kON  // Yellow
+  else
+    M_MotorMovingLight = kOFF
+  endif
+  M_MotorReadyLight = kON   // Green
+else
+  P_MovementInProgress = kFALSE
+  M_MotorMovingLight = kOFF
+  M_MotorReadyLight = kON
+endif
+
+// Check if amplifiers are disabled
+if (M_Amp1Enabled = 1)
+OR (M_Amp3Enabled = 1)
+OR (M_Amp5Enabled = 1)
+OR (M_Amp6Enabled = 1)
+OR (M_Amp7Enabled = 1)
+OR (M_Amp8Enabled = 1)
+  M_MotorReadyLight = kON   // Green
+
+  // StopAll was requested, but somehow amplifier got enabled
+  // Cycle StopAll to kill all motors again
+  if (P_StopAllReq = kTRUE AND P_StopAllStat = kTRUE)
+    P_StopAllStat = kFALSE
+  endif
+else
+  M_MotorReadyLight = kOFF
+endif
+
+
+Close
+
+
+#endif
