@@ -1,0 +1,270 @@
+#ifndef PLC03_Interlock_pmc
+#define PLC03_Interlock_pmc
+// ******************************************************************************
+// PLC 3 - PLC_Interlock
+//
+// Handles:
+//    - Interlock signal
+//    - StopAll request from software
+//    - Individual motor stop requests (StopMotorX)
+// ******************************************************************************
+
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "MVariables.pmc"
+#include "Timers.pmc"
+
+
+Open PLC kPLC_Interlock Clear
+
+// **************************
+// Handle interlock request
+// **************************
+if (P_InterlockState = kFALSE)
+  // Check for transitioning into interlock mode
+  // Interlock is not inverted signal - SafetyPLC output = 1 - sys okay
+  if (M_SafetyPLCIn = kLOW)
+    // ******************
+    // Transitioning into interlock state
+    // ******************
+    P_InterlockState = kTRUE
+    M_MachineErrorLight = kON
+
+    //********************
+    // Disable all PLCs that could cause movement
+    // Clear movement requests
+    //*******************
+    Disable PLC kPLC_MoveRequest
+    Disable PLC kPLC_OpenGap
+    Disable PLC kPLC_Homing
+
+    // Disable request if any
+    P_MotorHomeRequest = 0      
+    
+    // Kill Motors and disable motion programs
+    CMD"^K"
+    
+    // Wait for them to stop
+    I_CS2_Timer2 = kTIMEOUT_KILL * kMilliSecond
+    while (I_CS2_Timer2 > 0)
+    endwhile      
+  endif
+else
+  // Interlock was active, but we need to transition out of it
+  if (M_SafetyPLCIn = kHIGH)
+    // Exit out of interlock
+    if (P_StopAllStat = kFALSE AND P_StopAllReq = kFALSE)
+              
+      M_MotorDriveReset = kHIGH    // M44
+      
+      I_CS2_Timer2 = kTIMEOUT_FAULTRESET * kMilliSecond
+      while (I_CS2_Timer2 > 0) 
+      endwhile
+      
+      M_MotorDriveReset = kLOW    // M44
+
+      //********************
+      // Enable all PLCs that could cause movement
+      //*******************
+      // Disable request if any
+      P_MotorHomeRequest = 0
+
+      ENABLE PLC kPLC_Homing
+      ENABLE PLC kPLC_OpenGap
+      ENABLE PLC kPLC_MoveRequest
+      
+      // If OpenGap was active at this time this will cause it to start executing again
+      P_OpenGapExecuting = kFALSE
+    endif
+  
+    P_InterlockState = kFALSE
+    M_MachineErrorLight = kOFF
+  else
+    // We are in interlock state. Make sure amps are killed and remain so
+    if (M_Amp1Enabled = kTRUE)
+    OR (M_Amp3Enabled = kTRUE)
+    OR (M_Amp5Enabled = kTRUE)
+    OR (M_Amp6Enabled = kTRUE)
+    OR (M_Amp7Enabled = kTRUE)
+    OR (M_Amp8Enabled = kTRUE)
+
+      M_Mtr1_Amp_Enable = kFALSE
+      M_Mtr3_Amp_Enable = kFALSE
+      M_Mtr5_Amp_Enable = kFALSE
+      M_Mtr6_Amp_Enable = kFALSE
+      M_Mtr7_Amp_Enable = kFALSE
+      M_Mtr8_Amp_Enable = kFALSE
+      CMD"^K"
+
+    endif    
+  endif
+endif
+
+// **************************
+// Handle StopAll request
+// **************************
+// Ignore if we are in interlock
+if (P_InterlockState = kFALSE)
+  // Handle stopall request
+  if (P_StopAllStat != P_StopAllReq)
+    // Handle request to stop, if we are not yet stopped
+    if (P_StopAllReq != kFALSE)
+      //********************
+      // Disable all PLCs that could cause movement
+      // Clear movement requests
+      //*******************
+      DISABLE PLC PLC_MoveRequest
+      DISABLE PLC PLC_OpenGap
+      DISABLE PLC PLC_Homing
+
+      // Disable request if any
+      P_MotorHomeRequest = 0
+      
+      // Abort all moves and stop all motors
+      CMD"&1A"
+      CMD"&2A"
+      CMD"&6A"
+      I_CS2_Timer2 = kTIMEOUT_ABORT * kMilliSecond
+      while (I_CS2_Timer2 > 0) 
+      endwhile
+      
+      // Kill Motors (will disable amplifiers)
+      CMD"^K"
+      // Wait for the command to be processed (600)
+      I_CS2_Timer2 = kTIMEOUT_KILL * kMilliSecond
+      while (I_CS2_Timer2 > 0) 
+      endwhile        
+    endif
+    
+    if (P_StopAllReq = kFALSE)
+      M_MotorDriveReset = kHIGH
+
+      // Wait for drive to reset
+      I_CS2_Timer2 = kTIMEOUT_FAULTRESET * kMilliSecond
+      while (I_CS2_Timer2 > 0) 
+      endwhile
+      
+      M_MotorDriveReset = kLOW
+    
+      //********************
+      // Enable all PLCs that could cause movement
+      // Clear movement conditions
+      //*******************
+
+      // Disable request if any
+      P_MotorHomeRequest = 0
+      ENABLE PLC PLC_Homing
+      ENABLE PLC PLC_OpenGap
+      ENABLE PLC PLC_MoveRequest
+      
+      // If OpenGap was active at this time this will cause it to start executing again
+      P_OpenGapExecuting = kFALSE
+    endif
+    
+    P_StopAllStat = P_StopAllReq
+  endif
+endif
+
+
+// XXX HERE
+
+
+// **********************************************
+// Handle Stop commands for individual gap motors
+// **********************************************
+if (M_CS1Running = 0 AND P_StopAllStat = 0 AND P_InterlockState = 0)
+
+  P_MotorNumber = 1
+  P_HomingPLCStopped = 0 // Flag indicating whether the plc has been stopped
+
+  while (P_MotorNumber < 5) // For each motor
+    // *** Check for stop request & if the motor has been enabled ***
+    if ( P_MotorStopCommand != 0 AND M_MotorAmpEnabled = 1 )
+        // Special processing for Gap motors
+        if (P_MotorNumber < 5)
+          // Disable homing PLC and clear the homing request
+          DISABLE PLC PLC_Homing     // plc 5  
+          P_MotorHomeRequest = 0   
+          P_HomingPLCStopped = 1
+          
+          // Address the motor and issue stop
+          ADDRESS#P_MotorNumber
+          //cmd "J/"
+          cmd "k"
+          
+          // Find out the coupled motor 
+          // For motor 1 : 1%2 = 1 -> coupled = 1+1 = 2
+          // For motor 2 : 2%2 = 0 -> coupled = 2-1 = 1
+          // For motor 3 : 3%2 = 1 -> coupled = 3+1 = 4
+          // For motor 4 : 4%2 = 0 -> coupled = 4-1 = 3
+          P_CoupledMotorNumber = P_MotorNumber % 2
+          if (P_CoupledMotorNumber = 1)
+            P_CoupledMotorNumber = P_MotorNumber + 1
+          else
+            P_CoupledMotorNumber = P_MotorNumber - 1
+          endif
+          
+          // If the coupled motor is having a master, stop that one too
+          if (I_CoupledMotorFollowEn = 1 AND M_CoupledMtrAmpEnabled = 1)
+            ADDRESS#P_CoupledMotorNumber
+            cmd "k"
+          endif 
+        else
+          // Address the motor and issue stop
+          ADDRESS#P_MotorNumber
+          cmd "k"
+        endif
+        
+        // Clear the stop 
+        P_MotorStopCommand = 0 
+    endif
+    
+    // Increment for next motor
+    P_MotorNumber = P_MotorNumber + 1
+  endwhile
+  
+  // If the Homing PLC has been disabled make sure to enable it.
+  if (P_HomingPLCStopped = 1) 
+    // Disable any homing request issued in meantime and enable homing PLC
+    P_MotorHomeRequest = 0 
+    ENABLE PLC PLC_Homing      // plc 5
+  endif    
+endif // if(M_CS1Running = 0 AND P_StopAllStat = 0 AND P_InterlockState = 0)
+  
+CLOSE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Close
+
+#endif

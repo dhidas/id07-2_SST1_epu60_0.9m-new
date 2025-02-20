@@ -12,6 +12,9 @@
 #define P_StopAllReq            P300    // Request stop all
 #define P_StopAllStat           P301    // Stop all active
 
+#define P_OpenGapExecuting      P411    // Open gap is being executed
+#define P_InterlockState        P421    // Signals that we are in interlock state. Do not issue movements.
+
 #define P_GapMotor1Offset       P1011   // Gap motor 1 GU offset
 #define P_GapMotor3Offset       P1013   // Gap motor 3 GL offset
 #define P_PhaseMotor5Offset     P1015   // Phase motor 5 TO offset
@@ -23,7 +26,8 @@
 #define P_MinimumGap            P1032   // Minimum gap position
 #define P_MaximumEngPhase       P1033   // Maximum phase position
 #define P_MaximumOpPhase        P1034   // Maximum user phase
-                                
+#define P_MotorHomeRequest      P1055   // 1-4 request homing for motor. 0 no home
+
 #define P_GapVelocity           P1114   // Gap velocity
 #define P_GapAccel              P1115   // Gap accel
                                

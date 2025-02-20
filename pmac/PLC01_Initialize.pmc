@@ -1,11 +1,12 @@
 #ifndef PLC01_Initialize_pmc
 #define PLC01_Initialize_pmc
 
+#include "Constants.pmc"
 #include "MVariables.pmc"
 #include "PVariables.pmc"
 #include "Timers.pmc"
 
-Open PLC 1 Clear
+Open PLC kPLC_Initialize Clear
 
 // Clear all the outputs to ensure that brakes are engaged and amplifiers are disabled
 M_Mtr1_Amp_Enable = kFALSE

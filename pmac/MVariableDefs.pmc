@@ -1,5 +1,7 @@
 #ifndef MVariableDefss_pmc
 #define MVariableDefss_pmc
+#
+M27->Y:$78804,2,1     ;  Input 27 J7   Pin#6   (OUT_STAT2, Digital input indicating SafetyPLC has been tripped)
 
 M33->Y:$078802,0,1    ; Output 1 J6   Pin#12    Pin#30  Upper gap motor M1  -  turns off Shutdown mode on external drive
 M34->Y:$078802,1,1    ; Output 2 J6   Pin#13    Pin#31  
@@ -12,6 +14,7 @@ M40->Y:$078802,7,1    ; Output 8 J6   Pin#19    Pin#37  Phase D motor M8  -  tur
 M41->Y:$078805,0,1    ; Output 09 J7  Pin#12    Pin#30  (Machine error red light output)
 M42->Y:$078805,1,1    ; Output 10 J7  Pin#13    Pin#31  (Machine moving orange light output)
 M43->Y:$078805,2,1    ; Output 11 J7  Pin#14    Pin#32  (Machine ready green light output)
+M44->Y:$078805,3,1    ; Output 12 J7  Pin#15    Pin#33  (Motor Drive Reset Output)
 
 M137->X:$0000B0,17,1 ; #1 Running-program bit
 M139->X:$0000B0,19,1 ; #1 Amplifier-enabled status bit

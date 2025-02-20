@@ -15,12 +15,12 @@
 // Also handles the lights.
 // ******************************************************************************
 
-#include "PVariables.pmc"
 #include "Constants.pmc"
+#include "PVariables.pmc"
 #include "MVariables.pmc"
 
 
-Open PLC 2 Clear
+Open PLC kPLC_MovementInProgress Clear
 
 if (P_MIPCounter > 500)
   P_MIPCounter = 0

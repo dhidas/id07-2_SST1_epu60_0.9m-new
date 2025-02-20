@@ -3,6 +3,8 @@
 
 #include "MVariableDefs.pmc"
 
+#define M_SafetyPLCIn             M27 ; (0 - tripped, 1 - okay)  PLC
+
 #define M_Mtr1_Amp_Enable         M33
 #define M_Mtr3_Amp_Enable         M35
 #define M_Mtr5_Amp_Enable         M37
@@ -12,6 +14,7 @@
 #define M_MachineErrorLight       M41
 #define M_MotorMovingLight        M42
 #define M_MotorReadyLight         M43
+#define M_MotorDriveReset         M44
 
 #define M_Mtr1Moving      M137
 #define M_Amp1Enabled     M139
