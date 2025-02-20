@@ -135,11 +135,11 @@ I7004,2,100=3                       ; I7m04 Servo IC m PWM Deadtime / PFM Pulse 
 
 
 // Rotary encoder direction encoding
-I7010,2,20=3	 // Enc 1,3           ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
-I7110=3	       // Enc 5             ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
-I7120=7	       // Enc 6             ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
-I7130=7	       // Enc 7             ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
-I7140=3	       // Enc 8             ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7010,2,20=3   // Enc 1,3           ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7110=3         // Enc 5            ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7120=7         // Enc 6            ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7130=7         // Enc 7            ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7140=3         // Enc 8            ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
 
 // Capture on Flag going low
 I7012,2,20=1                        ; I7mn2 Servo IC m Channel n Capture Control
@@ -151,25 +151,25 @@ I7113,4,10=0                        ; I7mn3 Servo IC m Channel n Capture Flag Se
 
 // I7mn6=3: Outputs A and B are DAC; Output C is PFM
 // We are using PFM on output C
-I7016,2,20=3		                    ; I7mn6 Servo IC m Channel n Output Mode Select
-I7116,4,10=3	                      ; I7mn6 Servo IC m Channel n Output Mode Select
+I7016,2,20=3                        ; I7mn6 Servo IC m Channel n Output Mode Select
+I7116,4,10=3                        ; I7mn6 Servo IC m Channel n Output Mode Select
 
 // I7mn8=0: Do not invert direction signal (+=low; -=high)
 // I7mn8=1: Invert direction signal (-=low; +=high)
 // Needs to be inverted for gap motors
-I7018,2,20=1		                    ; I7mn8 Servo IC m Channel n PFM Direction Signal Invert Control
+I7018,2,20=1                        ; I7mn8 Servo IC m Channel n PFM Direction Signal Invert Control
 I7118,4,10=0                        ; I7mn8 Servo IC m Channel n PFM Direction Signal Invert Control
 
 
 // ECT
-I8000=$78000	                      ; Mtr1 $3501
+I8000=$78000                        ; Mtr1 $3501
 I8001=$78008                        
-I8002=$78010	                      ; Mtr3 $3503
+I8002=$78010                        ; Mtr3 $3503
 I8003=$78018                        
-I8004=$78100	                      ; Mtr5 $3505
-I8005=$78108	                      ; Mtr6 $3506
-I8006=$78110	                      ; Mtr7 $3507
-I8007=$78118	                      ; Mtr8 $3508
+I8004=$78100                        ; Mtr5 $3505
+I8005=$78108                        ; Mtr6 $3506
+I8006=$78110                        ; Mtr7 $3507
+I8007=$78118                        ; Mtr8 $3508
 I8008=$2F8420                       ; MACRO PGM Mtr1
 I8009=$18000                        ;      $350a
 I8010=$2F8424                       ; MACRO PGM Mtr3
