@@ -1,0 +1,45 @@
+#ifndef Constants_pmc
+#define Constants_pmc
+
+#define kTRUE                   1
+#define kFALSE                  0
+
+#define kMilliSecond            (8388608/I10)
+#define kSecond           (1000*kMilliSecond)
+
+#define kMINGAP             14000
+#define kMAXGAP            100000
+#define kMAXPHASE           29500
+
+#define #define kmm2um      1000
+
+#define kEncCntsPerMm        5000
+#define kEncCntsPerUm  (kEncCntsPerMm/kmm2um)
+
+#define kMotorFlagModeCtrl      $90A401
+#define kGapMtrSpeed            2
+#define kGapMtrAccel            0.01
+#define kGapMtrHomeSpeed        0.5
+                                
+#define kPhaseMtrSpeed          5.0
+#define kPhaseMtrAccel          0.015625
+#define kPhaseMtrHomeSpeed      0.5
+
+#define kENABLE_DELAY         200
+#define kPOST_KILL_DELAY      400
+
+#define kLimitMargin          50    // in cts
+
+// Girder Modes
+#define kGapCoordinated    0
+#define kLeftMotorMaster   1
+#define kRightMotorMaster  2
+#define kIndividualMotor   3
+#define kFlyCoordinated    4
+
+
+
+
+
+
+#endif

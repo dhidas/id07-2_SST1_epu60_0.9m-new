@@ -1,0 +1,33 @@
+#ifndef PVariables_pmc
+#define PVariables_pmc
+
+#define P_UpperGirderModeReq    P201    // Upper girder mode setpoint
+#define P_UpperGirderMode       P202    // Upper girder mode readback
+#define P_LowerGirderModeReq    P203    // Lower girder mode setpoint
+#define P_LowerGirderMode       P204    // Lower girder mode readback
+
+#define P_StopAllReq            P300    // Request stop all
+
+#define P_GapMotor1Offset       P1011   // Gap motor 1 GU offset
+#define P_GapMotor3Offset       P1013   // Gap motor 3 GL offset
+#define P_PhaseMotor5Offset     P1015   // Phase motor 5 TO offset
+#define P_PhaseMotor6Offset     P1016   // Phase motor 6 TI offset
+#define P_PhaseMotor7Offset     P1017   // Phase motor 7 BO offset
+#define P_PhaseMotor8Offset     P1018   // Phase motor 8 BI offset
+
+#define P_MaximumGap            P1031   // Maximum gap position
+#define P_MinimumGap            P1032   // Minimum gap position
+#define P_MaximumEngPhase       P1033   // Maximum phase position
+#define P_MaximumOpPhase        P1034   // Maximum user phase
+                                
+#define P_GapVelocity           P1114   // Gap velocity
+#define P_GapAccel              P1115   // Gap accel
+                               
+#define P_PhaseVelocity         P1119   // Phase velocity
+#define P_PhaseAccel            P1120   // Phase accel
+
+
+
+
+
+#endif

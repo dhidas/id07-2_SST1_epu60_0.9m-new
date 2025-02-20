@@ -1,0 +1,19 @@
+#ifndef MVariables_pmc
+#define MVariables_pmc
+
+#include "MVariableDefs.pmc"
+
+#define M_Mtr1_Amp_Enable   M33
+#define M_Mtr3_Amp_Enable   M35
+#define M_Mtr5_Amp_Enable   M37
+#define M_Mtr6_Amp_Enable   M38
+#define M_Mtr7_Amp_Enable   M39
+#define M_Mtr8_Amp_Enable   M40
+
+
+
+
+
+
+
+#endif

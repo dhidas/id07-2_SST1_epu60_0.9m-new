@@ -1,0 +1,180 @@
+#ifndef IVariables_pmc
+#define IVariables_pmc
+
+#include "Constants.pmc"
+
+// Use factory reset defaults wherever possible.  Some defaults are repeated for clarity
+
+I3=2                                    ; Communication protocol
+I4=0                                    ; Communications Integrity Mode for pmac driver
+I5=3                                    ; PLC Program Control
+I6=1                                    ; Error Reporting Mode
+I36=1                                   ; Enable/Abort Separation Control XXX Check
+I62=1                                   ; Internal Message Carriage Return Control *
+I63=1                                   ; Control-X Echo Enable
+I64=0                                   ; Internal Response Tag Enable *
+
+// The following done for MACRO
+#define RingCheckPeriod 20                        ; Suggested Ring Check Period [msec]
+#define FatalPackErr    15                        ; Suggested Fatal Packet Error Percentage [%]
+I70=$3333                                         ; Macro IC 0 Node Auxiliary Register Enable (for 8 macro motors)
+I71=0                                             ; Type 0 MX Mode
+I78=32                                            ; Macro Type 1 Master/Slave Communications Timeout
+I80=INT(RingCheckPeriod *8388608/I10/(I8+1)+1)    ; Macro Ring Check Period [Servo Cycles]
+I81=INT(I80* FatalPackErr /100+1)                 ; Macro Maximum Ring Error Count
+I82=I80-I81*4                                     ; Macro Minimum Sync Packet Count
+
+
+// Motors 1, 3 (Gap)
+I100,2,200=1                            ; Motor xx Activation Control
+// Consider using default values for 107..109
+I107,2,200=32                           ; Motor xx Master (Handwheel) Scale Factor
+I108,2,200=32                           ; Motor xx Position Scale Factor
+I109,2,200=32                           ; Motor xx Velocity-Loop Scale Factor
+I111,2,200=8000                         ; Motor xx Fatal Following Error Limit
+I112,2,200=4000                         ; Motor xx Warning Following Error Limit
+I115,2,200=0.004                        ; Motor xx Abort/Limit Deceleration Rate
+I116,2,200=kGapMtrSpeed                 ; Motor xx Maximum Program Velocity
+I117,2,200=kGapMtrAccel                 ; Motor xx Maximum Program Acceleration
+I119,2,200=kGapMtrAccel                 ; Motor xx Maximum Jog/Home Acceleration
+I120,2,200=250                          ; Motor xx Jog/Home Acceleration Time
+I121,2,200=100                          ; Motor xx Jog/Home S-Curve Time
+I122,2,200=kGapMtrSpeed                 ; Motor xx Jog Speed
+I123,2,200=kGapMtrHomeSpeed             ; Motor xx Home Speed and Direction
+I124,2,200=kMotorFlagModeCtrl           ; Motor xx Flag Mode Control
+I130,2,200=1600                         ; Motor xx PID Proportional Gain
+I131,2,200=0                            ; Motor xx PID Derivative Gain
+I132,2,200=2000                         ; Motor xx PID Velocity Feedforward Gain
+I133,2,200=0                            ; Motor xx PID Integral Gain
+I134,2,200=1                            ; Motor xx PID Integration Mode
+I135,2,200=0                            ; Motor xx PID Acceleration Feedforward Gain
+I138,2,200=-0.888                       ; Motor xx PID Notch Filter Coefficient D1    XXX Check Consider remove
+I165,2,200=160                          ; Motor xx Deadband Size    XX Check consider remove
+I169,2,200=1280                         ; Motor xx Output Command Limit   XXX Check
+I197,2,200=1                            ; Motor xx Position Capture & Trigger Mode
+
+// Unique settings for each gap motor (1 and 3)
+I102=$78004      I302=$78014            ; Motor xx Command Output Address                                                       
+I103=$3501       I303=$3503             ; Motor xx Position Loop Feedback Address                                               
+I104=$3501       I304=$3503             ; Motor xx Velocity Loop Feedback Address                                               
+I125=$78000      I325=$78010            ; Motor xx Flag Address                                                                 
+
+
+// Motors 5-8
+I500,4,100=1                        ; Motor xx Activation Control
+// Consider using default for 507..509
+I507,4,100=32                       ; Motor xx Master (Handwheel) Scale Factor
+I508,4,100=32                       ; Motor xx Position Scale Factor
+I509,4,100=32                       ; Motor xx Velocity-Loop Scale Factor
+I511,4,100=8000                     ; Motor xx Fatal Following Error Limit
+I512,4,100=4000                     ; Motor xx Warning Following Error Limit
+I515,4,100=0.004                    ; Motor xx Abort/Limit Deceleration Rate
+I516,4,100=kPhaseMtrSpeed           ; Motor xx Maximum Program Velocity
+I517,4,100=kPhaseMtrAccel           ; Motor xx Maximum Program Acceleration
+I519,4,100=kPhaseMtrAccel           ; Motor xx Maximum Jog/Home Acceleration
+I520,4,100=250                      ; Motor xx Jog/Home Acceleration Time
+I521,4,100=100                      ; Motor xx Jog/Home S-Curve Time
+I522,4,100=kPhaseMtrSpeed           ; Motor xx Jog Speed
+I523,4,100=kPhaseMtrHomeSpeed       ; Motor xx Home Speed and Direction
+I524,4,100=kMotorFlagModeCtrl       ; Motor xx Flag Mode Control
+I530,4,100=6000                     ; Motor xx PID Proportional Gain
+I531,4,100=0                        ; Motor xx PID Derivative Gain
+I532,4,100=12000                    ; Motor xx PID Velocity Feedforward Gain
+I533,4,100=0                        ; Motor xx PID Integral Gain
+I534,4,100=1                        ; Motor xx PID Integration Mode
+I535,4,100=0                        ; Motor xx PID Acceleration Feedforward Gain
+I538,4,100=-0.888                   ; Motor xx PID Notch Filter Coefficient D1    XXX Check Consider remove
+I565,4,100=160                      ; Motor xx Deadband Size    XX Check consider remove
+I569,4,100=1280                     ; Motor xx Output Command Limit
+I597,4,100=1                        ; Motor xx Position Capture & Trigger Mode
+
+// Motor 5-8 unique settings
+I502=$78104   I602=$7810C   I702=$78114   I802=$7811C       ; Motor xx Command Output Address
+I503=$3505    I603=$3506    I703=$3507    I803=$3508        ; Motor xx Position Loop Feedback Address
+I504=$3505    I604=$3506    I704=$3507    I804=$3508        ; Motor xx Velocity Loop Feedback Address
+I526=-95232   I626=-43680   I726=137104   I826=3872         ; Motor xx Home Offset
+
+
+// This is for MACRO motors of the PGM
+I900,2,100=1                        ; Motor xx Activation Control
+I902=$78420     I1002=$78424        ; Motor xx Command Output Address
+I903=$350a      I1003=$350c         ; Motor xx Position Loop Feedback Address XXX Update this
+I904=$350a      I1004=$350c         ; Motor xx Velocity Loop Feedback Address XXX Update this
+I924,2,100=$840401                  ; Motor xx Flag Mode Control
+I925=$3440      I1025=$3441         ; Motor xx Flag Address
+
+
+// For kinematics
+I5113,2,100=10                      ; Isx13 Coordinate System x Segmentation Time
+I5120,2,100=50                      ; Isx20 Coordinate System x Lookahead Length
+I5150,2,100=1                       ; Isx50 Coordinate System x Kinematic Calculations Enable
+
+// For kinematics for CS6 (FlyScan/FlyMove)
+i5613=10                            ; Isx13 Coordinate System x Segmentation Time
+i5620=500                           ; Isx20 Coordinate System x Lookahead Length
+i5650=1                             ; Isx50 Coordinate System x Kinematic Calculations Enable
+
+; Limit feedrate for CS6 (FlyScan/FlyMove)
+I5698=60                            ; Isx98 Coordinate System x Maximum Feedrate
+
+
+// The following is done for MACRO
+I6800=1473                          ; Macro IC0 MaxPhase/PWM Frequency Control
+I6801=1                             ; Macro IC0 Phase Clock Frequency Control
+I6802=3                             ; Macro IC0 Servo Clock Frequency Control
+I6840=$4030                         ; Macro IC0 Ring Configuration/Status, typical master IC setting
+I6841=$0FF333                       ; Macro IC0 Node Activate Ctrl (Servo nodes 0, 1, 4, 5, 8, 9, 12, 13) – User Input
+
+
+// Servo IC 1-2 clock controls
+I7000,2,100=1473                    ; I7m00 Servo IC m MaxPhase/PWM Frequency Control
+I7001,2,100=3                       ; I7m01 Servo IC m Phase Clock Frequency Control
+I7002,2,100=1                       ; I7m02 Servo IC m Servo Clock Frequency Control
+I7003,2,100=1746                    ; I7m03 Servo IC m Hardware Clock Control
+I7004,2,100=3                       ; I7m04 Servo IC m PWM Deadtime / PFM Pulse Width Control
+
+
+// Rotary encoder direction encoding
+I7010,2,20=3	 // Enc 1,3           ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7110=3	       // Enc 5             ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7120=7	       // Enc 6             ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7130=7	       // Enc 7             ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7140=3	       // Enc 8             ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+
+// Capture on Flag going low
+I7012,2,20=1                        ; I7mn2 Servo IC m Channel n Capture Control
+I7112,4,10=1                        ; I7mn2 Servo IC m Channel n Capture Control
+
+// Use Home flag
+I7013,2,20=0                        ; I7mn3 Servo IC m Channel n Capture Flag Select Control
+I7113,4,10=0                        ; I7mn3 Servo IC m Channel n Capture Flag Select Control
+
+// I7mn6=3: Outputs A and B are DAC; Output C is PFM
+// We are using PFM on output C
+I7016,2,20=3		                    ; I7mn6 Servo IC m Channel n Output Mode Select
+I7116,4,10=3	                      ; I7mn6 Servo IC m Channel n Output Mode Select
+
+// I7mn8=0: Do not invert direction signal (+=low; -=high)
+// I7mn8=1: Invert direction signal (-=low; +=high)
+// Needs to be inverted for gap motors
+I7018,2,20=1		                    ; I7mn8 Servo IC m Channel n PFM Direction Signal Invert Control
+I7118,4,10=0                        ; I7mn8 Servo IC m Channel n PFM Direction Signal Invert Control
+
+
+// ECT
+I8000=$78000	                      ; Mtr1 $3501
+I8001=$78008                        
+I8002=$78010	                      ; Mtr3 $3503
+I8003=$78018                        
+I8004=$78100	                      ; Mtr5 $3505
+I8005=$78108	                      ; Mtr6 $3506
+I8006=$78110	                      ; Mtr7 $3507
+I8007=$78118	                      ; Mtr8 $3508
+I8008=$2F8420                       ; MACRO PGM Mtr1
+I8009=$18000                        ;      $350a
+I8010=$2F8424                       ; MACRO PGM Mtr3
+I8011=$18000                        ;      $250c
+I8012=$0                            ; End of ECT $350d
+
+
+#endif

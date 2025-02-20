@@ -1,0 +1,82 @@
+#ifndef PLC01_Initialize_pmc
+#define PLC01_Initialize_pmc
+
+#include "MVariables.pmc"
+#include "PVariables.pmc"
+#include "Timers.pmc"
+
+Open PLC 1 Clear
+
+// Clear all the outputs to ensure that brakes are engaged and amplifiers are disabled
+M_Mtr1_Amp_Enable = kFALSE
+M_Mtr3_Amp_Enable = kFALSE
+M_Mtr5_Amp_Enable = kFALSE
+M_Mtr6_Amp_Enable = kFALSE
+M_Mtr7_Amp_Enable = kFALSE
+M_Mtr8_Amp_Enable = kFALSE
+
+// Disable all PLCs except this one for config
+Disable PLC 0
+Disable PLC 2..31
+Disable PLCC 0..31
+
+// I don't know why the constants are not used here XXX Check
+P_GapVelocity = 1000
+P_GapAccel = 0.01
+P_PhaseVelocity = 1000
+P_PhaseAccel = 0.01
+
+// These may come through epics XXX Check, if never used remove these
+P_GapMotor1Offset = 0
+P_GapMotor3Offset = 0
+P_PhaseMotor5Offset = 0
+P_PhaseMotor6Offset = 0
+P_PhaseMotor7Offset = 0
+P_PhaseMotor8Offset = 0
+
+// Soft limits
+P_MinimumGap    = kMINGAP
+P_MaximumGap    = kMAXGAP
+P_MaximumEngPhase = kMAXPHASE
+P_MaximumOpPhase  = kMAXPHASE   ; XXX Check I don't think this is used at all
+
+// Wait for Gemini drives to initialize
+I_CS1_Timer2 = kENABLE_DELAY*kMilliSecond
+while (I_CS1_Timer2 > 0) endwhile
+
+// Kill all motors and small delay
+CMD"^K"
+I_CS1_Timer2 = kPOST_KILL_DELAY*kMilliSecond
+while (I_CS1_Timer2 > 0) endwhile
+
+// Ensure limits are NOT disabled!
+I124,2,200=kMotorFlagModeCtrl
+I524,4,100=kMotorFlagModeCtrl
+
+// Set initial soft limits for phase
+I513,4,100=+(kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I514,4,100=-(kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+
+// Clear Home Complete bits
+I145,2,200=kFALSE
+I545,4,100=kFALSE
+
+// Set modes to girder coordinated
+P_UpperGirderModeReq  = kGapCoordinated
+P_UpperGirderMode   = kGapCoordinated
+P_LowerGirderModeReq  = kGapCoordinated
+P_LowerGirderMode   = kGapCoordinated
+
+// Make sure StopAll is NOT requested
+P_StopAllReq  = kFALSE
+
+// Enable PLCs here
+
+
+Disable PLC 1
+Close
+
+
+
+
+#endif

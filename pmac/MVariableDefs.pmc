@@ -1,0 +1,15 @@
+#ifndef MVariableDefss_pmc
+#define MVariableDefss_pmc
+
+M33->Y:$078802,0,1    ; Output 1 J6   Pin#12    Pin#30  Upper gap motor M1  -  turns off Shutdown mode on external drive
+M34->Y:$078802,1,1    ; Output 2 J6   Pin#13    Pin#31  
+M35->Y:$078802,2,1    ; Output 3 J6   Pin#14    Pin#32  Lower gap motor M3  -  turns off Shutdown mode on external drive
+M36->Y:$078802,3,1    ; Output 4 J6   Pin#15    Pin#33  
+M37->Y:$078802,4,1    ; Output 5 J6   Pin#16    Pin#34  Phase A motor M5  -  turns off brake
+M38->Y:$078802,5,1    ; Output 6 J6   Pin#17    Pin#35  Phase B motor M6  -  turns off brake
+M39->Y:$078802,6,1    ; Output 7 J6   Pin#18    Pin#36  Phase C motor M7  -  turns off brake
+M40->Y:$078802,7,1    ; Output 8 J6   Pin#19    Pin#37  Phase D motor M8  -  turns off brake
+
+
+
+#endi

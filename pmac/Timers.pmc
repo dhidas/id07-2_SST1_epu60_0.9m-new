@@ -1,0 +1,6 @@
+#ifndef Timers_pmc
+#define Timers_pmc
+
+#define I_CS1_Timer2        I5112   // C.S.1 timer 2 (Used in PLC1)
+
+#endif
