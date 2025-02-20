@@ -231,7 +231,6 @@ if (M_CS1Running = 0 AND P_StopAllStat = 0 AND P_InterlockState = 0)
   endif    
 endif // if(M_CS1Running = 0 AND P_StopAllStat = 0 AND P_InterlockState = 0)
   
-CLOSE
 
 
 
