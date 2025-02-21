@@ -116,9 +116,9 @@ if (P_InterlockState = kFALSE)
       // Disable all PLCs that could cause movement
       // Clear movement requests
       //*******************
-      DISABLE PLC PLC_MoveRequest
-      DISABLE PLC PLC_OpenGap
-      DISABLE PLC PLC_Homing
+      Disable PLC kPLC_MoveRequest
+      Disable PLC kPLC_OpenGap
+      Disable PLC kPLC_Homing
 
       // Disable request if any
       P_MotorHomeRequest = 0
@@ -156,9 +156,9 @@ if (P_InterlockState = kFALSE)
 
       // Disable request if any
       P_MotorHomeRequest = 0
-      ENABLE PLC PLC_Homing
-      ENABLE PLC PLC_OpenGap
-      ENABLE PLC PLC_MoveRequest
+      Enable PLC kPLC_Homing
+      Enable PLC kPLC_OpenGap
+      Enable PLC kPLC_MoveRequest
       
       // If OpenGap was active at this time this will cause it to start executing again
       P_OpenGapExecuting = kFALSE

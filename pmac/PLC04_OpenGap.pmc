@@ -5,6 +5,7 @@
 #include "PVariables.pmc"
 #include "Timers.pmc"
 #include "MVariables.pmc"
+#include "QVariables.pmc"
 
 // Open Gap is requested from facility as a result of some issue such as over temp detection etc.
 // The undulator is commanded to open to a full gap as a result.

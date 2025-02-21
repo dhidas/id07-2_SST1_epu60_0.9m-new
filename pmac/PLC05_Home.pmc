@@ -2,8 +2,9 @@
 #define PLC05_Home_pmc
 
 #include "Constants.pmc"
-#include "PVaroables.pmc"
+#include "PVariables.pmc"
 #include "MVariables.pmc"
+#include "Timers.pmc"
 
 // ******************************************************************************
 // Applies new offsets for Gap movement
@@ -99,98 +100,94 @@ Open PLC kPLC_Homing Clear
           endif
           if(M_Mtr1OpenLoop = kTRUE OR M_Mtr3OpenLoop = kTRUE)      // Either set to open loop
             CMD"#1k #3k"
-            P_UpperHmStatus = POS_JOG_FAILURE
+            P_UpperHmStatus = kPOS_JOG_FAILURE
             I_CS3_Timer2 = -1
           endif
         endwhile
       endif
 
-      I_CS3_Timer2 = 200 MilliSeconds
+      I_CS3_Timer2 = 200 * kMilliSecond
       while (I_CS3_Timer2 > 0)
       endwhile
 
       // Jog to limits at home speed 
-      if (P_UpperHmStatus = NEG_JOG_SUCCESS)
+      if (P_UpperHmStatus = kNEG_JOG_SUCCESS)
 
-        I122 = GapHomeSpeed
-        I322 = GapHomeSpeed
+        I122 = kGapMtrHomeSpeed
+        I322 = kGapMtrHomeSpeed
         P_UpperHmStatus = 0  // clear status flag
 
-        cmd "#1J+ #3J+"
-        I_CS3_Timer2 = ENABLE_DELAY MilliSeconds
+        CMD"#1j+ #3j+"
+        I_CS3_Timer2 = kENABLE_DELAY * kMilliSecond
         while (I_CS3_Timer2 > 0)
         endwhile
 
-        I_CS3_Timer2 =80000 * 8388608/I10
+        I_CS3_Timer2 =80000 * kMilliSecond
         while(I_CS3_Timer2 > 0)
-          if(M140=1 AND M340=1 AND M130=1 AND M330=1)
-            P_UpperHmStatus = POS_JOG_SUCCESS
+          if(M_Mtr1InPos = kTRUE AND M_Mtr3InPos = kTRUE AND M_Mtr1StoppedOnLim = kTRUE AND M_Mtr3StoppedOnLim = kTRUE)
+            P_UpperHmStatus = kPOS_JOG_SUCCESS
             I_CS3_Timer2 = -1
           endif
-          if(M142=1 OR M342=1)
-            if(M142=1)
-              P_UpperHmStatus = MTR1_FFE
-              I_CS3_Timer2 = -1
-            endif
-            if(M342=1)
-              P_UpperHmStatus = MTR3_FFE
-              I_CS3_Timer2 = -1
-            endif
+          if(M_Mtr1FFE = kTRUE)
+            P_UpperHmStatus = kMTR1_FFE
+            I_CS3_Timer2 = -1
           endif
-          if(M138=1 OR M338=1)
-            cmd "#1k #3k"
-            P_UpperHmStatus = POS_JOG_FAILURE
+          if(M_Mtr3FFE=1)
+            P_UpperHmStatus = kMTR3_FFE
+            I_CS3_Timer2 = -1
+          endif
+          if(M_Mtr1OpenLoop = kTRUE OR M_Mtr3OpenLoop = kTRUE)
+            CMD"#1k #3k"
+            P_UpperHmStatus = kPOS_JOG_FAILURE
             I_CS3_Timer2 = -1
           endif
         endwhile
       endif
 
 
-      if(P_UpperHmStatus = POS_JOG_SUCCESS)
+      if(P_UpperHmStatus = kPOS_JOG_SUCCESS)
 
         P_UpperHmStatus = 0  // clear status flag
 
         // Set position of mtrs 1 & 3
-        COMMAND "#1K #3K"
-        I_CS3_Timer2 = 200 MilliSeconds    // Small delay to stop moving, 100 servo cycles = 20 msec
-        WHILE(I_CS3_Timer2>0)
-        ENDWHILE
+        CMD"#1K #3K"
+        I_CS3_Timer2 = 200 * kMilliSecond    // Small delay to stop moving, 100 servo cycles = 20 msec
+        while(I_CS3_Timer2>0)
+        endwhile
   
-        M162 = M1_POS_LIMIT * I108 * 32    // Counts at limit*I108*32
-        M362 = M3_POS_LIMIT * I108 * 32    // Counts at limit*I108*32
-        I_CS3_Timer2 = 100 MilliSeconds    // Small delay to start moving, 100 servo cycles = 20 msec
-        WHILE(I_CS3_Timer2>0)
-        ENDWHILE
+        M_Mtr1ActPos = kM1_POS_LIMIT * I108 * 32    // Counts at limit*I108*32
+        M_Mtr3ActPos = kM3_POS_LIMIT * I108 * 32    // Counts at limit*I108*32
+        I_CS3_Timer2 = 100 * kMilliSecond
+        while(I_CS3_Timer2 > 0)
+        endwhile
 
         // Reset jog speeds
-        I122 = GapJogSpeed
-        I322 = GapJogSpeed
+        I122 = kGapMtrSpeed
+        I322 = kGapMtrSpeed
 
         // move off limit switches
         cmd "#1J^-15000 #3J^-15000"
-        I_CS3_Timer2 = ENABLE_DELAY MilliSeconds
+        I_CS3_Timer2 = kENABLE_DELAY * kMilliSecond
         while (I_CS3_Timer2 > 0)
         endwhile
 
-        I_CS3_Timer2 =100000 * 8388608/I10
+        I_CS3_Timer2 = 100000 * kMilliSecond
         while(I_CS3_Timer2 > 0)
-          if(M140=1 AND M340=1)
-            P_UpperHmStatus = POS_JOG_SUCCESS
+          if(M_Mtr1InPos = kTRUE AND M_Mtr3InPos = kTRUE)
+            P_UpperHmStatus = kPOS_JOG_SUCCESS
             I_CS3_Timer2 = -1
           endif
-          if(M142=1 OR M342=1)
-            if(M142=1)
-              P_UpperHmStatus = MTR1_FFE
-              I_CS3_Timer2 = -1
-            endif
-            if(M342=1)
-              P_UpperHmStatus = MTR3_FFE
-              I_CS3_Timer2 = -1
-            endif
+          if(M_Mtr1FFE = kTRUE)
+            P_UpperHmStatus = kMTR1_FFE
+            I_CS3_Timer2 = -1
           endif
-          if(M138=1 OR M338=1)
-            cmd "#1k #3k"
-            P_UpperHmStatus = POS_JOG_FAILURE
+          if(M_Mtr3FFE = kTRUE)
+            P_UpperHmStatus = kMTR3_FFE
+            I_CS3_Timer2 = -1
+          endif
+          if(M_Mtr1OpenLoop = kTRUE OR M_Mtr3OpenLoop = kTRUE)
+            CMD"#1k #3k"
+            P_UpperHmStatus = kPOS_JOG_FAILURE
             I_CS3_Timer2 = -1
           endif
         endwhile
@@ -198,65 +195,60 @@ Open PLC kPLC_Homing Clear
         P_UpperHmStatus = 0  // clear status flag
 
         // set target to be upper soft limit
-        M172 = (P_MaximumGap/mm2um)*(EncCntsPerMm/2)
-        M372 = M172
-        // M172 = 250000
-        // M372 = 250000
+        M_Mtr1VarJojPos = (P_MaximumGap/kmm2um)*(kEncCntsPerMm/2)
+        M_Mtr3VarJojPos = M_Mtr1VarJojPos
 
         // move to target
-        cmd "#1J=* #3J=*"
-        I_CS3_Timer2 = ENABLE_DELAY MilliSeconds
+        CMD"#1j=* #3j=*"
+        I_CS3_Timer2 = kENABLE_DELAY * kMilliSecond
         while (I_CS3_Timer2 > 0)
         endwhile
 
-        I_CS3_Timer2 =100000 * 8388608/I10
+        I_CS3_Timer2 = 100000 * kMilliSecond
         while(I_CS3_Timer2 > 0)
-          if(M140=1 AND M340=1)
-            P_UpperHmStatus = POS_JOG_SUCCESS
+          if(M_Mtr1InPos = kTRUE AND M_Mtr3InPos = kTRUE)
+            P_UpperHmStatus = kPOS_JOG_SUCCESS
             I_CS3_Timer2 = -1
           endif
-          if(M142=1 OR M342=1)
-            if(M142=1)
-              P_UpperHmStatus = MTR1_FFE
-              I_CS3_Timer2 = -1
-            endif
-            if(M342=1)
-              P_UpperHmStatus = MTR3_FFE
-              I_CS3_Timer2 = -1
-            endif
+          if(M_Mtr1FFE = kTRUE)
+            P_UpperHmStatus = kMTR1_FFE
+            I_CS3_Timer2 = -1
           endif
-          if(M138=1 OR M338=1)
+          if(M_Mtr3FFE = kTRUE)
+            P_UpperHmStatus = kMTR3_FFE
+            I_CS3_Timer2 = -1
+          endif
+          if(M_Mtr1OpenLoop = kTRUE OR M_Mtr3OpenLoop = kTRUE)
             cmd "#1k #3k"
-            P_UpperHmStatus = POS_JOG_FAILURE
+            P_UpperHmStatus = kPOS_JOG_FAILURE
             I_CS3_Timer2 = -1
           endif
         endwhile
 
-        I_CS3_Timer2 = 200 MilliSeconds    // Small delay to stop moving, 100 servo cycles = 20 msec
-        WHILE(I_CS3_Timer2>0)
-        ENDWHILE
+        I_CS3_Timer2 = 200 * kMilliSecond
+        while(I_CS3_Timer2>0)
+        endwhile
 
-        // kill motors
-        COMMAND "#1K #3K"
-        I_CS3_Timer2 = 100 MilliSeconds    // Small delay to stop moving, 100 servo cycles = 20 msec
-        WHILE(I_CS3_Timer2>0)
-        ENDWHILE
+        CMD"#1K #3K"
+        I_CS3_Timer2 = 100 * kMilliSecond
+        while(I_CS3_Timer2>0)
+        endwhile
 
-        if(P_UpperHmStatus = POS_JOG_SUCCESS)
+        if(P_UpperHmStatus = kPOS_JOG_SUCCESS)
 
           // Set home status to homed for mtr 1 & 3
-          M145 = 1
-          M345 = 1
+          M_Mtr1HomeComplete = kTRUE
+          M_Mtr3HomeComplete = kTRUE
 
           // home mtrs 5, 6, 7, 8
-          ENA PLC PLC_HomeMtr5
-          ENA PLC PLC_HomeMtr6
-          ENA PLC PLC_HomeMtr7
-          ENA PLC PLC_HomeMtr8
+          Enable PLC kPLC_HomeMtr5
+          Enable PLC kPLC_HomeMtr6
+          Enable PLC kPLC_HomeMtr7
+          Enable PLC kPLC_HomeMtr8
 
         endif
 
-      endif // if(P_UpperHmStatus = POS_JOG_SUCCESS)
+      endif
 
       // Reset soft limits
       I113 = P_TmpMtr1HiLim
@@ -265,33 +257,32 @@ Open PLC kPLC_Homing Clear
       I314 = P_TmpMtr3LoLim
 
       // Wait for PLC 24, 25, 26, 27 to finish
-      WHILE (P2405=0 OR P2505=0 OR P2605=0 OR P2705=0)
-      ENDWHILE
+      while (P_Mtr5HomeFinish = kFALSE OR P_Mtr6HomeFinish = kFALSE OR P_Mtr7HomeFinish = kFALSE OR P_Mtr8HomeFinish = kFALSE)
+      endwhile
 
       // Turn on PLC for limits
-      ENA PLC PLC_Limits
-      I_CS3_Timer2 = ENABLE_DELAY MilliSeconds
+      ENA PLC kPLC_Limits
+      I_CS3_Timer2 = kENABLE_DELAY * kMilliSecond
       while (I_CS3_Timer2 > 0)
       endwhile
 
-      // Kill all motors
-      COMMAND "#5K#6K#7K#8K"
-      I_CS3_Timer2 = ENABLE_DELAY MilliSeconds
+      CMD"#5K#6K#7K#8K"
+      I_CS3_Timer2 = kENABLE_DELAY * kMilliSecond
       while (I_CS3_Timer2 > 0)
       endwhile
 
       // Reset home indicators
-      P2405 = 0
-      P2505 = 0
-      P2605 = 0
-      P2705 = 0
+      P_Mtr5HomeFinish = kFALSE
+      P_Mtr5HomeFinish = kFALSE
+      P_Mtr5HomeFinish = kFALSE
+      P_Mtr5HomeFinish = kFALSE
 
       // Reset jog speeds
-      I122 = GapJogSpeed
-      I322 = GapJogSpeed
+      I122 = kGapMtrSpeed
+      I322 = kGapMtrSpeed
 
     endif
-  endif // if (P_MovementInProgress = FALSE AND P_MotorHomeRequest > 0 AND P_MotorHomeRequest < 5)
+  endif
     
   
   // Always clear the P_MotorHomeRequest even if the homing was not allowed.

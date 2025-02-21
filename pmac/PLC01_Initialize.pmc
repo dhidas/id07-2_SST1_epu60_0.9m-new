@@ -51,16 +51,30 @@ I_CS1_Timer2 = kPOST_KILL_DELAY*kMilliSecond
 while (I_CS1_Timer2 > 0) endwhile
 
 // Ensure limits are NOT disabled!
-I124,2,200=kMotorFlagModeCtrl
-I524,4,100=kMotorFlagModeCtrl
+I124=kMotorFlagModeCtrl
+I324=kMotorFlagModeCtrl
+I524=kMotorFlagModeCtrl
+I624=kMotorFlagModeCtrl
+I724=kMotorFlagModeCtrl
+I824=kMotorFlagModeCtrl
 
 // Set initial soft limits for phase
-I513,4,100=+(kMAXPHASE * kEncCntsPerUm + kLimitMargin)
-I514,4,100=-(kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I513= (kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I613= (kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I713= (kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I813= (kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I514=-(kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I614=-(kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I714=-(kMAXPHASE * kEncCntsPerUm + kLimitMargin)
+I814=-(kMAXPHASE * kEncCntsPerUm + kLimitMargin)
 
 // Clear Home Complete bits
-I145,2,200=kFALSE
-I545,4,100=kFALSE
+I145=kFALSE
+I345=kFALSE
+I545=kFALSE
+I645=kFALSE
+I745=kFALSE
+I845=kFALSE
 
 // Set modes to girder coordinated
 P_UpperGirderModeReq  = kGapCoordinated

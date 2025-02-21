@@ -58,6 +58,10 @@
 #define P_PhaseAccel            P1120   // Phase accel
 
 
+#define P_Mtr5HomeFinish        P2405
+#define P_Mtr6HomeFinish        P2505
+#define P_Mtr7HomeFinish        P2605
+#define P_Mtr8HomeFinish        P2705
 
 
 

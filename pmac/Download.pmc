@@ -8,3 +8,4 @@
 #include "PLC02_MovementInProgress.pmc"
 #include "PLC03_Interlock.pmc"
 #include "PLC04_OpenGap.pmc"
+#include "PLC05_Home.pmc"

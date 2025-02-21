@@ -15,7 +15,11 @@
 #define kMAXGAP            100000
 #define kMAXPHASE           29500
 
-#define #define kmm2um      1000
+// These are effectively offsets.  Used in homing.
+#define kM1_POS_LIMIT    251966
+#define kM3_POS_LIMIT    252787
+
+#define kmm2um      1000
 
 #define kEncCntsPerMm        5000
 #define kEncCntsPerUm  (kEncCntsPerMm/kmm2um)
@@ -53,9 +57,14 @@
 #define kPLC_Interlock              3
 #define kPLC_OpenGap                4
 #define kPLC_Homing                 5
-#define kPLC_MoveRequest          XXX
-#define kPLC_Limits               XXX
-
+#define kPLC_MoveRequest            8
+#define kPLC_Limits                13
+#define kPLC_HomeMtr1              22
+#define kPLC_HomeMtr3              23
+#define kPLC_HomeMtr5              24
+#define kPLC_HomeMtr6              25
+#define kPLC_HomeMtr7              26
+#define kPLC_HomeMtr8              27
 
 
 
@@ -63,5 +72,7 @@
 #define kNEG_JOG_SUCCESS   8
 #define kMTR1_FFE         -1
 #define kMTR3_FFE         -3
+#define kPOS_JOG_FAILURE  -7
+#define kUPPER_HM_FAILURE -8
 
 #endif

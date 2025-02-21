@@ -3,8 +3,9 @@
 
 #include "MVariableDefs.pmc"
 
-#define M_SafetyPLCIn             M27 ; (0 - tripped, 1 - okay)  PLC
-#define M_OpenGapSignalIn         M29 ; Shut Down Immediately Signal coming from Safety PLC or Facility? (0=shut down, 1=sys okay)
+#define M_SafetyPLCIn             M27
+#define M_OpenGapSignalIn         M29
+
 #define M_Mtr1_Amp_Enable         M33
 #define M_Mtr3_Amp_Enable         M35
 #define M_Mtr5_Amp_Enable         M37
@@ -23,6 +24,8 @@
 #define M_Mtr1InPos              M140
 #define M_Mtr1FFE                M142
 #define M_Mtr1HomeComplete       M145
+#define M_Mtr1ActPos             M162
+#define M_Mtr1VarJojPos          M172
 
 #define M_Mtr3StoppedOnLim       M330
 #define M_Mtr3Moving             M337
@@ -31,6 +34,8 @@
 #define M_Mtr3InPos              M340
 #define M_Mtr3FFE                M342
 #define M_Mtr3HomeComplete       M345
+#define M_Mtr3ActPos             M362
+#define M_Mtr3VarJojPos          M372
                                  
 #define M_Mtr5StoppedOnLim       M530
 #define M_Mtr5Moving             M537
@@ -39,6 +44,8 @@
 #define M_Mtr5InPos              M540
 #define M_Mtr5FFE                M542
 #define M_Mtr5HomeComplete       M545
+#define M_Mtr5ActPos             M562
+#define M_Mtr5VarJojPos          M572
                                  
 #define M_Mtr6StoppedOnLim       M630
 #define M_Mtr6Moving             M637
@@ -47,6 +54,8 @@
 #define M_Mtr6InPos              M640
 #define M_Mtr6FFE                M642
 #define M_Mtr6HomeComplete       M645
+#define M_Mtr6ActPos             M662
+#define M_Mtr6VarJojPos          M672
                                  
 #define M_Mtr7StoppedOnLim       M730
 #define M_Mtr7Moving             M737
@@ -55,6 +64,8 @@
 #define M_Mtr7InPos              M740
 #define M_Mtr7FFE                M742
 #define M_Mtr7HomeComplete       M745
+#define M_Mtr7ActPos             M762
+#define M_Mtr7VarJojPos          M772
                                  
 #define M_Mtr8StoppedOnLim       M830
 #define M_Mtr8Moving             M837
@@ -63,6 +74,8 @@
 #define M_Mtr8InPos              M840
 #define M_Mtr8FFE                M842
 #define M_Mtr8HomeComplete       M845
+#define M_Mtr8ActPos             M862
+#define M_Mtr8VarJojPos          M872
 
 
 
@@ -74,3 +87,4 @@
 
 
 #endif
+#
