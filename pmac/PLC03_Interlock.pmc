@@ -42,7 +42,7 @@ if (P_InterlockState = kFALSE)
     Disable PLC kPLC_Homing
 
     // Disable request if any
-    P_MotorHomeRequest = kFALSE
+    P_MotorHomeRequest = 0
     
     // Kill Motors and disable motion programs
     CMD"^K"
@@ -70,7 +70,7 @@ else
       // Enable all PLCs that could cause movement
       //*******************
       // Disable request if any
-      P_MotorHomeRequest = kFALSE
+      P_MotorHomeRequest = 0
 
       Enable PLC kPLC_MoveRequest
       Enable PLC kPLC_OpenGap
@@ -121,7 +121,7 @@ if (P_InterlockState = kFALSE)
       DISABLE PLC PLC_Homing
 
       // Disable request if any
-      P_MotorHomeRequest = kFALSE
+      P_MotorHomeRequest = 0
       
       // Abort all moves and stop all motors
       CMD"&1A"
@@ -155,7 +155,7 @@ if (P_InterlockState = kFALSE)
       //*******************
 
       // Disable request if any
-      P_MotorHomeRequest = kFALSE
+      P_MotorHomeRequest = 0
       ENABLE PLC PLC_Homing
       ENABLE PLC PLC_OpenGap
       ENABLE PLC PLC_MoveRequest
@@ -188,7 +188,7 @@ if (M_CS1Running = kFALSE AND P_StopAllStat = kFALSE AND P_InterlockState = kFAL
         if (P_MotorNumber < 5)
           // Disable homing PLC and clear the homing request
           Disable PLC kPLC_Homing
-          P_MotorHomeRequest = kFALSE
+          P_MotorHomeRequest = 0
           P_HomingPLCStopped = kTRUE
           
           // Address the motor and issue stop
@@ -211,7 +211,7 @@ if (M_CS1Running = kFALSE AND P_StopAllStat = kFALSE AND P_InterlockState = kFAL
   // If the Homing PLC has been disabled make sure to enable it.
   if (P_HomingPLCStopped = kTRUE) 
     // Disable any homing request issued in meantime and enable homing PLC
-    P_MotorHomeRequest = kFALSE 
+    P_MotorHomeRequest = 0
     Enable PLC kPLC_Homing
   endif    
 endif

@@ -1,7 +1,10 @@
 #ifndef PLC04_OpenGap_pmc
 #define PLC04_OpenGap_pmc
 
-#include "Constants.h"
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "Timers.pmc"
+#include "MVariables.pmc"
 
 // Open Gap is requested from facility as a result of some issue such as over temp detection etc.
 // The undulator is commanded to open to a full gap as a result.
@@ -22,7 +25,7 @@ if (P_OpenGapExecuting = 0)
     //*******************
     Disable PLC kPLC_MoveRequest
     Disable PLC kPLC_Homing
-    P_MotorHomeRequest = kFALSE
+    P_MotorHomeRequest = 0
     
     // Abort all gap movements and stop all gap motors
     CMD"^A"
@@ -87,7 +90,7 @@ else
     // Enable all PLCs that could cause movement
     // Clear movement conditions
     //*******************
-    P_MotorHomeRequest = kFALSE
+    P_MotorHomeRequest = 0
     ENABLE PLC kPLC_Homing
     ENABLE PLC kPLC_MoveRequest
     P_OpenGapExecuting = kFALSE

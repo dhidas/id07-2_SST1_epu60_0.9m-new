@@ -52,9 +52,16 @@
 #define kPLC_MovementInProgress     2
 #define kPLC_Interlock              3
 #define kPLC_OpenGap                4
+#define kPLC_Homing                 5
 #define kPLC_MoveRequest          XXX
-#define kPLC_Homing               XXX
+#define kPLC_Limits               XXX
 
 
+
+
+#define kPOS_JOG_SUCCESS   7
+#define kNEG_JOG_SUCCESS   8
+#define kMTR1_FFE         -1
+#define kMTR3_FFE         -3
 
 #endif
