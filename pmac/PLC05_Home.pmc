@@ -18,7 +18,7 @@ Open PLC kPLC_Homing Clear
       P_MotorHomeStatus = P_MotorHomeRequest
       P_MotorHomeRequest = 0
 
-      P_UpperHmStatus = kFALSE  // clear status flag
+      P_UpperHmStatus = 0  // clear status flag
 
       // Set home status to not homed for mtr 1 & 3
       M_Mtr1HomeComplete = kFALSE
@@ -40,67 +40,65 @@ Open PLC kPLC_Homing Clear
       I314 = 0
 
       // Command to go to positive limit switch
-      CMD"#1J+ #3J+"
-      I_CS3_Timer2 = ENABLE_DELAY MilliSeconds
+      CMD"#1j+ #3j+"
+      I_CS3_Timer2 = kENABLE_DELAY * kMilliSecond
       while (I_CS3_Timer2 > 0)
       endwhile
 
-      I_CS3_Timer2 = 600000 * 8388608/I10
+      I_CS3_Timer2 = 600000 * kMilliSecond
       while(I_CS3_Timer2 > 0)
-        if(M140=1 AND M340=1 AND M130=1 AND M330=1)  // In-position and on limit true
-          P_UpperHmStatus = POS_JOG_SUCCESS
+        if(M_Mtr1InPos=kTRUE AND M_Mtr3InPos=kTRUE AND M_Mtr1StoppedOnLim=kTRUE AND M_Mtr3StoppedOnLim=kTRUE)  // In-position and on limit true
+          P_UpperHmStatus = kPOS_JOG_SUCCESS
           I_CS3_Timer2 = -1
         endif
-        if(M142=1 OR M342=1)        // Following error
-          if(M142=1)
-            P_UpperHmStatus = MTR1_FFE
-            I_CS3_Timer2 = -1
-          endif
-          if(M342=1)
-            P_UpperHmStatus = MTR3_FFE
-            I_CS3_Timer2 = -1
-          endif
+        // Following error
+        if(M_Mtr1FFE = kTRUE)
+          P_UpperHmStatus = kMTR1_FFE
+          I_CS3_Timer2 = -1
         endif
-        if(M138=1 OR M338=1)        // Motor open loop
-          cmd "#1k #3k"
-          P_UpperHmStatus = POS_JOG_FAILURE
+        if(M_Mtr3FFE = kTRUE)
+          P_UpperHmStatus = kMTR3_FFE
+          I_CS3_Timer2 = -1
+        endif
+        if(M_Mtr1OpenLoop = kTRUE OR M_Mtr3OpenLoop = kTRUE)        // Motor open loop
+          cmd"#1K #3K"
+          P_UpperHmStatus = kPOS_JOG_FAILURE
           I_CS3_Timer2 = -1
         endif
       endwhile
 
-      I_CS3_Timer2 = 200 MilliSeconds
+      I_CS3_Timer2 = 200 * kMilliSecond
       while (I_CS3_Timer2 > 0)
       endwhile
 
       // Back up from positive limit 
-      if (P_UpperHmStatus = POS_JOG_SUCCESS)
+      if (P_UpperHmStatus = kPOS_JOG_SUCCESS)
 
         P_UpperHmStatus = 0          // clear status flag
-                          // don't know why necessary
-        cmd "#1J^-15000"
-        cmd "#3J^-15000"
-        I_CS3_Timer2 = ENABLE_DELAY MilliSeconds
+                         
+        CMD"#1J^-15000"
+        CMD"#3J^-15000"
+        I_CS3_Timer2 = kENABLE_DELAY * kMilliSecond
         while (I_CS3_Timer2 > 0)
         endwhile
 
-        I_CS3_Timer2 = 20000 * 8388608/I10
+        I_CS3_Timer2 = 20000 * kMilliSecond
         while(I_CS3_Timer2 > 0)
-          if(M140=1 AND M340=1)      // In-position true
-            P_UpperHmStatus = NEG_JOG_SUCCESS
+          if(M_Mtr1InPos = kTRUE AND M_Mtr3InPos = kTRUE)      // In-position true
+            P_UpperHmStatus = kNEG_JOG_SUCCESS
             I_CS3_Timer2 = -1
           endif
-          if(M142=1 OR M342=1)      // Following error
-            if(M142=1)
-              P_UpperHmStatus = MTR1_FFE
-              I_CS3_Timer2 = -1
-            endif
-            if(M342=1)
-              P_UpperHmStatus = MTR3_FFE
-              I_CS3_Timer2 = -1
-            endif
+          // Following error
+          if(M_Mtr1FFE = kTRUE)
+            P_UpperHmStatus = kMTR1_FFE
+            I_CS3_Timer2 = -1
           endif
-          if(M138=1 OR M338=1)      // Either set to open loop
-            cmd "#1k #3k"
+          if(M_Mtr3FFE = kTRUE)
+            P_UpperHmStatus = kMTR3_FFE
+            I_CS3_Timer2 = -1
+          endif
+          if(M_Mtr1OpenLoop = kTRUE OR M_Mtr3OpenLoop = kTRUE)      // Either set to open loop
+            CMD"#1k #3k"
             P_UpperHmStatus = POS_JOG_FAILURE
             I_CS3_Timer2 = -1
           endif
