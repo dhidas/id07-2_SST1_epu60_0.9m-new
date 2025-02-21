@@ -11,6 +11,8 @@
 
 #define P_StopAllReq            P300    // Request stop all
 #define P_StopAllStat           P301    // Stop all active
+#define P_MotorNumber           P302    // Used in PLC3
+#define P_HomingPLCStopped      P303    // "
 
 #define P_OpenGapExecuting      P411    // Open gap is being executed
 #define P_InterlockState        P421    // Signals that we are in interlock state. Do not issue movements.
@@ -27,6 +29,17 @@
 #define P_MaximumEngPhase       P1033   // Maximum phase position
 #define P_MaximumOpPhase        P1034   // Maximum user phase
 #define P_MotorHomeRequest      P1055   // 1-4 request homing for motor. 0 no home
+
+#define P_StopMotor1            P1061   // Command to stop the motor 1
+#define P_StopMotor2            P1062   // Command to stop the motor 2
+#define P_StopMotor3            P1063   // Command to stop the motor 3
+#define P_StopMotor4            P1064   // Command to stop the motor 4
+#define P_StopMotor5            P1065   // Command to stop the motor 5
+#define P_StopMotor6            P1066   // Command to stop the motor 6
+#define P_StopMotor7            P1067   // Command to stop the motor 7
+#define P_StopMotor8            P1068   // Command to stop the motor 8
+
+
 
 #define P_GapVelocity           P1114   // Gap velocity
 #define P_GapAccel              P1115   // Gap accel

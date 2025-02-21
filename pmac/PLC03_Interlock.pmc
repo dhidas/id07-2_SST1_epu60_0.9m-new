@@ -14,6 +14,9 @@
 #include "MVariables.pmc"
 #include "Timers.pmc"
 
+// Local only substitutions
+#define localMotorStopCommand P(1060 + P_MotorNumber)
+#define localMotorAmpEnabled M(P_MotorNumber*100 + 39)
 
 Open PLC kPLC_Interlock Clear
 
@@ -39,7 +42,7 @@ if (P_InterlockState = kFALSE)
     Disable PLC kPLC_Homing
 
     // Disable request if any
-    P_MotorHomeRequest = 0      
+    P_MotorHomeRequest = kFALSE
     
     // Kill Motors and disable motion programs
     CMD"^K"
@@ -67,11 +70,11 @@ else
       // Enable all PLCs that could cause movement
       //*******************
       // Disable request if any
-      P_MotorHomeRequest = 0
+      P_MotorHomeRequest = kFALSE
 
-      ENABLE PLC kPLC_Homing
-      ENABLE PLC kPLC_OpenGap
-      ENABLE PLC kPLC_MoveRequest
+      Enable PLC kPLC_MoveRequest
+      Enable PLC kPLC_OpenGap
+      Enable PLC kPLC_Homing
       
       // If OpenGap was active at this time this will cause it to start executing again
       P_OpenGapExecuting = kFALSE
@@ -118,7 +121,7 @@ if (P_InterlockState = kFALSE)
       DISABLE PLC PLC_Homing
 
       // Disable request if any
-      P_MotorHomeRequest = 0
+      P_MotorHomeRequest = kFALSE
       
       // Abort all moves and stop all motors
       CMD"&1A"
@@ -152,7 +155,7 @@ if (P_InterlockState = kFALSE)
       //*******************
 
       // Disable request if any
-      P_MotorHomeRequest = 0
+      P_MotorHomeRequest = kFALSE
       ENABLE PLC PLC_Homing
       ENABLE PLC PLC_OpenGap
       ENABLE PLC PLC_MoveRequest
@@ -166,57 +169,39 @@ if (P_InterlockState = kFALSE)
 endif
 
 
-// XXX HERE
 
 
 // **********************************************
 // Handle Stop commands for individual gap motors
 // **********************************************
-if (M_CS1Running = 0 AND P_StopAllStat = 0 AND P_InterlockState = 0)
+if (M_CS1Running = kFALSE AND P_StopAllStat = kFALSE AND P_InterlockState = kFALSE)
 
   P_MotorNumber = 1
-  P_HomingPLCStopped = 0 // Flag indicating whether the plc has been stopped
+  P_HomingPLCStopped = kFALSE // Flag indicating whether the plc has been stopped
 
+  ; XXX Check.  This makes no sense to me.  I think it only does gap motors
+  ; but why not phase motors???
   while (P_MotorNumber < 5) // For each motor
     // *** Check for stop request & if the motor has been enabled ***
-    if ( P_MotorStopCommand != 0 AND M_MotorAmpEnabled = 1 )
+    if ( localMotorStopCommand != kFALSE AND localMotorAmpEnabled = kTRUE )
         // Special processing for Gap motors
         if (P_MotorNumber < 5)
           // Disable homing PLC and clear the homing request
-          DISABLE PLC PLC_Homing     // plc 5  
-          P_MotorHomeRequest = 0   
-          P_HomingPLCStopped = 1
+          Disable PLC kPLC_Homing
+          P_MotorHomeRequest = kFALSE
+          P_HomingPLCStopped = kTRUE
           
           // Address the motor and issue stop
           ADDRESS#P_MotorNumber
-          //cmd "J/"
-          cmd "k"
-          
-          // Find out the coupled motor 
-          // For motor 1 : 1%2 = 1 -> coupled = 1+1 = 2
-          // For motor 2 : 2%2 = 0 -> coupled = 2-1 = 1
-          // For motor 3 : 3%2 = 1 -> coupled = 3+1 = 4
-          // For motor 4 : 4%2 = 0 -> coupled = 4-1 = 3
-          P_CoupledMotorNumber = P_MotorNumber % 2
-          if (P_CoupledMotorNumber = 1)
-            P_CoupledMotorNumber = P_MotorNumber + 1
-          else
-            P_CoupledMotorNumber = P_MotorNumber - 1
-          endif
-          
-          // If the coupled motor is having a master, stop that one too
-          if (I_CoupledMotorFollowEn = 1 AND M_CoupledMtrAmpEnabled = 1)
-            ADDRESS#P_CoupledMotorNumber
-            cmd "k"
-          endif 
+          CMD"K"
         else
           // Address the motor and issue stop
           ADDRESS#P_MotorNumber
-          cmd "k"
+          CMD"K"
         endif
         
         // Clear the stop 
-        P_MotorStopCommand = 0 
+        localMotorStopCommand = kFALSE
     endif
     
     // Increment for next motor
@@ -224,45 +209,12 @@ if (M_CS1Running = 0 AND P_StopAllStat = 0 AND P_InterlockState = 0)
   endwhile
   
   // If the Homing PLC has been disabled make sure to enable it.
-  if (P_HomingPLCStopped = 1) 
+  if (P_HomingPLCStopped = kTRUE) 
     // Disable any homing request issued in meantime and enable homing PLC
-    P_MotorHomeRequest = 0 
-    ENABLE PLC PLC_Homing      // plc 5
+    P_MotorHomeRequest = kFALSE 
+    Enable PLC kPLC_Homing
   endif    
-endif // if(M_CS1Running = 0 AND P_StopAllStat = 0 AND P_InterlockState = 0)
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+endif
 
 Close
 
