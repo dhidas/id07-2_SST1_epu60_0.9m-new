@@ -78,6 +78,11 @@ M862->D:$00040B // #8 Actual position (1/[Ixx08*32] cts)
 M872->L:$000457 // #8 Variable jog position/distance (cts)
 
 
+
+
+
+
+
 M5180->X:$002040,0,1 ; &1 Program-running bit
 M5280->X:$002140,0,1 ; &2 Program-running bit
 M5680->X:$002540,0,1 ; &6 Program-running bit
