@@ -1,0 +1,9 @@
+#ifndef QVariables_pmc
+#define QVariables_pmc
+
+#define Q_X_KinDemandPos  Q77
+
+
+
+
+#endif

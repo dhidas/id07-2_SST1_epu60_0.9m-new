@@ -1,0 +1,99 @@
+#ifndef PLC04_OpenGap_pmc
+#define PLC04_OpenGap_pmc
+
+#include "Constants.h"
+
+// Open Gap is requested from facility as a result of some issue such as over temp detection etc.
+// The undulator is commanded to open to a full gap as a result.
+Open PLC kPLC_OpenGap Clear
+
+if (P_OpenGapExecuting = 0)
+
+  // If OpenGap signal arrives, handle it
+  // !!! Make sure that we ignore the situation in StopAll/InterlockState
+  // Also do not execute if any gap motor is disabled (we do not want to enable on-purpose disabled motor)
+  // logic presently OpenGapSignal = 0 is false, sys okay   1 = true
+  if (M_OpenGapSignalIn != kLOW AND P_InterlockState = kFALSE AND P_StopAllStat = kFALSE)
+    P_OpenGapExecuting = 1
+    
+    //********************
+    // Disable all PLCs that could cause movement
+    // Clear movement requests
+    //*******************
+    Disable PLC kPLC_MoveRequest
+    Disable PLC kPLC_Homing
+    P_MotorHomeRequest = kFALSE
+    
+    // Abort all gap movements and stop all gap motors
+    CMD"^A"
+    // Wait StopTime ms for them to stop
+    I_CS3_Timer1 = kSTOP_TIME * kMilliSecond
+    while (I_CS3_Timer1 > 0)
+    endwhile
+      
+    // Make sure to bring the girders in Gap Coordinated mode
+    if (P_UpperGirderMode != kGapCoordinated OR P_LowerGirderMode != kGapCoordinated)
+      // State coordinated movement for both girders
+      P_UpperGirderModeReq = kGapCoordinated
+      P_LowerGirderModeReq = kGapCoordinated
+      while (P_UpperGirderMode != kGapCoordinated OR P_LowerGirderMode != kGapCoordinated) 
+      endwhile 
+      
+      // Added aditional delay to make sure the OpenGAP motion program sees the change
+      I_CS3_Timer1 = kGirderChangeTime * kMilliSecond
+      while (I_CS3_Timer1 > 0)
+      endwhile
+    endif
+    
+    // Enable motors (close loops)
+    CMD"#1j/#3j/"
+    I_CS3_Timer1 = kSTOP_TIME * kMilliSecond
+    while (I_CS3_Timer1 > 0)
+    endwhile
+  
+    // Finally execute OpenGap movement
+    ADDRESS&1
+    
+    // Go to MaximumGap, minus the offset
+    Q_X_KinDemandPos = P_MaximumGap
+      Q_X_KinDemandPos = P_MaximumGap - ABS(P_CoordinatedCenterOffset)
+    CMD"B4R"
+  endif
+else
+  // Signal cleared 
+  if (M_OpenGapSignalIn = kLOW)
+  
+    // If we were still moving, stop movement  
+    if (M_CS1Running = 1)
+      // If there is movement abort it.
+      // Abort all moves and stop all motors
+      ADDRESS&1
+      CMD"^A"
+        
+      // Wait StopTime ms for them to stop
+      I_CS3_Timer1 = kSTOP_TIME * kMilliSecond
+      while (I_CS3_Timer1 > 0)
+      endwhile
+      
+      // Kill motors      
+      CMD"^K"
+      // Wait StopTime ms for them to stop
+      I_CS3_Timer1 = kSTOP_TIME * kMilliSecond
+      while (I_CS3_Timer1 > 0)
+      endwhile      
+    endif  
+
+    //********************
+    // Enable all PLCs that could cause movement
+    // Clear movement conditions
+    //*******************
+    P_MotorHomeRequest = kFALSE
+    ENABLE PLC kPLC_Homing
+    ENABLE PLC kPLC_MoveRequest
+    P_OpenGapExecuting = kFALSE
+  endif
+endif
+
+Close
+
+#endif

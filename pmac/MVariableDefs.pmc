@@ -2,6 +2,7 @@
 #define MVariableDefss_pmc
 #
 M27->Y:$78804,2,1     ;  Input 27 J7   Pin#6   (OUT_STAT2, Digital input indicating SafetyPLC has been tripped)
+M29->Y:$78804,4,1 //  Input 29 J7   Pin#7   (Shut Down Immediately Signal coming from Safety PLC or Facility)
 
 M33->Y:$078802,0,1    ; Output 1 J6   Pin#12    Pin#30  Upper gap motor M1  -  turns off Shutdown mode on external drive
 M34->Y:$078802,1,1    ; Output 2 J6   Pin#13    Pin#31  

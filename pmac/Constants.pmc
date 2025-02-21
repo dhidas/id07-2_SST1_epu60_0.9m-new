@@ -34,6 +34,8 @@
 #define kTIMEOUT_KILL         600
 #define kTIMEOUT_FAULTRESET   500
 #define kTIMEOUT_ABORT        300
+#define kSTOP_TIME            500
+#define kGirderChangeTime    2000
 
 #define kLimitMargin          50    // in cts
 
@@ -49,7 +51,7 @@
 #define kPLC_Initialize             1
 #define kPLC_MovementInProgress     2
 #define kPLC_Interlock              3
-#define kPLC_OpenGap              XXX
+#define kPLC_OpenGap                4
 #define kPLC_MoveRequest          XXX
 #define kPLC_Homing               XXX
 

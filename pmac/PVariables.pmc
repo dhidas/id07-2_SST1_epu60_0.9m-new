@@ -1,12 +1,13 @@
 #ifndef PVariables_pmc
 #define PVariables_pmc
 
-#define P_UpperGirderModeReq    P201    // Upper girder mode setpoint
-#define P_UpperGirderMode       P202    // Upper girder mode readback
-#define P_LowerGirderModeReq    P203    // Lower girder mode setpoint
-#define P_LowerGirderMode       P204    // Lower girder mode readback
+#define P_MovementInProgress      P200    // Movement is in progress
+#define P_UpperGirderModeReq      P201    // Upper girder mode setpoint
+#define P_UpperGirderMode         P202    // Upper girder mode readback
+#define P_LowerGirderModeReq      P203    // Lower girder mode setpoint
+#define P_LowerGirderMode         P204    // Lower girder mode readback
+#define P_CoordinatedCenterOffset P206    // Offset from the zero position for Gap coordinated movements
 
-#define P_MovementInProgress    P200    // Movement is in progress
 #define P_MIPCounter            P215    // Motor Moving Light counter
 
 #define P_StopAllReq            P300    // Request stop all

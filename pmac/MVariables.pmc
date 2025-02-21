@@ -4,7 +4,7 @@
 #include "MVariableDefs.pmc"
 
 #define M_SafetyPLCIn             M27 ; (0 - tripped, 1 - okay)  PLC
-
+#define M_OpenGapSignalIn         M29 ; Shut Down Immediately Signal coming from Safety PLC or Facility? (0=shut down, 1=sys okay)
 #define M_Mtr1_Amp_Enable         M33
 #define M_Mtr3_Amp_Enable         M35
 #define M_Mtr5_Amp_Enable         M37
