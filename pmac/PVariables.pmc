@@ -26,6 +26,18 @@
 #define P_TmpMtr3HiLim          P506
 #define P_TmpMtr3LoLim          P507
 
+// PLC 06 PLC 07
+#define P_SplineOK          P600
+#define P_SplineERROR       P601
+#define P_DYDX              P605
+#define P_INDEX             P609
+#define P_SIG               P610
+#define P_P                 P611
+#define P_SplineInCalc      P614
+
+// P620-659 used for gap/energy data
+
+// P720-739 user for spline
 
 #define P_GapMotor1Offset       P1011   // Gap motor 1 GU offset
 #define P_GapMotor3Offset       P1013   // Gap motor 3 GL offset

@@ -5,5 +5,6 @@
 #define I_CS2_Timer2        I5212     // C.S.2 timer 2 (Used in PLC3)
 #define I_CS3_Timer1        I5311     // C.S.3 timer 1 (Used in PLC4)
 #define I_CS3_Timer2        I5312     // C.S.3 timer 2 (Used in PLC5)
+#define I_CS4_Timer1        I5411     // C.S.4 timer 1 (Used in PLC6)
 
 #endif

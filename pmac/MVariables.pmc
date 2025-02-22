@@ -80,6 +80,38 @@
 
 
 
+
+// For PLC init of splines
+#define M_vXm     M4000
+#define M_iXm     M4001
+#define M_vX      M4002
+#define M_iX      M4003
+#define M_vXp     M4004
+#define M_iXp     M4005
+#define M_vYm     M4006
+#define M_iYm     M4007
+#define M_vY      M4008
+#define M_iY      M4009
+#define M_vYp     M4010
+#define M_iYp     M4011
+#define M_vYPPm   M4012
+#define M_iYPPm   M4013
+#define M_vYPP    M4014
+#define M_iYPP    M4015
+#define M_vYPPp   M4016
+#define M_iYPPp   M4017
+#define M_vXPPm   M4018
+#define M_iXPPm   M4019
+#define M_vXPP    M4020
+#define M_iXPP    M4021
+#define M_vXPPp   M4022
+#define M_iXPPp   M4023
+#define M_vU0m    M4024
+#define M_iU0m    M4025
+#define M_vU0     M4026
+#define M_iU0     M4027
+
+
 #define M_CS1Running             M5180
 #define M_CS2Running             M5280
 #define M_CS6Running             M5680

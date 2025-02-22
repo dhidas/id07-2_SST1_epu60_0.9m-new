@@ -1,0 +1,234 @@
+#include "MVariables.pmc"
+#include "PVariables.pmc"
+#include "Constants.pmc"
+#include "Timers.pmc"
+
+
+// Local define only
+#define localUI P(kSplineUStart + P_INDEX)
+#define localU0 P(kSplineUStart)
+
+// Default spline data is set here
+P620=   100.000    P640=   16180.575
+P621=   157.895    P641=   20511.413
+P622=   215.789    P642=   24406.112
+P623=   273.684    P643=   27137.775
+P624=   331.579    P644=   29537.384
+P625=   389.474    P645=   31660.283
+P626=   447.368    P646=   33531.471
+P627=   505.263    P647=   35331.942
+P628=   563.158    P648=   36984.597
+P629=   621.053    P649=   38605.412
+P630=   678.947    P650=   40170.510
+P631=   736.842    P651=   41736.350
+P632=   794.737    P652=   43302.614
+P633=   852.632    P653=   44930.645
+P634=   910.526    P654=   46590.920
+P635=   968.421    P655=   48368.501
+P636=  1026.316    P656=   50258.585
+P637=  1084.211    P657=   52283.675
+P638=  1142.105    P658=   54678.711
+P639=  1200.000    P659=   57212.478
+
+
+/***
+    This PLC calculates the spline coefficients.  The harmonic
+    here is relative to the input data.  If the harmonic is
+    changed this PLC MUST be rerun.
+ 
+    X - Energy in eV
+    Y - Gap in um
+    Harmonic - int
+***/
+
+Open PLC kPLC_FlySplineCalc Clear
+
+// If the fly CS is running a program ignore this request
+if (M_CS6Running = 0)
+
+  // Start with spline not OK and no ERROR and InCalc
+  P_SplineOK = 0
+  P_SplineERROR = 0
+  P_SplineInCalc = 1
+
+
+  // Check both X and Y are monotonic increasing 1-1 data
+  P_INDEX = 0
+  while (P_INDEX < kNSPLINE - 1)
+    if (P(kSplineXStart + P_INDEX + 1) < P(kSplineXStart + P_INDEX) or P(kSplineYStart + P_INDEX + 1) < P(kSplineYStart + P_INDEX))
+      P_SplineOK = 0
+      P_SplineERROR = 1
+    endif
+    P_INDEX = P_INDEX + 1
+  endw
+
+  // Calculate derivatives
+  P(kSplineYPPStart) = -0.5
+  P_DYDX = (P(kSplineYStart + 1) - P(kSplineYStart)) / (P(kSplineXStart + 1) - P(kSplineXStart))
+  P(kSplineUStart) = 3. / (P(kSplineXStart + 1) - P(kSplineXStart)) * P_DYDX - P_DYDX
+
+  P_INDEX = 1
+  while (P_INDEX < kNSPLINE - 1)
+    P_SIG = (P(kSplineXStart + P_INDEX) - P(kSplineXStart + P_INDEX - 1)) / (P(kSplineXStart + P_INDEX + 1) - P(kSplineXStart + P_INDEX - 1))
+    P_P = P_SIG * P(kSplineYPPStart + P_INDEX - 1) + 2
+    P(kSplineYPPStart + P_INDEX) = (P_SIG - 1.) / P_P
+    localUI = (P(kSplineYStart + P_INDEX + 1) - P(kSplineYStart + P_INDEX)) / (P(kSplineXStart + P_INDEX + 1) - P(kSplineXStart + P_INDEX))
+    localUI = localUI - (P(kSplineYStart + P_INDEX) - P(kSplineYStart + P_INDEX - 1)) / (P(kSplineXStart + P_INDEX) - P(kSplineXStart + P_INDEX - 1))
+    localUI = (6*localUI/(P(kSplineXStart + P_INDEX + 1) - P(kSplineXStart + P_INDEX - 1)) - P_SIG * P(kSplineUStart + P_INDEX - 1)) / P_P
+  endwhile
+
+endif
+P_SplineInCalc = kFALSE
+Disable PLC 6
+Close
+
+
+;  // Set min and max eV from spline
+;  P_SplineEvMin = M_vX
+;  M_iX = M_iX + kNSPLINE - 1
+;  P_SplineEvMax = M_vX
+;  M_iX = M_iX - kNSPLINE + 1
+;
+;  // Force out here if there is an error (PLC exit only at endw)
+;  if (P_SplineERROR = 1)
+;      disable plc 6
+;      Timer06 = 250 * kMilliSecond
+;      while (Timer06 > 0) endw
+;  endif
+;
+;  P_DYDX0 = (M_vYp - M_vY) / (M_vXp - M_vX)
+;  M_vYPP = -0.5
+;  M_vU0 = (3. / (M_vXp - M_vX)) * ((M_vYp - M_vY) / (M_vXp - M_vX) - P_DYDX0)
+;
+;  P_INDEX = 1
+;  while (P_INDEX < kNSPLINE - 1)
+;      M_iXm   = M_iXm   + 1
+;      M_iX    = M_iX    + 1
+;      M_iXp   = M_iXp   + 1
+;      M_iYm   = M_iYm   + 1
+;      M_iY    = M_iY    + 1
+;      M_iYp   = M_iYp   + 1
+;      M_iYPPm = M_iYPPm + 1
+;      M_iYPP  = M_iYPP  + 1
+;      M_iYPPp = M_iYPPp + 1
+;      M_iXPPm = M_iXPPm + 1
+;      M_iXPP  = M_iXPP  + 1
+;      M_iXPPp = M_iXPPp + 1
+;      M_iU0m  = M_iU0m  + 1
+;      M_iU0   = M_iU0   + 1
+;
+;      P_SIG = (M_vX - M_vXm) / (M_vXp - M_vXm)
+;      P_P = P_SIG * M_vYPPm + 2
+;      M_vYPP = (P_SIG - 1.) / P_P
+;      M_vU0 = (M_vYp - M_vY) / (M_vXp - M_vX) - (M_vY - M_vYm) / (M_vX - M_vXm)
+;      M_vU0 = (6. * M_vU0 / (M_vXp - M_vXm) - P_SIG * M_vU0m) / P_P
+;      P_INDEX = P_INDEX + 1
+;  endw
+;
+;  // Here P_INDEX is kNSPLLINE-1, and vectors are i P_INDEX-1 (N-2)
+;
+;  P_DYDXN = (M_vYp - M_vY) / (M_vXp - M_vX)
+;  P_QN = 0.5
+;  P_UN = (3. / (M_vXp - M_vX)) * (P_DYDXN - (M_vYp - M_vY) / (M_vXp - M_vX))
+;  M_vYPPp = (P_UN - P_QN * M_vU0) / (P_QN * M_vYPP + 1)
+;
+;  // Reset index here
+;  P_INDEX = kNSPLINE - 2
+;  while (P_INDEX > -1)
+;      M_vYPP = M_vYPP * M_vYPPp + M_vU0
+;
+;      // dec index here
+;      if (P_INDEX > 0)
+;          M_iXm   = M_iXm   - 1
+;          M_iX    = M_iX    - 1
+;          M_iXp   = M_iXp   - 1
+;          M_iYm   = M_iYm   - 1
+;          M_iY    = M_iY    - 1
+;          M_iYp   = M_iYp   - 1
+;          M_iYPPm = M_iYPPm - 1
+;          M_iYPP  = M_iYPP  - 1
+;          M_iYPPp = M_iYPPp - 1
+;          M_iXPPm = M_iXPPm - 1
+;          M_iXPP  = M_iXPP  - 1
+;          M_iXPPp = M_iXPPp - 1
+;          M_iU0m  = M_iU0m  - 1
+;          M_iU0   = M_iU0   - 1
+;      endif
+;
+;      P_INDEX = P_INDEX - 1
+;  endw
+;
+;
+;
+;  P_DXDY0 = (M_vXp - M_vX) / (M_vYp - M_vY)
+;  M_vXPP = -0.5
+;  M_vU0 = (3. / (M_vYp - M_vY)) * ((M_vXp - M_vX) / (M_vYp - M_vY) - P_DXDY0)
+;
+;  P_INDEX = 1
+;  while (P_INDEX < kNSPLINE - 1)
+;      M_iXm   = M_iXm   + 1
+;      M_iX    = M_iX    + 1
+;      M_iXp   = M_iXp   + 1
+;      M_iYm   = M_iYm   + 1
+;      M_iY    = M_iY    + 1
+;      M_iYp   = M_iYp   + 1
+;      M_iYPPm = M_iYPPm + 1
+;      M_iYPP  = M_iYPP  + 1
+;      M_iYPPp = M_iYPPp + 1
+;      M_iXPPm = M_iXPPm + 1
+;      M_iXPP  = M_iXPP  + 1
+;      M_iXPPp = M_iXPPp + 1
+;      M_iU0m  = M_iU0m  + 1
+;      M_iU0   = M_iU0   + 1
+;
+;      P_SIG = (M_vY - M_vYm) / (M_vYp - M_vYm)
+;      P_P = P_SIG * M_vXPPm + 2
+;      M_vXPP = (P_SIG - 1.) / P_P
+;      M_vU0 = (M_vXp - M_vX) / (M_vYp - M_vY) - (M_vX - M_vXm) / (M_vY - M_vYm)
+;      M_vU0 = (6. * M_vU0 / (M_vYp - M_vYm) - P_SIG * M_vU0m) / P_P
+;      P_INDEX = P_INDEX + 1
+;  endw
+;
+;  // Here P_INDEX is kNSPLLINE-1, and vectors are i P_INDEX-1 (N-2)
+;
+;  P_DXDYN = (M_vXp - M_vX) / (M_vYp - M_vY)
+;  P_QN = 0.5
+;  P_UN = (3. / (M_vYp - M_vY)) * (P_DXDYN - (M_vXp - M_vX) / (M_vYp - M_vY))
+;  M_vXPPp = (P_UN - P_QN * M_vU0) / (P_QN * M_vXPP + 1)
+;
+;  // Reset index here
+;  P_INDEX = kNSPLINE - 2
+;  while (P_INDEX > -1)
+;      M_vXPP = M_vXPP * M_vXPPp + M_vU0
+;
+;      // dec index here
+;      if (P_INDEX > 0)
+;          M_iXm   = M_iXm   - 1
+;          M_iX    = M_iX    - 1
+;          M_iXp   = M_iXp   - 1
+;          M_iYm   = M_iYm   - 1
+;          M_iY    = M_iY    - 1
+;          M_iYp   = M_iYp   - 1
+;          M_iYPPm = M_iYPPm - 1
+;          M_iYPP  = M_iYPP  - 1
+;          M_iYPPp = M_iYPPp - 1
+;          M_iXPPm = M_iXPPm - 1
+;          M_iXPP  = M_iXPP  - 1
+;          M_iXPPp = M_iXPPp - 1
+;          M_iU0m  = M_iU0m  - 1
+;          M_iU0   = M_iU0   - 1
+;      endif
+;
+;      P_INDEX = P_INDEX - 1
+;  endw
+;
+;  if (P_SplineERROR = 0)
+;      P_SplineOK = 1
+;  endif
+;
+;  P_SplineInCalc = 0
+;
+;endif
+;
+;Disable PLC 6
+;Close

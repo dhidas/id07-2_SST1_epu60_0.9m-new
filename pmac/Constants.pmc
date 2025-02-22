@@ -57,6 +57,7 @@
 #define kPLC_Interlock              3
 #define kPLC_OpenGap                4
 #define kPLC_Homing                 5
+#define kPLC_FlySplineCalc          6
 #define kPLC_MoveRequest            8
 #define kPLC_Limits                13
 #define kPLC_HomeMtr1              22
@@ -74,5 +75,20 @@
 #define kMTR3_FFE         -3
 #define kPOS_JOG_FAILURE  -7
 #define kUPPER_HM_FAILURE -8
+
+
+
+
+#define kNSPLINE 20
+#define kSplineXStart 620
+#define kSplineYStart 640
+#define kSplineYPPStart 660
+#define kSplineUStart 680
+#define kvXStart    $626C ; Vector starting points for spline      P620
+#define kvYStart    $6280 ; These should match the corresponding   P640
+#define kvYPPStart  $6294 ; values for the initial M-variables     P660
+#define kvXPPStart  $62A8 ; defined in MVariableDefs.pmc           P680
+#define kvU0Start   $62D0 ;                                        P720
+
 
 #endif
