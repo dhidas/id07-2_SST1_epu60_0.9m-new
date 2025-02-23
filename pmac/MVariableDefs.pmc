@@ -25,6 +25,7 @@ M140->Y:$0000C0,0,1 // #1 Background in-position bit
 M142->Y:$0000C0,2,1 // #1 Fatal-following-error bit
 M145->Y:$0000C0,10,1 // #1 Home-complete bit
 M162->D:$00008B // #1 Actual position (1/[Ixx08*32] cts)
+M164->D:$0000CC // #1 Position bias (1/[Ixx08*32] cts)
 M172->L:$0000D7 // #1 Variable jog position/distance (cts)
 
 M330->Y:$0001C0,11,1 // #3 Stopped-on-position-limit bit
@@ -35,6 +36,7 @@ M340->Y:$0001C0,0,1 // #3 Background in-position bit
 M342->Y:$0001C0,2,1 // #3 Fatal-following-error bit
 M345->Y:$0001C0,10,1 // #3 Home-complete bit
 M362->D:$00018B // #3 Actual position (1/[Ixx08*32] cts)
+M364->D:$0001CC // #3 Position bias (1/[Ixx08*32] cts)
 M372->L:$0001D7 // #3 Variable jog position/distance (cts)
 
 M530->Y:$0002C0,11,1 // #5 Stopped-on-position-limit bit

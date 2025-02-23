@@ -48,8 +48,12 @@
 #define P_UNX               P613
 
 // P620-659 used for gap/energy data
+#define P_NextToLastEnergyPoint P638
+#define P_LastEnergyPoint       P639
+#define P_NextToLastGapPoint    P658
+#define P_LastGapPoint          P659
 
-// P720-739 user for spline
+// P660-739 user for spline
 
 #define P_GapMotor1Offset       P1011   // Gap motor 1 GU offset
 #define P_GapMotor3Offset       P1013   // Gap motor 3 GL offset

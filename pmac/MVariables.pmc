@@ -25,6 +25,7 @@
 #define M_Mtr1FFE                M142
 #define M_Mtr1HomeComplete       M145
 #define M_Mtr1ActPos             M162
+#define M_Mtr1PosBias            M164
 #define M_Mtr1VarJojPos          M172
 
 #define M_Mtr3StoppedOnLim       M330
@@ -35,6 +36,7 @@
 #define M_Mtr3FFE                M342
 #define M_Mtr3HomeComplete       M345
 #define M_Mtr3ActPos             M362
+#define M_Mtr3PosBias            M364
 #define M_Mtr3VarJojPos          M372
                                  
 #define M_Mtr5StoppedOnLim       M530

@@ -1,0 +1,69 @@
+#ifndef PLC07_FlyPosReporting_pmc
+#define PLC07_FlyPosReporting_pmc
+
+#include "QVariables.pmc"
+#include "MVariables.pmc"
+#include "PVariables.pmc"
+#include "Constants.pmc"
+
+// Local defines for readability
+#define lXhi P(kSplineXStart + Q_PRTmp_khi)
+#define lXlo P(kSplineXStart + Q_PRTmp_klo)
+#define lXPPhi P(kSplineXPPStart + Q_PRTmp_khi)
+#define lXPPlo P(kSplineXPPStart + Q_PRTmp_klo)
+#define lYk P(kSplineYStart + Q_PRTmp_k)
+
+Open PLC kPLCFlyPosReporting Clear
+
+ADDRESS &6
+
+// Calculate gap from motor positions
+Q_PR_Mtr1Tmp = ((M_Mtr1ActPos + M_Mtr1PosBias)/(I108*32) + P_GapMotor1Offset) * kmm2um / kEncCntsPerMm
+Q_PR_Mtr3Tmp = ((M_Mtr3ActPos + M_Mtr3PosBias)/(I308*32) + P_GapMotor3Offset) * kmm2um / kEncCntsPerMm
+Q_PRTmp_Gap  = (Q_PR_Mtr1Tmp + Q_PR_Mtr3Tmp)    // gap
+
+// Fake some energy if we're outside of the table on the high end
+if (Q_PRTmp_Gap > P_LastGapPoint)
+  Q_PRTmp_Slope = (P_LastGapPoint - P_NextToLastGapPoint) / (P_LastEnergyPoint - P_NextToLastEnergyPoint)
+  Q_PRTmp_Offset = P_LastGapPoint - Q_PRTmp_Slope * P_LastEnergyPoint
+
+  Q_PRTmp_EnGap = (Q_PRTmp_Gap - Q_PRTmp_Offset) / Q_PRTmp_Slope
+else
+  Q_PRTmp_klo = 0
+  Q_PRTmp_khi = kNSPLINE - 1
+
+  while (Q_PRTmp_khi - Q_PRTmp_klo > 1)
+    Q_PRTmp_k = INT((Q_PRTmp_khi + Q_PRTmp_klo)/2)
+    if (lYk > Q_PRTmp_Gap)
+      Q_PRTmp_khi = Q_PRTmp_k
+    else
+      Q_PRTmp_klo = Q_PRTmp_k
+    endif
+  endw
+
+  Q_PRTmp_h = lXhi - lXlo
+  Q_PRTmp_a = (lXhi - Q_PRTmp_Gap) / Q_PRTmp_h
+  Q_PRTmp_b = (Q_PRTmp_Gap - lXlo) / Q_PRTmp_h
+
+  Q_PRTmp_EnGap=P_SplineHarmonic*(Q_PRTmp_a*lXlo+Q_PRTmp_b*lXhi+((Q_PRTmp_a*Q_PRTmp_a*Q_PRTmp_a-Q_PRTmp_a)*lXPPlo+(Q_PRTmp_b*Q_PRTmp_b*Q_PRTmp_b-Q_PRTmp_b)*lXPPhi)*Q_PRTmp_h*Q_PRTmp_h/6)
+endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Close
+
+#endif

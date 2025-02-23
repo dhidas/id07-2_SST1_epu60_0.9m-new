@@ -3,6 +3,18 @@
 
 #define Q_X_KinDemandPos  Q77
 
+#define Q_PRTmp_Gap      Q328
+#define Q_PRTmp_klo      Q329
+#define Q_PRTmp_khi      Q330
+#define Q_PRTmp_k        Q331
+#define Q_PRTmp_h        Q332
+#define Q_PRTmp_a        Q333
+#define Q_PRTmp_b        Q334
+#define Q_PRTmp_EnGap    Q335
+#define Q_PR_Mtr1Tmp     Q338
+#define Q_PR_Mtr3Tmp     Q339
+#define Q_PRTmp_Slope    Q340
+#define Q_PRTmp_Offset   Q341
 
 
 

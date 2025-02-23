@@ -1,3 +1,6 @@
+#ifndef PLC06_FlySplineCalc_pmc
+#define PLC06_FlySplineCalc_pmc
+
 #include "MVariables.pmc"
 #include "PVariables.pmc"
 #include "Constants.pmc"
@@ -140,3 +143,4 @@ Disable PLC 6
 Close
 
 
+#endif

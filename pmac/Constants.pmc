@@ -58,6 +58,7 @@
 #define kPLC_OpenGap                4
 #define kPLC_Homing                 5
 #define kPLC_FlySplineCalc          6
+#define kPLCFlyPosReporting         7
 #define kPLC_MoveRequest            8
 #define kPLC_Limits                13
 #define kPLC_HomeMtr1              22
