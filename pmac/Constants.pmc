@@ -82,13 +82,10 @@
 #define kNSPLINE 20
 #define kSplineXStart 620
 #define kSplineYStart 640
-#define kSplineYPPStart 660
-#define kSplineUStart 680
-#define kvXStart    $626C ; Vector starting points for spline      P620
-#define kvYStart    $6280 ; These should match the corresponding   P640
-#define kvYPPStart  $6294 ; values for the initial M-variables     P660
-#define kvXPPStart  $62A8 ; defined in MVariableDefs.pmc           P680
-#define kvU0Start   $62D0 ;                                        P720
+#define kSplineXPPStart 660
+#define kSplineYPPStart 680
+#define kSplineUXStart 700
+#define kSplineUYStart 720
 
 
 #endif

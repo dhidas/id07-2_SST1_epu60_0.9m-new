@@ -29,11 +29,23 @@
 // PLC 06 PLC 07
 #define P_SplineOK          P600
 #define P_SplineERROR       P601
+#define P_SplineHarmonic    P602
+#define P_SplineEvMin       P603
+#define P_SplineEvMax       P604
 #define P_DYDX              P605
+#define P_DXDY              P606
+#define P_DYDXN             P607
+#define P_DXDYN             P608
 #define P_INDEX             P609
-#define P_SIG               P610
-#define P_P                 P611
+#define P_SIGY              P610
+#define P_PY                P611
+#define P_QNY               P612
+#define P_UNY               P613
 #define P_SplineInCalc      P614
+#define P_SIGX              P610
+#define P_PX                P611
+#define P_QNX               P612
+#define P_UNX               P613
 
 // P620-659 used for gap/energy data
 
