@@ -30,8 +30,6 @@
 #define P_SplineOK          P600
 #define P_SplineERROR       P601
 #define P_SplineHarmonic    P602
-#define P_SplineEvMin       P603
-#define P_SplineEvMax       P604
 #define P_DYDX              P605
 #define P_DXDY              P606
 #define P_DYDXN             P607
@@ -48,12 +46,22 @@
 #define P_UNX               P618
 
 // P620-659 used for gap/energy data
-#define P_NextToLastEnergyPoint P638
-#define P_LastEnergyPoint       P639
-#define P_NextToLastGapPoint    P658
-#define P_LastGapPoint          P659
+#define P_SplineEvMin           P(kSplineXStart)
+#define P_SplineEvMax           P(kSplineXStart + kNSPLINE - 1)
+#define P_NextToLastEnergyPoint P(kSplineXStart + kNSPLINE - 2)
+#define P_LastEnergyPoint       P(kSplineXStart + kNSPLINE - 1)
+#define P_NextToLastGapPoint    P(kSplineYStart + kNSPLINE - 2)
+#define P_LastGapPoint          P(kSplineYStart + kNSPLINE - 1)
 
 // P660-739 user for spline
+#define P_MirrorMtrPosPR          P780
+#define P_GratingMtrPosPR         P781
+#define P_MirrorPosPR             P782
+#define P_GratingPosPR            P783
+#define P_PhiPR                   P784
+#define P_BetaPR                  P785
+#define P_AlphaPR                 P786
+#define P_LambdaPR                P787
 
 #define P_GapMotor1Offset       P1011   // Gap motor 1 GU offset
 #define P_GapMotor3Offset       P1013   // Gap motor 3 GL offset
@@ -85,12 +93,23 @@
 #define P_PhaseVelocity         P1119   // Phase velocity
 #define P_PhaseAccel            P1120   // Phase accel
 
+#define P_BetaPrime             P1601   // Beta prime read from PGM
+#define P_K0                    P1602   // K0 from PGM
+#define P_MirrorOffset          P1604   // Mirror offset read from PGM
+#define P_GratingOffset         P1605   // Grating offset read from PGM
+#define P_MDiffractionOrder     P1610   // Diffraction order from PGM
+#define P_Lambda                P1615   // Lambda from PGM
+#define P_MonoOffsetDir         P1616   // Offset direction from PGM (or static)
+#define P_BeamInAngle           P1620   // Beam-In angle read from PGM
 
 #define P_Mtr5HomeFinish        P2405
 #define P_Mtr6HomeFinish        P2505
 #define P_Mtr7HomeFinish        P2605
 #define P_Mtr8HomeFinish        P2705
 
-
+#define P_Mtr9_Resolution    P4809
+#define P_Mtr10_Resolution   P4810
+#define P_Mtr9_Offset        P4909
+#define P_Mtr10_Offset       P4910
 
 #endif

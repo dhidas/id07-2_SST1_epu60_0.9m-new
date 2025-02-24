@@ -174,10 +174,6 @@ if (M_CS6Running = 0)
     P_INDEX = P_INDEX - 1
   endwhile
 
-  // Set the ev min and max for convenience
-  P_SplineEvMin = P(kSplineXStart)
-  P_SplineEvMax = P(kSplineXStart + kNSPLINE - 1)
-
 endif
 
 if (P_SplineERROR = 0)

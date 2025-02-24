@@ -88,5 +88,11 @@
 #define kSplineUXStart 700
 #define kSplineUYStart 720
 
+#define kDegrees 0
+
+
+
+#define kEV_TO_MM 0.0012398419
+
 
 #endif

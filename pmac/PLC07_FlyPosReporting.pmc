@@ -50,12 +50,26 @@ else
   Q_PRTmp_EnGap=P_SplineHarmonic*(Q_PRTmp_a*lXlo+Q_PRTmp_b*lXhi+((Q_PRTmp_a*Q_PRTmp_a*Q_PRTmp_a-Q_PRTmp_a)*lXPPlo+(Q_PRTmp_b*Q_PRTmp_b*Q_PRTmp_b-Q_PRTmp_b)*lXPPhi)*Q_PRTmp_h*Q_PRTmp_h/6)
 endif
 
+#define MIR_MTR_POS_PR (MIR_PITCH_RES*(M_MTR9_ACTUAL_POS+M_MTR9_POS_BIAS)/(I908*32)+MIR_PITCH_OFF)
+#define GRT_MTR_POS_PR (GRT_PITCH_RES*(M_MTR10_ACTUAL_POS+M_MTR10_POS_BIAS)/(I1008*32)+GRT_PITCH_OFF)
 
+P_MirrorMtrPosPR  = P_Mtr9_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr9_Offset
+P_GratingMtrPosPR = P_Mtr10_Resolution*(M_Mtr10ActPos + M_Mtr10PosBias)/(I1008*32) + P_Mtr10_Offset
 
+P_MirrorPosPR = P_MirrorMtrPosPR - P_MirrorOffset - P_BeamInAngle
+P_GratingPosPR = P_GratingMtrPosPR - P_GratingOffset - P_BeamInAngle
 
+I15=kDegrees
+P_PhiPR = 90 - P_MirrorMtrPosPR * P_MonoOffsetDir
+P_BetaPR = P_GratingPosPR * P_MonoOffsetDir - 90 + P_BetaPrime
+P_AlphaPR = 2 * P_PhiPR + P_BetaPR - P_BetaPrime
+P_LambdaPR = (SIN(P_AlphaPR) + SIN(P_BetaPR)) / (P_MDiffractionOrder * P_K0)
+Q_PRTmp_PGM = kEV_TO_MM / P_Lambda
+Q_PRTmp_CFF  = COS(-1*P_BetaPR) / COS(P_AlphaPR)
 
-
-
+Q_X_KinReportPos = Q_PRTmp_EnGap
+Q_Y_KinReportPos = Q_PRTmp_PGM
+Q_Z_KinReportPos = Q_PRTmp_CFF
 
 
 
