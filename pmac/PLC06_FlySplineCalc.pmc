@@ -7,6 +7,52 @@
 #include "Timers.pmc"
 
 
+
+// the following spline calculation is the pmac equivalent of the below c++ code
+// (it is easier for me to look at the c++...)
+// The first part is setting the coefficients
+;;;;      T const dydx0 = (fY[1] - fY[0]) / (fX[1] - fX[0]);
+;;;;      fYPP[0] = T(-0.5);
+;;;;      u[0] = T(0)
+;;;;
+;;;;      for (int i = 1; i < N-1; ++i) {
+;;;;        sig = (fX[i] - fX[i-1]) / (fX[i+1] - fX[i-1]);
+;;;;        p = sig * fYPP[i-1] + T(2);
+;;;;        fYPP[i] = (sig - 1.) / p;
+;;;;        u[i] = (fY[i+1] - fY[i]) / (fX[i+1] - fX[i]) - (fY[i] - fY[i-1]) / (fX[i] - fX[i-1]);
+;;;;        u[i] = (6. * u[i] / (fX[i+1] - fX[i-1]) - sig * u[i-1]) / p;
+;;;;      }
+;;;;
+;;;;      T const dydxN = (fY[N-1] - fY[N-2]) / (fX[N-1] - fX[N-2]);
+;;;;
+;;;;      double qn = 0.5;
+;;;;      T un = (3. / (fX[N-1] - fX[N-2])) * (dydxN - (fY[N-1] - fY[N-2]) / (fX[N-1] - fX[N-2]));
+;;;;      fYPP[N-1] = (un - qn * u[N-2]) / (qn * fYPP[N-2] + T(1.));
+;;;;
+;;;;      for (int k = N-2; k >= 0; --k) {
+;;;;        fYPP[k] = fYPP[k] * fYPP[k+1] + u[k];
+;;;;      }
+// The second part is getting a value
+;;;;      int klo=0;
+;;;;      int khi = (int) fX.size() - 1;
+;;;;      int k;
+;;;;      while (khi - klo > 1) {
+;;;;        k = (khi + klo) >> 1;
+;;;;        if (fX[k] > x) {
+;;;;          khi = k;
+;;;;        } else {
+;;;;          klo = k;
+;;;;        }
+;;;;      }
+;;;;
+;;;;      double const h = fX[khi] - fX[klo];
+;;;;      double const a = (fX[khi] - x) / h;
+;;;;      double const b = (x - fX[klo]) / h;
+;;;;
+;;;;      return a * fY[klo] + b * fY[khi] + ((a * a * a - a) * fYPP[klo] + (b * b * b - b) * fYPP[khi]) * (h * h) / 6.;
+
+
+
 // Local define only
 // Used for setting and in loop.
 // These are for index 0 (lX0), index i (lXI), inde i+1 (lXIP1), index i-1 (lXIM1)
