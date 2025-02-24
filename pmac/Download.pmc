@@ -13,3 +13,4 @@
 #include "PLC07_FlyPosReporting.pmc"
 #include "PLC08_MoveRequest.pmc"
 #include "PLC09_KillMotors.pmc"
+#include "PLC10_GapPosReadback.pmc"

@@ -12,6 +12,7 @@
 #define P_LowerGirderModeReq      P203    // Lower girder mode setpoint
 #define P_LowerGirderMode         P204    // Lower girder mode readback
 #define P_CoordinatedCenterOffset P206    // Offset from the zero position for Gap coordinated movements
+#define P_MeasuredCenterOffset    P208    // Reported center offset
 
 #define P_MIPCounter            P215    // Motor Moving Light counter
 #define P_UpperHmStatus         P219    // Upper girder homing status

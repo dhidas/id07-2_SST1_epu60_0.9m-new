@@ -1,0 +1,28 @@
+#include "Constants.pmc"
+#include "QVariables.pmc"
+#include "MVariables.pmc"
+#include "PVariables.pmc"
+
+// ******************************************************************************
+// GAP position reporting PLC
+// ******************************************************************************
+Open PLC kPLC_GapPosReadback Clear
+
+ADDRESS &1
+
+Q_PRTmpMtr1 = (((M_Mtr1ActPos + M_Mtr1PosBias)/(I108*32)) + P_GapMotor1Offset) / kEncCntsPerUm
+Q_PRTmpMtr3 = (((M_Mtr3ActPos + M_Mtr3PosBias)/(I308*32)) + P_GapMotor3Offset) / kEncCntsPerUm
+
+Q_X_KinReportPos = (Q_PRTmpMtr1 + Q_PRTmpMtr3)    // um
+Q_Y_KinReportPos = (Q_PRTmpMtr1 - Q_PRTmpMtr3)/2    // um
+
+P_MeasuredCenterOffset = Q_Y_KinReportPos            // Save it P variable for reading in EPICS
+
+if(P_UpperGirderModeReq != P_UpperGirderMode)
+  P_UpperGirderMode = P_UpperGirderModeReq
+endif 
+if (P_LowerGirderModeReq != P_LowerGirderMode)
+  P_LowerGirderMode = P_LowerGirderModeReq
+endif
+
+close

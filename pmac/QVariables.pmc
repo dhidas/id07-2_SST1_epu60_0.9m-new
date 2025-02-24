@@ -24,7 +24,8 @@
 #define Q_PRTmp_Offset        Q341
 #define Q_PRTmp_PGM           Q342
 #define Q_PRTmp_CFF           Q343
-
+#define Q_PRTmpMtr1           Q344
+#define Q_PRTmpMtr3           Q345
 
 
 #endif
