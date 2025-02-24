@@ -1,0 +1,44 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "MVariables.pmc"
+#include "Timers.pmc"
+#
+// ******************************************************************************
+// If there is no move request and no motion is presently executing, issue a kill
+// command to all the motors
+// ******************************************************************************
+Open PLC kPLC_KillMotors Clear
+  
+  // Handle transition out of movement - kill the motors
+  // Kill motors only if there is no pending request to move, and there is no current movement
+  if (P_GapMoveReq = kFALSE AND P_PhaseMoveReq = kFALSE AND M_CS1Running = kFALSE AND M_CS2Running = kFALSE AND P_FlyMoveReq = kFALSE AND P_FlyScanReq = kFALSE AND M_CS6Running = kFALSE)
+
+    // Kill if there was any movement previously and move timer expired
+    if (P_CS1RunningPrev = 1 AND I_CS5_Timer2 !> 0)
+    OR (P_CS2RunningPrev = 1 AND I_CS5_Timer2 !> 0)
+    OR (P_CS6RunningPrev = 1 AND I_CS5_Timer2 !> 0)
+    
+      // Put the brakes on and disable the amplifiers
+      M_Mtr1_Amp_Enable = kFALSE
+      M_Mtr3_Amp_Enable = kFALSE
+      M_Mtr5_Amp_Enable = kFALSE
+      M_Mtr6_Amp_Enable = kFALSE
+      M_Mtr7_Amp_Enable = kFALSE
+      M_Mtr8_Amp_Enable = kFALSE
+
+      // Kill the motors
+      CMD"#1K#3K#5K#6K#7K#8K"
+
+      // Post Kill delay
+      I_CS7_Timer1 = kPOST_KILL_DELAY * kMilliSecond
+      while (I_CS7_Timer1 > 0) endwhile
+
+      // Record the current status to detect changes
+      P_CS1RunningPrev = M_CS1Running
+      P_CS2RunningPrev = M_CS2Running
+      P_CS6RunningPrev = M_CS6Running
+
+    endif
+  endif
+  
+Close
