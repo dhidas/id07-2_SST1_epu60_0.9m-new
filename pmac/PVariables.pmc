@@ -23,6 +23,8 @@
 #define P_MotorNumber           P302    // Used in PLC3
 #define P_HomingPLCStopped      P303    // "
 
+#define P_PhaseModeReq          P401    // Requested phase mode
+#define P_PhaseModeStat         P402    // Actual phase mode
 #define P_OpenGapExecuting      P411    // Open gap is being executed
 #define P_InterlockState        P421    // Signals that we are in interlock state. Do not issue movements.
 

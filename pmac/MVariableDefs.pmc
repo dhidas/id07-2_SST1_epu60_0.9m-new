@@ -53,6 +53,7 @@ M542->Y:$0002C0,2,1 // #5 Fatal-following-error bit
 M543->Y:$0002C0,3,1 // #5 Amplifier-fault-error bit
 M545->Y:$0002C0,10,1 // #5 Home-complete bit
 M562->D:$00028B // #5 Actual position (1/[Ixx08*32] cts)
+M564->D:$0002CC // #5 Position bias (1/[Ixx08*32] cts)
 M572->L:$0002D7 // #5 Variable jog position/distance (cts)
 
 M630->Y:$000340,11,1 // #6 Stopped-on-position-limit bit
@@ -64,6 +65,7 @@ M642->Y:$000340,2,1 // #6 Fatal-following-error bit
 M643->Y:$000340,3,1 // #6 Amplifier-fault-error bit
 M645->Y:$000340,10,1 // #6 Home-complete bit
 M662->D:$00030B // #6 Actual position (1/[Ixx08*32] cts)
+M664->D:$00034C // #6 Position bias (1/[Ixx08*32] cts)
 M672->L:$000357 // #6 Variable jog position/distance (cts)
 
 M730->Y:$0003C0,11,1 // #7 Stopped-on-position-limit bit
@@ -75,6 +77,7 @@ M742->Y:$0003C0,2,1 // #7 Fatal-following-error bit
 M743->Y:$0003C0,3,1 // #7 Amplifier-fault-error bit
 M745->Y:$0003C0,10,1 // #7 Home-complete bit
 M762->D:$00038B // #7 Actual position (1/[Ixx08*32] cts)
+M764->D:$0003CC // #7 Position bias (1/[Ixx08*32] cts)
 M772->L:$0003D7 // #7 Variable jog position/distance (cts)
 
 M830->Y:$000440,11,1 // #8 Stopped-on-position-limit bit
@@ -86,8 +89,8 @@ M842->Y:$000440,2,1 // #8 Fatal-following-error bit
 M843->Y:$000440,3,1 // #8 Amplifier-fault-error bit
 M845->Y:$000440,10,1 // #8 Home-complete bit
 M862->D:$00040B // #8 Actual position (1/[Ixx08*32] cts)
+M864->D:$00044C // #8 Position bias (1/[Ixx08*32] cts)
 M872->L:$000457 // #8 Variable jog position/distance (cts)
-
 
 
 

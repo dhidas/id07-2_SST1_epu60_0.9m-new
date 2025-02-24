@@ -1,0 +1,33 @@
+#include "Constants.pmc"
+#include "QVariables.pmc"
+#include "MVariables.pmc"
+#include "PVariables.pmc"
+
+// ******************************************************************************
+// PHASE position reporting PLC
+// ******************************************************************************
+Open PLC kPLC_PhasePosReadback Clear
+ADDRESS &2
+
+Q_PRTmpMtr5 = (((M_Mtr5ActPos+M_Mtr5PosBias)/(I508*32)) + P_PhaseMotor5Offset) / kEncCntsPerUm
+Q_PRTmpMtr6 = (((M_Mtr6ActPos+M_Mtr6PosBias)/(I608*32)) + P_PhaseMotor6Offset) / kEncCntsPerUm
+Q_PRTmpMtr7 = (((M_Mtr7ActPos+M_Mtr7PosBias)/(I708*32)) + P_PhaseMotor7Offset) / kEncCntsPerUm
+Q_PRTmpMtr8 = (((M_Mtr8ActPos+M_Mtr8PosBias)/(I808*32)) + P_PhaseMotor8Offset) / kEncCntsPerUm
+
+if (P_PhaseModeStat = kParallelZ2Z3)
+  Q_X_KinReportPos = (Q_PRTmpMtr6 + Q_PRTmpMtr7)/2
+endif
+
+if (P_PhaseModeStat = kParallelZ1Z4)
+  Q_X_KinReportPos = (Q_PRTmpMtr5 + Q_PRTmpMtr8)/2
+endif
+
+if (P_PhaseModeStat = kAntiParallelZ2Z3)
+  Q_X_KinReportPos= (Q_PRTmpMtr6 - Q_PRTmpMtr7)/2
+endif
+
+if (P_PhaseModeStat = kAntiParallelZ1Z4)
+  Q_X_KinReportPos = (Q_PRTmpMtr5 - Q_PRTmpMtr8)/2
+endif
+
+close

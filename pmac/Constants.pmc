@@ -54,6 +54,12 @@
 #define kIndividualMotor   3
 #define kFlyCoordinated    4
 
+// Phase Modes
+#define kParallelZ2Z3               0
+#define kParallelZ1Z4               1
+#define kAntiParallelZ2Z3           2
+#define kAntiParallelZ1Z4           3
+
 
 // Define PLC number names
 #define kPLC_Initialize             1
@@ -66,6 +72,7 @@
 #define kPLC_MoveRequest            8
 #define kPLC_KillMotors             9
 #define kPLC_GapPosReadback        10
+#define kPLC_PhasePosReadback      12
 #define kPLC_Limits                13
 #define kPLC_HomeMtr1              22
 #define kPLC_HomeMtr3              23

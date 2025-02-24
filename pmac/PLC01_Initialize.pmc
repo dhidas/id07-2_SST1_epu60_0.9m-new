@@ -88,6 +88,10 @@ P_UpperGirderMode   = kGapCoordinated
 P_LowerGirderModeReq  = kGapCoordinated
 P_LowerGirderMode   = kGapCoordinated
 
+// Set phase mode to Parallel
+P_PhaseModeReq = kParallelZ2Z3
+P_PhaseModeStat = kParallelZ2Z3
+
 // Make sure StopAll is NOT requested
 P_StopAllReq  = kFALSE
 

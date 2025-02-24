@@ -55,6 +55,7 @@
 #define M_Mtr5AmpFault           M543
 #define M_Mtr5HomeComplete       M545
 #define M_Mtr5ActPos             M562
+#define M_Mtr5PosBias            M564
 #define M_Mtr5VarJojPos          M572
                                  
 #define M_Mtr6StoppedOnLim       M630
@@ -66,6 +67,7 @@
 #define M_Mtr6AmpFault           M643
 #define M_Mtr6HomeComplete       M645
 #define M_Mtr6ActPos             M662
+#define M_Mtr6PosBias            M664
 #define M_Mtr6VarJojPos          M672
                                  
 #define M_Mtr7StoppedOnLim       M730
@@ -77,6 +79,7 @@
 #define M_Mtr7AmpFault           M743
 #define M_Mtr7HomeComplete       M745
 #define M_Mtr7ActPos             M762
+#define M_Mtr7PosBias            M764
 #define M_Mtr7VarJojPos          M772
                                  
 #define M_Mtr8StoppedOnLim       M830
@@ -88,6 +91,7 @@
 #define M_Mtr8AmpFault           M843
 #define M_Mtr8HomeComplete       M845
 #define M_Mtr8ActPos             M862
+#define M_Mtr8PosBias            M864
 #define M_Mtr8VarJojPos          M872
 
 

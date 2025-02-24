@@ -26,6 +26,10 @@
 #define Q_PRTmp_CFF           Q343
 #define Q_PRTmpMtr1           Q344
 #define Q_PRTmpMtr3           Q345
+#define Q_PRTmpMtr5           Q346
+#define Q_PRTmpMtr6           Q347
+#define Q_PRTmpMtr7           Q348
+#define Q_PRTmpMtr8           Q349
 
 
 #endif
