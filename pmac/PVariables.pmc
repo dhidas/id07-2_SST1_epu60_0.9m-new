@@ -42,10 +42,10 @@
 #define P_QNY               P612
 #define P_UNY               P613
 #define P_SplineInCalc      P614
-#define P_SIGX              P610
-#define P_PX                P611
-#define P_QNX               P612
-#define P_UNX               P613
+#define P_SIGX              P615
+#define P_PX                P616
+#define P_QNX               P617
+#define P_UNX               P618
 
 // P620-659 used for gap/energy data
 #define P_NextToLastEnergyPoint P638

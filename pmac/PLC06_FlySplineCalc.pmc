@@ -33,8 +33,8 @@
 #define lUYIM1 P(kSplineUYStart + P_INDEX - 1)
 #define lXIM1 P(kSplineXStart + P_INDEX - 1)
 #define lYIM1 P(kSplineYStart + P_INDEX - 1)
-#define lYPPIM1 P(kSplineYPPStart + P_INDEX - 1)
 #define lXPPIM1 P(kSplineXPPStart + P_INDEX - 1)
+#define lYPPIM1 P(kSplineYPPStart + P_INDEX - 1)
 
 // Default spline data is set here
 P620=   100.000    P640=   16180.575
@@ -89,12 +89,12 @@ if (M_CS6Running = 0)
   endw
 
   // Calculate derivatives
-  lYPP0 = -0.5
-  lXPP0 = -0.5
   P_DYDX = (lY1 - lY0) / (lX1 - lX0)
   P_DXDY = 1 / P_DYDX
-  lUY0 = 3. / (lX1 - lX0) * P_DYDX - P_DYDX
-  lUX0 = 3. / (lY1 - lY0) * P_DXDY - P_DXDY
+  lYPP0 = -0.5
+  lXPP0 = -0.5
+  lUY0 = 0
+  lUX0 = 0
 
   P_INDEX = 1
   while (P_INDEX < kNSPLINE - 1)

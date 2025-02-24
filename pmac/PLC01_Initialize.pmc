@@ -9,8 +9,9 @@
 Open PLC kPLC_Initialize Clear
 
 // For testing only, must be removed
-m162 = 10000*I108*32*5
-m362 = 10000*I308*32*5
+#define GGG 48368.501
+m162 = GGG/2*I108*32*5
+m362 = GGG/2*I308*32*5
 P_SplineHarmonic = 1
 
 // Clear all the outputs to ensure that brakes are engaged and amplifiers are disabled
