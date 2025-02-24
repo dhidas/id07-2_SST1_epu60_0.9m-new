@@ -1,10 +1,11 @@
 #ifndef Timers_pmc
 #define Timers_pmc
 
-#define I_CS1_Timer2        I5112   // C.S.1 timer 2 (Used in PLC1)
+#define I_CS1_Timer2        I5112     // C.S.1 timer 2 (Used in PLC1)
 #define I_CS2_Timer2        I5212     // C.S.2 timer 2 (Used in PLC3)
 #define I_CS3_Timer1        I5311     // C.S.3 timer 1 (Used in PLC4)
 #define I_CS3_Timer2        I5312     // C.S.3 timer 2 (Used in PLC5)
 #define I_CS4_Timer1        I5411     // C.S.4 timer 1 (Used in PLC6)
-
+#define I_CS5_Timer1        I5511     // C.S.5 timer 1 (Used in PLC8)
+#define I_CS5_Timer2        I5512     // C.S.5 timer 2 (Used in PLC8 and 9)
 #endif

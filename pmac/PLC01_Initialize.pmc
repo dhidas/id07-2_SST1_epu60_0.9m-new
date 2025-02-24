@@ -92,7 +92,7 @@ P_LowerGirderMode   = kGapCoordinated
 P_StopAllReq  = kFALSE
 
 // Enable PLCs here
-Enable PLC  kPLC_MovementInProgress
+Enable PLC kPLC_MovementInProgress
 Enable PLC kPLC_FlySplineCalc
 Enable PLC kPLCFlyPosReporting
 

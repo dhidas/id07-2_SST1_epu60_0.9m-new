@@ -5,6 +5,7 @@
 
 #define M_SafetyPLCIn             M27
 #define M_OpenGapSignalIn         M29
+#define M_3PhasePower             M30         // Digital input indicating power is on to drives  (0=pwr off, 1=pwr on)
 
 #define M_Mtr1_Amp_Enable         M33
 #define M_Mtr3_Amp_Enable         M35
@@ -23,10 +24,15 @@
 #define M_Amp1Enabled            M139
 #define M_Mtr1InPos              M140
 #define M_Mtr1FFE                M142
+#define M_Mtr1AmpFault           M143
 #define M_Mtr1HomeComplete       M145
+#define M_Mtr9AmpEnabled         M154
 #define M_Mtr1ActPos             M162
 #define M_Mtr1PosBias            M164
 #define M_Mtr1VarJojPos          M172
+
+
+#define M_Mtr10AmpEnabled        M254
 
 #define M_Mtr3StoppedOnLim       M330
 #define M_Mtr3Moving             M337
@@ -34,6 +40,7 @@
 #define M_Amp3Enabled            M339
 #define M_Mtr3InPos              M340
 #define M_Mtr3FFE                M342
+#define M_Mtr3AmpFault           M343
 #define M_Mtr3HomeComplete       M345
 #define M_Mtr3ActPos             M362
 #define M_Mtr3PosBias            M364
@@ -45,6 +52,7 @@
 #define M_Amp5Enabled            M539
 #define M_Mtr5InPos              M540
 #define M_Mtr5FFE                M542
+#define M_Mtr5AmpFault           M543
 #define M_Mtr5HomeComplete       M545
 #define M_Mtr5ActPos             M562
 #define M_Mtr5VarJojPos          M572
@@ -55,6 +63,7 @@
 #define M_Amp6Enabled            M639
 #define M_Mtr6InPos              M640
 #define M_Mtr6FFE                M642
+#define M_Mtr6AmpFault           M643
 #define M_Mtr6HomeComplete       M645
 #define M_Mtr6ActPos             M662
 #define M_Mtr6VarJojPos          M672
@@ -65,6 +74,7 @@
 #define M_Amp7Enabled            M739
 #define M_Mtr7InPos              M740
 #define M_Mtr7FFE                M742
+#define M_Mtr7AmpFault           M743
 #define M_Mtr7HomeComplete       M745
 #define M_Mtr7ActPos             M762
 #define M_Mtr7VarJojPos          M772
@@ -75,6 +85,7 @@
 #define M_Amp8Enabled            M839
 #define M_Mtr8InPos              M840
 #define M_Mtr8FFE                M842
+#define M_Mtr8AmpFault           M843
 #define M_Mtr8HomeComplete       M845
 #define M_Mtr8ActPos             M862
 #define M_Mtr8VarJojPos          M872

@@ -3,7 +3,7 @@
 
 M27->Y:$78804,2,1     ;  Input 27 J7   Pin#6   (OUT_STAT2, Digital input indicating SafetyPLC has been tripped)
 M29->Y:$78804,4,1     ;  Input 29 J7   Pin#7   (Shut Down Immediately Signal coming from Safety PLC or Facility)
-
+M30->Y:$78804,5,1     ;  Input 30 J7   Pin#26    (Digital input indicating power is on to drives)
 M33->Y:$078802,0,1    ; Output 1 J6   Pin#12    Pin#30  Upper gap motor M1  -  turns off Shutdown mode on external drive
 M34->Y:$078802,1,1    ; Output 2 J6   Pin#13    Pin#31  
 M35->Y:$078802,2,1    ; Output 3 J6   Pin#14    Pin#32  Lower gap motor M3  -  turns off Shutdown mode on external drive
@@ -23,10 +23,14 @@ M138->X:$0000B0,18,1 // #1 Open-loop-mode bit
 M139->X:$0000B0,19,1 ; #1 Amplifier-enabled status bit
 M140->Y:$0000C0,0,1 // #1 Background in-position bit
 M142->Y:$0000C0,2,1 // #1 Fatal-following-error bit
+M143->Y:$0000C0,3,1 // #1 Amplifier-fault-error bit
 M145->Y:$0000C0,10,1 // #1 Home-complete bit
+M154->Y:$003440,14,1 // MACRO IC 0 Node 0 amplifier enable flag
 M162->D:$00008B // #1 Actual position (1/[Ixx08*32] cts)
 M164->D:$0000CC // #1 Position bias (1/[Ixx08*32] cts)
 M172->L:$0000D7 // #1 Variable jog position/distance (cts)
+
+M254->Y:$003441,14,1    // MACRO IC 0 Node 1 amplifier enable flag
 
 M330->Y:$0001C0,11,1 // #3 Stopped-on-position-limit bit
 M337->X:$0001B0,17,1 ; #3 Running-program bit
@@ -34,6 +38,7 @@ M338->X:$0001B0,18,1 // #3 Open-loop-mode bit
 M339->X:$0001B0,19,1 ; #3 Amplifier-enabled status bit
 M340->Y:$0001C0,0,1 // #3 Background in-position bit
 M342->Y:$0001C0,2,1 // #3 Fatal-following-error bit
+M343->Y:$0001C0,3,1 // #3 Amplifier-fault-error bit
 M345->Y:$0001C0,10,1 // #3 Home-complete bit
 M362->D:$00018B // #3 Actual position (1/[Ixx08*32] cts)
 M364->D:$0001CC // #3 Position bias (1/[Ixx08*32] cts)
@@ -45,6 +50,7 @@ M538->X:$0002B0,18,1 // #5 Open-loop-mode bit
 M539->X:$0002B0,19,1 ; #5 Amplifier-enabled status bit
 M540->Y:$0002C0,0,1 // #5 Background in-position bit
 M542->Y:$0002C0,2,1 // #5 Fatal-following-error bit
+M543->Y:$0002C0,3,1 // #5 Amplifier-fault-error bit
 M545->Y:$0002C0,10,1 // #5 Home-complete bit
 M562->D:$00028B // #5 Actual position (1/[Ixx08*32] cts)
 M572->L:$0002D7 // #5 Variable jog position/distance (cts)
@@ -55,6 +61,7 @@ M638->X:$000330,18,1 // #6 Open-loop-mode bit
 M639->X:$000330,19,1 ; #6 Amplifier-enabled status bit
 M640->Y:$000340,0,1 // #6 Background in-position bit
 M642->Y:$000340,2,1 // #6 Fatal-following-error bit
+M643->Y:$000340,3,1 // #6 Amplifier-fault-error bit
 M645->Y:$000340,10,1 // #6 Home-complete bit
 M662->D:$00030B // #6 Actual position (1/[Ixx08*32] cts)
 M672->L:$000357 // #6 Variable jog position/distance (cts)
@@ -65,6 +72,7 @@ M738->X:$0003B0,18,1 // #7 Open-loop-mode bit
 M739->X:$0003B0,19,1 ; #7 Amplifier-enabled status bit
 M740->Y:$0003C0,0,1 // #7 Background in-position bit
 M742->Y:$0003C0,2,1 // #7 Fatal-following-error bit
+M743->Y:$0003C0,3,1 // #7 Amplifier-fault-error bit
 M745->Y:$0003C0,10,1 // #7 Home-complete bit
 M762->D:$00038B // #7 Actual position (1/[Ixx08*32] cts)
 M772->L:$0003D7 // #7 Variable jog position/distance (cts)
@@ -75,9 +83,11 @@ M838->X:$000430,18,1 // #8 Open-loop-mode bit
 M839->X:$000430,19,1 ; #8 Amplifier-enabled status bit
 M840->Y:$000440,0,1 // #8 Background in-position bit
 M842->Y:$000440,2,1 // #8 Fatal-following-error bit
+M843->Y:$000440,3,1 // #8 Amplifier-fault-error bit
 M845->Y:$000440,10,1 // #8 Home-complete bit
 M862->D:$00040B // #8 Actual position (1/[Ixx08*32] cts)
 M872->L:$000457 // #8 Variable jog position/distance (cts)
+
 
 
 

@@ -1,6 +1,11 @@
 #ifndef PVariables_pmc
 #define PVariables_pmc
 
+#define P_MoveAborted             P86
+#define P_MotorNo                 P87
+#define P_MotorError              P89
+#define P_RetryNo                 P90
+
 #define P_MovementInProgress      P200    // Movement is in progress
 #define P_UpperGirderModeReq      P201    // Upper girder mode setpoint
 #define P_UpperGirderMode         P202    // Upper girder mode readback
@@ -63,6 +68,12 @@
 #define P_AlphaPR                 P786
 #define P_LambdaPR                P787
 
+#define P_FlyMoveSetpoint   P817
+#define P_FlyMoveReq        P818
+#define P_FlyScanReq        P820
+#define P_TestPLC8          P899
+
+
 #define P_GapMotor1Offset       P1011   // Gap motor 1 GU offset
 #define P_GapMotor3Offset       P1013   // Gap motor 3 GL offset
 #define P_PhaseMotor5Offset     P1015   // Phase motor 5 TO offset
@@ -86,12 +97,17 @@
 #define P_StopMotor8            P1068   // Command to stop the motor 8
 
 
-
+#define P_GapMoveReq            P1111   // Set to 1 to request gap movement to the GapSetpoint
+#define P_GapSetpoint           P1112   // Setpoint for new gap movement (from EPICS OP screen)
+#define P_CS1RunningPrev        P1113   // CS1Running flag previous value
 #define P_GapVelocity           P1114   // Gap velocity
 #define P_GapAccel              P1115   // Gap accel
-                               
+#define P_PhaseMoveReq          P1116   // Set to 1 to request phase movement to the PhaseSetpoint
+#define P_PhaseSetpoint         P1117   // Setpoint for new phase movement (from EPICS OP screen)
+#define P_CS2RunningPrev        P1118   // CS2Running flag previous value
 #define P_PhaseVelocity         P1119   // Phase velocity
 #define P_PhaseAccel            P1120   // Phase accel
+#define P_CS6RunningPrev        P1121   // CS6Running flag previous value
 
 #define P_BetaPrime             P1601   // Beta prime read from PGM
 #define P_K0                    P1602   // K0 from PGM
@@ -102,14 +118,19 @@
 #define P_MonoOffsetDir         P1616   // Offset direction from PGM (or static)
 #define P_BeamInAngle           P1620   // Beam-In angle read from PGM
 
+#define P_MacroRequest          P1700
+
 #define P_Mtr5HomeFinish        P2405
 #define P_Mtr6HomeFinish        P2505
 #define P_Mtr7HomeFinish        P2605
 #define P_Mtr8HomeFinish        P2705
 
-#define P_Mtr9_Resolution    P4809
-#define P_Mtr10_Resolution   P4810
-#define P_Mtr9_Offset        P4909
-#define P_Mtr10_Offset       P4910
+#define P_ZERO                  P2805
+#define P_ONE                   P2806
+
+#define P_Mtr9_Resolution       P4809
+#define P_Mtr10_Resolution      P4810
+#define P_Mtr9_Offset           P4909
+#define P_Mtr10_Offset          P4910
 
 #endif

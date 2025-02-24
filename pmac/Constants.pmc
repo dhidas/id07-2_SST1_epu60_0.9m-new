@@ -10,6 +10,7 @@
 
 #define kMilliSecond            (8388608/I10)
 #define kSecond           (1000*kMilliSecond)
+#define kMinute           (kSecond*60)
 
 #define kMINGAP             14000
 #define kMAXGAP            100000
@@ -39,9 +40,12 @@
 #define kTIMEOUT_FAULTRESET   500
 #define kTIMEOUT_ABORT        300
 #define kSTOP_TIME            500
+#define kABORT_DELAY          250
 #define kGirderChangeTime    2000
+#define kPRE_KILL_DELAY         5
+#define kENABLE_RETRIES         5
 
-#define kLimitMargin          50    // in cts
+#define kLimitMargin           50    // in cts
 
 // Girder Modes
 #define kGapCoordinated    0
@@ -78,8 +82,6 @@
 #define kUPPER_HM_FAILURE -8
 
 
-
-
 #define kNSPLINE 20
 #define kSplineXStart 620
 #define kSplineYStart 640
@@ -89,6 +91,12 @@
 #define kSplineUYStart 720
 
 #define kDegrees 0
+
+
+#define kPHY_FIRST_MTR_NUM    1
+#define kPHY_LAST_MTR_NUM     8
+#define kPHY_MTR_NOT_USED_A   2
+#define kPHY_MTR_NOT_USED_B   4
 
 
 

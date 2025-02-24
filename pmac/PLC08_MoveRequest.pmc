@@ -1,0 +1,242 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "MVariables.pmc"
+#include "QVariables.pmc"
+#include "Timers.pmc"
+
+P_TestPLC8 = 0
+P_FlyMoveReq = 0
+P_FlyScanReq = 0
+
+// ******************************************************************************
+// If software StopAll, interlock input and OpenGap input is deactivated, and a request
+// to change gap or phase is set to TRUE, abort exising motion. Then enable all motors
+// and ensure none of the motors have FFE. Then call the respective program for gap or
+// phase motion.
+// ******************************************************************************
+OPEN PLC kPLC_MoveRequest CLEAR 
+
+  if (P_StopAllStat = 0 AND P_InterlockState = 0 AND P_OpenGapExecuting = 0)
+    // ***************************************************
+    // 1. Abort movement on axis if movement exists
+    // ***************************************************  
+    P_MoveAborted = 0
+    if (P_GapMoveReq != 0 AND M_CS1Running = 1)
+      ADDRESS &1
+      CMD"A"
+      P_MoveAborted = 1
+    endif
+
+    // This is here in case control room or anyone issues a gap command
+    // w/ fly mode enabled.  Put back to gap coordinated mode and move
+    if (P_GapMoveReq != 0)
+      if (P_UpperGirderMode = kFlyCoordinated) OR (P_LowerGirderMode = kFlyCoordinated)
+        ADDRESS &6
+        CMD"A"
+        P_MoveAborted = 1
+        P_MacroRequest = 0
+        P_UpperGirderModeReq = kGapCoordinated
+        P_LowerGirderModeReq = kGapCoordinated
+        // Wait for the change to happen
+        while (P_UpperGirderMode != kGapCoordinated OR P_LowerGirderMode != kGapCoordinated)
+        endwhile
+      endif
+    endif
+
+    if (P_PhaseMoveReq != 0 AND M_CS2Running = 1)
+      ADDRESS &2
+      CMD"A"
+      P_MoveAborted = 1
+    endif
+    
+    if (P_MoveAborted != 0)
+      I_CS5_Timer1 = kABORT_DELAY * kMilliSecond
+      while(I_CS5_Timer1 > 0) 
+      endwhile
+    endif
+    
+    // ***************************************************
+    // 2. Make sure to enable _ALL_ motors
+    // ***************************************************
+    if (P_GapMoveReq != 0 OR P_FlyMoveReq != 0 OR P_FlyScanReq != 0)
+      
+      P_RetryNo = 0
+      P_MotorError = kFALSE
+
+      while (P_RetryNo < kENABLE_RETRIES)
+        
+        if (M_Amp1Enabled = kFALSE)
+        OR (M_Amp3Enabled = kFALSE)
+          // Enable gap motors (close loops)
+          M_Mtr1_Amp_Enable = kTRUE
+          M_Mtr3_Amp_Enable = kTRUE
+          CMD"#1J/#3J/"
+          I_CS5_Timer1 = kENABLE_DELAY * kMilliSecond
+          while(I_CS5_Timer1 > 0) 
+          endwhile
+        endif
+                
+        // Check if there are errors on enabling motors
+        P_MotorNo = kPHY_FIRST_MTR_NUM
+        P_MotorError = kFALSE
+
+        while(P_MotorNo < (kPHY_LAST_MTR_NUM -3))
+          if (P_MotorNo != kPHY_MTR_NOT_USED_A OR P_MotorNo != kPHY_MTR_NOT_USED_B)
+            // Check for fatal following error = TRUE
+            // Check for motor drive fault = TRUE
+            // Check for motor brake breaker fault = FALSE
+            // Check for 3-phase power fault = FALSE
+            if (M(P_MotorNo * 100 + 42) = kTRUE)
+            OR (M(P_MotorNo * 100 + 43) = kTRUE)
+            OR (M_3PhasePower = kFALSE)            
+              P_MotorError = kTRUE
+              P_MotorNo = kPHY_LAST_MTR_NUM + 1 // this will exit the outer loop
+            endif
+          endif          
+          P_MotorNo = P_MotorNo + 1
+        endwhile
+        
+        if (P_MotorError = kFALSE)
+          // No motor enable error , exit 
+          P_RetryNo = kENABLE_RETRIES + 1
+        endif
+        
+        P_RetryNo = P_RetryNo + 1
+      endwhile
+    endif
+
+    if (P_PhaseMoveReq != 0)
+      
+      P_RetryNo = 0
+      P_MotorError = kFALSE
+
+      while (P_RetryNo < kENABLE_RETRIES)
+
+        if (M_Amp1Enabled = kFALSE)
+        OR (M_Amp3Enabled = kFALSE)
+        OR (M_Amp5Enabled = kFALSE)
+        OR (M_Amp6Enabled = kFALSE)
+        OR (M_Amp7Enabled = kFALSE)
+        OR (M_Amp8Enabled = kFALSE)
+
+          // Enable gap motors (close loops)
+          M_Mtr1_Amp_Enable = kTRUE
+          M_Mtr3_Amp_Enable = kTRUE
+          // Enable phase motors (close loops)
+          M_Mtr5_Amp_Enable = kTRUE
+          M_Mtr6_Amp_Enable = kTRUE
+          M_Mtr7_Amp_Enable = kTRUE
+          M_Mtr8_Amp_Enable = kTRUE
+          CMD"#1J/#3J/#5J/#6J/#7J/#8J/"
+          I_CS5_Timer1 = kENABLE_DELAY * kMilliSecond
+          while(I_CS5_Timer1 > 0) 
+          endwhile
+        endif
+        
+        
+        // Check if there are errors on enabling motors
+        P_MotorNo = kPHY_FIRST_MTR_NUM
+        P_MotorError = kFALSE
+
+        while(P_MotorNo < (kPHY_LAST_MTR_NUM + 1))
+          if (P_MotorNo != kPHY_MTR_NOT_USED_A OR P_MotorNo != kPHY_MTR_NOT_USED_B)
+            // Check for fatal following error = TRUE
+            // Check for motor drive fault = TRUE
+            // Check for motor brake breaker fault = FALSE
+            // Check for 3-phase power fault = FALSE
+            if (M(P_MotorNo * 100 + 42) = kTRUE)
+            OR (M(P_MotorNo * 100 + 43) = kTRUE)
+            OR (M_3PhasePower = kFALSE)            
+              P_MotorError = kTRUE
+              P_MotorNo = kPHY_LAST_MTR_NUM + 1 // this will exit the outer loop
+            endif
+          endif          
+          P_MotorNo = P_MotorNo + 1
+        endwhile
+        
+        if (P_MotorError = kFALSE)
+          // No motor enable error , exit 
+          P_RetryNo = kENABLE_RETRIES + 1
+        endif
+        
+        P_RetryNo = P_RetryNo + 1
+      endwhile
+    endif
+
+    if (P_FlyMoveReq != 0 OR P_FlyScanReq != 0)
+      if (M_Amp1Enabled = kFALSE)
+      OR (M_Amp3Enabled = kFALSE)
+      OR (M_Mtr9AmpEnabled = kFALSE)
+      OR (M_Mtr10AmpEnabled = kFALSE)
+
+        P_TestPLC8 = 1
+        // Enable gap motors (close loops)
+        M_Mtr1_Amp_Enable = kTRUE
+        M_Mtr3_Amp_Enable = kTRUE
+
+        CMD"#1J/#3J/#9J/#10J/"
+        P_TestPLC8 = 2
+        I_CS5_Timer1 = kENABLE_DELAY * kMilliSecond
+        while(I_CS5_Timer1 > 0)
+        endwhile
+        P_TestPLC8 = 3
+      endif
+      P_TestPLC8 = 4
+    endif
+
+    // ***************************************************
+    // 3. Issue movements if there is no motor error
+    // ***************************************************
+    if (P_MotorError = kFALSE)
+      if (P_GapMoveReq != 0)
+        P_GapMoveReq = 0
+        ADDRESS &1
+        Q_X_KinDemandPos = P_GapSetpoint
+        CMD"B10R"
+        P_CS1RunningPrev = 1
+        I_CS5_Timer2 = kPRE_KILL_DELAY * kMinute
+      endif
+
+      if (P_FlyMoveReq != 0 OR P_FlyScanReq != 0)
+        P_TestPLC8 = 5
+        ADDRESS &6
+        if (P_FlyMoveReq != 0)
+          Q_X_KinDemandPos = P_FlyMoveSetpoint
+          P_TestPLC8 = 6
+          P_FlyMoveReq = 0
+          CMD"&6B15R"
+        else
+          P_TestPLC8 = 7
+          if (P_FlyScanReq != 0)
+           ; Reset remote EQU outputs to zero
+           MXW0,M34,P_ZERO
+           MXW0,M33,P_ZERO
+           
+           P_FlyScanReq = 0
+           CMD"&6B14R"
+          endif
+        endif
+        P_CS6RunningPrev = kTRUE
+        I_CS5_Timer2 = kPRE_KILL_DELAY * kMinute
+      endif
+
+      if (P_PhaseMoveReq != 0)
+        P_PhaseMoveReq = 0
+        ADDRESS &2
+        Q_X_KinDemandPos = P_PhaseSetpoint
+        CMD"B12R"
+        P_CS2RunningPrev = kTRUE
+        I_CS5_Timer2 = kPRE_KILL_DELAY * kMinute
+      endif
+          
+    else
+      P_GapMoveReq = 0
+      P_FlyMoveReq = 0
+      P_PhaseMoveReq = 0
+    endif
+  else
+    P_GapMoveReq = 0
+    P_FlyMoveReq = 0
+    P_PhaseMoveReq = 0
+  endif
+Close
