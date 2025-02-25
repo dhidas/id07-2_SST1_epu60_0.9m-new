@@ -1,0 +1,55 @@
+#include "PVariables.pmc"
+#include "QVariables.pmc"
+#include "Constants.pmc"
+
+// Local defines for readability
+#define lP8Xhi P(kSplineXStart + Q_P8_khi)
+#define lP8Xlo P(kSplineXStart + Q_P8_klo)
+#define lP8Yhi P(kSplineYStart + Q_P8_khi)
+#define lP8Ylo P(kSplineYStart + Q_P8_klo)
+#define lP8XPPhi P(kSplineXPPStart + Q_P8_khi)
+#define lP8XPPlo P(kSplineXPPStart + Q_P8_klo)
+#define lP8Yk P(kSplineYStart + Q_P8_k)
+
+/***
+    This program is only intended to calculate the gap for a given energy.
+    The input is A (Q101).
+    The output is also written to Q101
+
+    Here I have hijacked (borrowed) Q & M-variables from the inverse kinematics.
+    Don't try to run this routine during motion of the same CS.  I'm not sure
+    how you would anyways.
+***/
+
+
+Open PROG 8 Clear
+READ(A)
+
+if (Q_CallAIO > P_LastEnergyPoint)
+  Q_P8_Slope = (P_LastGapPoint - P_NextToLastGapPoint) / (P_LastEnergyPoint - P_NextToLastEnergyPoint)
+  Q_P8_Offset = P_LastGapPoint - Q_P8_Slope * P_LastEnergyPoint
+  Q_CallAIO = Q_P8_Slope * Q_CallAIO + Q_P8_Offset
+else
+
+  Q_P8_klo = 0
+  Q_P8_khi = kNSPLINE - 1
+
+  while (Q_P8_khi - Q_P8_klo > 1)
+    Q_P8_k = INT((Q_P8_khi + Q_P8_klo)/2)
+    if (lP8Yk > Q_CallAIO)
+      Q_P8_khi = Q_P8_k
+    else
+      Q_P8_klo = Q_P8_k
+    endif
+  endw
+
+  Q_P8_h = lP8Yhi - lP8Ylo
+  Q_P8_a = (lP8Yhi - Q_CallAIO) / Q_P8_h
+  Q_P8_b = (Q_CallAIO - lP8Ylo) / Q_P8_h
+
+  Q_CallAIO = (Q_P8_a*lP8Xlo+Q_P8_b*lP8Xhi+((Q_P8_a*Q_P8_a*Q_P8_a-Q_P8_a)*lP8XPPlo+(Q_P8_b*Q_P8_b*Q_P8_b-Q_P8_b)*lP8XPPhi)*Q_P8_h*Q_P8_h/6)  ; XXX Check.  may have to multiply by P_SplineHarmonic
+
+endif
+
+return
+Close

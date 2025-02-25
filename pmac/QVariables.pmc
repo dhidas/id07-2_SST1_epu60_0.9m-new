@@ -11,6 +11,16 @@
 #define Q_Y_KinReportPos  Q88
 #define Q_Z_KinReportPos  Q89
 
+#define Q_CallAIO         Q101
+#define Q_P8_Slope        Q110
+#define Q_P8_Offset       Q111
+#define Q_P8_klo          Q112
+#define Q_P8_khi          Q113
+#define Q_P8_k            Q114
+#define Q_P8_h            Q115
+#define Q_P8_a            Q116
+#define Q_P8_b            Q117
+
 #define Q_PRTmp_Gap           Q328
 #define Q_PRTmp_klo           Q329
 #define Q_PRTmp_khi           Q330

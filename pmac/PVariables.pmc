@@ -138,10 +138,12 @@
 #define P_MacroStatus           P1703
 #define P_MacroTmp              P1707
 
+// Variables in the 2400..2799 range are reserved for PLCs 24..27
 #define P_Mtr5HomeFinish        P2405
 #define P_Mtr6HomeFinish        P2505
 #define P_Mtr7HomeFinish        P2605
 #define P_Mtr8HomeFinish        P2705
+// Variables in the 2400..2799 range are reserved for PLCs 24..27
 
 #define P_LastTriggerPos        P2800
 #define P_TriggerDirection      P2801
