@@ -3,6 +3,12 @@
 
 #include "MVariableDefs.pmc"
 
+#define M_TUBrakeBrkrFlt          M17         // Breaker for TU brake tripped (0=tripped, 1=normal)
+#define M_BUBrakeBrkrFlt          M18         // Breaker for BU brake tripped (0=tripped, 1=normal)
+#define M_PhaseABrakeBrkrFlt      M19         // Breaker for BU brake tripped (0=tripped, 1=normal)
+#define M_PhaseBBrakeBrkrFlt      M20         // Breaker for BD brake tripped (0=tripped, 1=normal)
+#define M_PhaseCBrakeBrkrFlt      M21         // Breaker for BD brake tripped (0=tripped, 1=normal)
+#define M_PhaseDBrakeBrkrFlt      M22         // Breaker for BD brake tripped (0=tripped, 1=normal)
 #define M_SafetyPLCIn             M27
 #define M_OpenGapSignalIn         M29
 #define M_3PhasePower             M30         // Digital input indicating power is on to drives  (0=pwr off, 1=pwr on)

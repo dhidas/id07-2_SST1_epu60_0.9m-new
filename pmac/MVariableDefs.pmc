@@ -1,6 +1,15 @@
 #ifndef MVariableDefs_pmc
 #define MVariableDefs_pmc
 
+M17->Y:$78803,0,1 //  Input 17 J7   Pin#1
+M18->Y:$78803,1,1 //  Input 18 J7   Pin#20
+M19->Y:$78803,2,1 //  Input 19 J7   Pint#2
+M20->Y:$78803,3,1 //  Input 20 J7   Pin#21
+M21->Y:$78803,4,1 //  Input 21 J7   Pin#3
+M22->Y:$78803,5,1 //  Input 22 J7   Pin#22
+M23->Y:$78803,6,1 //  Input 23 J7   Pin#4
+M24->Y:$78803,7,1 //  Input 24 J7   Pin#23
+
 M27->Y:$78804,2,1     ;  Input 27 J7   Pin#6   (OUT_STAT2, Digital input indicating SafetyPLC has been tripped)
 M29->Y:$78804,4,1     ;  Input 29 J7   Pin#7   (Shut Down Immediately Signal coming from Safety PLC or Facility)
 M30->Y:$78804,5,1     ;  Input 30 J7   Pin#26    (Digital input indicating power is on to drives)

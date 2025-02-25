@@ -1,0 +1,126 @@
+#include "Constants.pmc"
+#include "MVariables.pmc"
+#include "PVariables.pmc"
+
+// ******************************************************************************
+// PLC 14 - PLC_CheckMotorPower
+// 
+// Checks to make sure 3-phase power is on and motor brake breaker is not tripped:
+//
+//  M_TUBrakeBrkrFlt      Breaker for TU brake tripped (0=tripped, 1=normal)
+//  M_BUBrakeBrkrFlt      Breaker for BU brake tripped (0=tripped, 1=normal)
+//  M_PhaseABrakeBrkrFlt    Breaker for A brake tripped (0=tripped, 1=normal)
+//  M_PhaseBBrakeBrkrFlt    Breaker for B brake tripped (0=tripped, 1=normal)
+//  M_PhaseCBrakeBrkrFlt    Breaker for C brake tripped (0=tripped, 1=normal)
+//  M_PhaseDBrakeBrkrFlt    Breaker for D brake tripped (0=tripped, 1=normal)
+
+//  M_3PhasePower      Digital input indicating power is on to drives  (0=pwr off, 1=pwr on)                                          
+
+//  These can't be checked here, checked in PLC_08MoveRequest
+//  because amplifier fault signal (Mx43) is there before amp enable.
+//
+//  M_1DriveFlt        TU Drive Disabled (0 - enabled, 1 - disabled)
+//  M_2DriveFlt        TD Drive Disabled (0 - enabled, 1 - disabled)
+//  M_3DriveFlt        BU Drive Disabled (0 - enabled, 1 - disabled)
+//  M_4DriveFlt        BD Drive Disabled (0 - enabled, 1 - disabled)
+
+Open PLC kPLC_CheckMotorPower Clear
+  
+// Check if amp 1 is enabled
+if (M_Amp1Enabled = kTRUE)
+  if (M_TUBrakeBrkrFlt = kLOW)
+  OR (M_3PhasePower = kLOW)
+  
+    // Disable amplifiers
+    CMD"#1K"
+
+    // StopAll was requested, but somehow amplifier got enabled
+    // Cycle StopAll to kill all motors again
+    if (P_StopAllReq = kTRUE AND P_StopAllStat = kTRUE)
+      P_StopAllStat = 0
+    endif
+  endif
+endif
+
+
+// Check if amp 3 is enabled
+if (M_Amp3Enabled = kTRUE)
+  if (M_BUBrakeBrkrFlt = kLOW)
+  OR (M_3PhasePower = kLOW)
+  
+    // Disable amplifiers
+    CMD"#3K"
+
+    // StopAll was requested, but somehow amplifier got enabled
+    // Cycle StopAll to kill all motors again
+    if (P_StopAllReq = kTRUE AND P_StopAllStat = kTRUE)
+      P_StopAllStat = 0
+    endif
+  endif
+endif
+
+// Check if amp 5 is enabled
+if (M_Amp5Enabled = kTRUE)
+  if (M_PhaseABrakeBrkrFlt = kLOW)
+  OR (M_3PhasePower = kLOW)
+  
+    // Disable amplifiers
+    CMD"#5K"
+
+    // StopAll was requested, but somehow amplifier got enabled
+    // Cycle StopAll to kill all motors again
+    if (P_StopAllReq = kTRUE AND P_StopAllStat = kTRUE)
+      P_StopAllStat = 0
+    endif
+  endif
+endif
+
+// Check if amp 6 is enabled
+if (M_Amp6Enabled = kTRUE)
+  if (M_PhaseBBrakeBrkrFlt= kLOW)
+  OR (M_3PhasePower = kLOW)
+  
+    // Disable amplifiers
+    CMD"#6K"
+
+    // StopAll was requested, but somehow amplifier got enabled
+    // Cycle StopAll to kill all motors again
+    if (P_StopAllReq = kTRUE AND P_StopAllStat = kTRUE)
+      P_StopAllStat = 0
+    endif
+  endif
+endif
+
+// Check if amp 7 is enabled
+if (M_Amp7Enabled = kTRUE)
+  if (M_PhaseCBrakeBrkrFlt = kLOW)
+  OR (M_3PhasePower = kLOW)
+  
+    // Disable amplifiers
+    CMD"#7K"
+
+    // StopAll was requested, but somehow amplifier got enabled
+    // Cycle StopAll to kill all motors again
+    if (P_StopAllReq = kTRUE AND P_StopAllStat = kTRUE)
+      P_StopAllStat = 0
+    endif
+  endif
+endif
+
+// Check if amp 8 is enabled
+if (M_Amp8Enabled = kTRUE)
+  if (M_PhaseDBrakeBrkrFlt = kLOW)
+  OR (M_3PhasePower = kLOW)
+  
+    // Disable amplifiers
+    CMD"#8K"
+
+    // StopAll was requested, but somehow amplifier got enabled
+    // Cycle StopAll to kill all motors again
+    if (P_StopAllReq = kTRUE AND P_StopAllStat = kTRUE)
+      P_StopAllStat = 0
+    endif
+  endif
+endif
+
+Close

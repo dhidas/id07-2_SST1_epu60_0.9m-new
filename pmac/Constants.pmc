@@ -75,6 +75,7 @@
 #define kPLC_GapPosReadback        10
 #define kPLC_PhasePosReadback      12
 #define kPLC_Limits                13
+#define kPLC_CheckMotorPower       14
 #define kPLC_HomeMtr1              22
 #define kPLC_HomeMtr3              23
 #define kPLC_HomeMtr5              24
