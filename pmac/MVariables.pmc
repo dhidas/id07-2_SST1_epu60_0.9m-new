@@ -26,6 +26,7 @@
 #define M_MotorDriveReset         M44
 #define M_SafetyPLCReset          M45         // Safety PLC Reset Output
 
+#define M_Mtr1HomeFlag           M120
 #define M_Mtr1StoppedOnLim       M130
 #define M_Mtr1Moving             M137
 #define M_Mtr1OpenLoop           M138
@@ -42,6 +43,7 @@
 
 #define M_Mtr10AmpEnabled        M254
 
+#define M_Mtr3HomeFlag           M320
 #define M_Mtr3StoppedOnLim       M330
 #define M_Mtr3Moving             M337
 #define M_Mtr3OpenLoop           M338
@@ -54,6 +56,7 @@
 #define M_Mtr3PosBias            M364
 #define M_Mtr3VarJojPos          M372
                                  
+#define M_Mtr5HomeFlag           M520
 #define M_Mtr5StoppedOnLim       M530
 #define M_Mtr5Moving             M537
 #define M_Mtr5OpenLoop           M538
@@ -65,7 +68,8 @@
 #define M_Mtr5ActPos             M562
 #define M_Mtr5PosBias            M564
 #define M_Mtr5VarJojPos          M572
-                                 
+
+#define M_Mtr6HomeFlag           M620
 #define M_Mtr6StoppedOnLim       M630
 #define M_Mtr6Moving             M637
 #define M_Mtr6OpenLoop           M638
@@ -78,6 +82,7 @@
 #define M_Mtr6PosBias            M664
 #define M_Mtr6VarJojPos          M672
                                  
+#define M_Mtr7HomeFlag           M720
 #define M_Mtr7StoppedOnLim       M730
 #define M_Mtr7Moving             M737
 #define M_Mtr7OpenLoop           M738
@@ -90,6 +95,7 @@
 #define M_Mtr7PosBias            M764
 #define M_Mtr7VarJojPos          M772
                                  
+#define M_Mtr8HomeFlag           M820
 #define M_Mtr8StoppedOnLim       M830
 #define M_Mtr8Moving             M837
 #define M_Mtr8OpenLoop           M838

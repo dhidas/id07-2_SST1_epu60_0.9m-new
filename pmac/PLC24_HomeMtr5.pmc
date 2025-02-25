@@ -1,0 +1,275 @@
+#include "Timers.pmc"
+#include "Constants.pmc"
+
+// Homing PLC for Axis 5 on EPU (Phase Top Out)
+
+
+// This homing routine will search for the home switch immediately, without first
+// doing a search for a limit switch.
+// Heidenhain encoder has a home switch that is high for half the length of the encoder.
+// It also has a home index that is a little over 1 mm from the point that the home switch
+// changes from high to low.
+// The home switch reading determines the direction of search for the home index signal.
+// For this particular equipment the home switch can be high on either the positive or negative 
+// side of the home index, depending on how the encoder was mounted. It has to be determined prior
+// to setting up the PLC for that particular axis.
+// 
+// Johnny Kirkland 2016-02-11
+// 	using template from Wayne Lewis 
+//
+// Macros:
+// - PLC: PLC number
+// - AXIS: motion axis
+// - TIMER: PMAC timer to use
+// - SERVO: first three digits of axis gate array (I7mn)
+// - HOME_POL: polarity of home switch signal
+//
+// P variables
+// P2400 - homing state (homing, not homing)
+// P2401 - homing status (limit search, home search, post-home move)
+// P2402 - post-home move (0 = return to previous, 1 = stay at zero)
+// P2405 - successfully finished homing
+
+
+// Homing State P Variable
+P2400 = 0
+
+// Homing Status P Variable
+P2401 = 0
+
+// Homing successful
+P2405 = 0
+
+OPEN PLC24 CLEAR
+
+//---- Configuring State ----
+P2400 = 1
+P2401 = 1
+P2402 = 1
+//Save high soft limits to P variable Pxx04
+P2404 = I513
+//Save the low soft limits to P variable Pxx20
+P2420 = I514
+//Save the home capture flags to P variable Pxx36
+P2436 = I7112
+//Save the homing speed/direction to P variable Pxx66
+P2466 = I523
+//Save the limit flags to P variable Pxx68
+P2468 = I524
+//Save the current home offset
+P2470 = I526
+//Save the current position to P variable Pxx84
+P2484 = M562
+
+//Clear the soft limits
+I513 = 0
+I514 = 0
+
+// Ensure that brake is released
+// if(M_Mtr5_Brake_Out = ENGAGED)
+//	M_Mtr5_Brake_Out = RELEASED
+//	I_CS13_Timer1 = 20 MilliSeconds	// Small delay to release brake
+//	WHILE(I_CS13_Timer1>0)
+//	END WHILE
+// endif
+
+IF(P2401 = 1)
+	IF(M520 = 1)			// Home flag now HI, -> on negative side of home flag edge.
+		IF(P2401 = 1)
+			P2400 = 8
+			I523 = kPhaseMtrHomeSpeed
+			I526 = 0
+			// Set the home offset to 0.
+			I7113 = 0
+			// Capture on flag high =2. Capture on flag low =10.
+			I7112 = 10
+			// first searches for home flag which is above home index
+			CMD "#5HM"
+			I_CS13_Timer1 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+			WHILE(I_CS13_Timer1>0)
+			END WHILE
+
+			I_CS13_Timer1 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+			WHILE(M540 = 0)	// At least one motor should not be In Position
+			AND(M542 = 0) 	// No following errors should be set for any motor
+			AND(M530 = 0)	// Should not stop on position limit for selected motors
+			AND(I_CS13_Timer1>0)	// Check for timeout
+			AND(P2401 = 1)	// Check that we did not abort
+			END WHILE
+
+			IF(M542 = 1)	// If fatal following error
+				P2401 = 4
+			END IF
+			IF(M530 = 1)	// If a motor hit a limit
+				P2401 = 5
+			END IF
+			IF(I_CS13_Timer1<0 OR I_CS13_Timer1 = 0)	// If timed out
+				P2401 = 3
+			END IF
+		END IF
+	ELSE			// Home flag now LO, -> on positive side of home flag edge.
+		IF(P2401 = 1)
+			P2400 = 8
+			I523 = -kPhaseMtrHomeSpeed
+			I526 = 0
+			// Set the home offset to 0.
+			I7113 = 0
+			// Capture on flag high =2. Capture on flag low =10.
+			I7112 = 2
+			// first searches for home flag which is above home index
+			CMD "#5HM"
+			I_CS13_Timer1 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+			WHILE(I_CS13_Timer1>0)
+			END WHILE
+
+			I_CS13_Timer1 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+			WHILE(M540 = 0)	// At least one motor should not be In Position
+			AND(M542 = 0) 	// No following errors should be set for any motor
+			AND(M530 = 0)	// Should not stop on position limit for selected motors
+			AND(I_CS13_Timer1>0)	// Check for timeout
+			AND(P2401 = 1)	// Check that we did not abort
+			END WHILE
+
+			IF(M542 = 1)	// If fatal following error
+				P2401 = 4
+			END IF
+			IF(M530 = 1)	// If a motor hit a limit
+				P2401 = 5
+			END IF
+			IF(I_CS13_Timer1<0 OR I_CS13_Timer1 = 0)	// If timed out
+				P2401 = 3
+			END IF
+		END IF
+	END IF
+
+	IF(P2401 = 1)
+		M572 = -5000		// This number dependent on distance between home flag and home index.
+		COMMAND "#5J^*"		// Insures move to home index will be positive.
+							// Backing off just to be sure.
+		I_CS13_Timer1 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+		WHILE(I_CS13_Timer1>0)
+		END WHILE
+
+		I_CS13_Timer1 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+		WHILE(M540 = 0)	// At least one motor should not be In Position
+		AND(M542 = 0) 	// No following errors should be set for any motor
+		AND(M530 = 0)	// Should not stop on position limit for selected motors
+		AND(I_CS13_Timer1>0)	// Check for timeout
+		AND(P2401 = 1)	// Check that we did not abort
+		END WHILE
+
+		IF(M542 = 1)	// If fatal following error
+			P2401 = 4
+		END IF
+		IF(M530 = 1)	// If a motor hit a limit
+			P2401 = 5
+		END IF
+		IF(I_CS13_Timer1<0 OR I_CS13_Timer1 = 0)	// If timed out
+			P2401 = 3
+		END IF
+	END IF
+
+	IF(P2401 = 1)
+		P2486 = (P2486 - M562) / (I508 * 32) - (I526 / 16)	// ??? operating on a previously undefined variable???
+	END IF	// - (actual position) - (home offset)
+
+	IF(P2401 = 1)
+		P2400 = 4
+		I7112 = 1			// capture control back to home index
+		I526 = P2470		// home offset restored
+		I523 = kPhaseMtrHomeSpeed			// home direction and speed set
+		COMMAND "#5HM"		// home motor
+		I_CS13_Timer1 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+		WHILE(I_CS13_Timer1>0)
+		END WHILE
+
+		I_CS13_Timer1 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+		WHILE(M540 = 0)	// At least one motor should not be In Position
+		AND(M542 = 0) 	// No following errors should be set for any motor
+		AND(M530 = 0)	// Should not stop on position limit for selected motors
+		AND(I_CS13_Timer1>0)	// Check for timeout
+		AND(P2401 = 1)	// Check that we did not abort
+		END WHILE
+
+		IF(M542 = 1)	// If fatal following error
+			P2401 = 4
+		END IF
+		IF(M530 = 1)	// If a motor hit a limit
+			P2401 = 5
+		END IF
+		IF(I_CS13_Timer1<0 OR I_CS13_Timer1 = 0)	// If timed out
+			P2401 = 3
+		END IF
+	END IF
+
+	//---- Check if all motors have homed ----
+	IF(P2401 = 1) AND (M545 = 0)
+		P2401 = 6			// if home not complete
+	END IF
+			
+	//---- Set motor position ----for gap motors only
+	//IF(P2401=1) AND (M545=1)	// if home complete
+	//	M562=35.5*5000*I508*32	// X(mm)*5000*I508*32 (encoder is 5000 cts/mm), X is mid-point position
+	//END IF
+				
+	//---- PostHomeMove State ----
+	IF(P2401 = 1)
+		IF(P2402 = 0)	// set P2402 to 0 in initialization if you want to go back to original position
+			P2400 = 5
+			M572 = P2484 / (I508 * 32)	// jog to initial position/(pos. scale factor*32)
+			COMMAND "#5J=*"
+			I_CS13_Timer1 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+			WHILE(I_CS13_Timer1>0)
+			END WHILE
+
+			I_CS13_Timer1 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+			WHILE(M540 = 0)	// At least one motor should not be In Position
+			AND(M542 = 0) 	// No following errors should be set for any moto
+			AND(M530 = 0)	// Should not stop on position limit for selected motors
+			AND(I_CS13_Timer1>0)	// Check for timeout
+			AND(P2401 = 1)	// Check that we did not abort
+			END WHILE
+
+			IF(M542 = 1)	// If fatal following error
+				P2401 = 4
+			END IF
+			IF(M530 = 1)	// If a motor hit a limit
+				P2401 = 5
+			END IF
+			IF(I_CS13_Timer1<0 OR I_CS13_Timer1 = 0)	// If timed out
+				P2401 = 3
+			END IF
+		END IF
+	END IF
+END IF
+
+//---- Done ----
+//If we have got this far without failing, set status and state done
+IF(P2401 = 1)
+	P2401 = 0
+	P2400 = 7
+	P2405 = 1
+END IF
+
+//---- Tidy Up ----
+//Stop all motors if they do not have a following error
+IF(M542 = 0)
+	COMMAND "#5J/"
+END IF
+
+//Restore the high soft limits from P variables Pxx04..x19
+I513 = P2404
+//Restore the low soft limits from P variables Pxx20..x35
+I514 = P2420
+//Restore the home capture flags from P variables Pxx36..x51
+I7112 = P2436
+//Restore the homing speed/direction from P variables Pxx66
+I523 = P2466
+//Restore the limit flags to P variables Pxx68..x83
+I524 = P2468
+//Restore the home offset from P variables Pxx70
+I526 = P2470
+
+DISABLE PLC24
+
+CLOSE

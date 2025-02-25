@@ -28,6 +28,7 @@ M43->Y:$078805,2,1    ; Output 11 J7  Pin#14    Pin#32  (Machine ready green lig
 M44->Y:$078805,3,1    ; Output 12 J7  Pin#15    Pin#33  (Motor Drive Reset Output)
 M45->Y:$078805,4,1 //   Output 13 J7   Pin#16       Pin#34  (Safety PLC Reset Output)
 
+M120->X:$078000,16 // HMFL1 flag input status
 M130->Y:$0000C0,11,1 // #1 Stopped-on-position-limit bit
 M137->X:$0000B0,17,1 ; #1 Running-program bit
 M138->X:$0000B0,18,1 // #1 Open-loop-mode bit
@@ -43,6 +44,7 @@ M172->L:$0000D7 // #1 Variable jog position/distance (cts)
 
 M254->Y:$003441,14,1    // MACRO IC 0 Node 1 amplifier enable flag
 
+M320->X:$078010,16 // HMFL3 flag input status
 M330->Y:$0001C0,11,1 // #3 Stopped-on-position-limit bit
 M337->X:$0001B0,17,1 ; #3 Running-program bit
 M338->X:$0001B0,18,1 // #3 Open-loop-mode bit
@@ -55,6 +57,7 @@ M362->D:$00018B // #3 Actual position (1/[Ixx08*32] cts)
 M364->D:$0001CC // #3 Position bias (1/[Ixx08*32] cts)
 M372->L:$0001D7 // #3 Variable jog position/distance (cts)
 
+M520->X:$078100,16 // HMFL5 flag input status
 M530->Y:$0002C0,11,1 // #5 Stopped-on-position-limit bit
 M537->X:$0002B0,17,1 ; #5 Running-program bit
 M538->X:$0002B0,18,1 // #5 Open-loop-mode bit
@@ -67,6 +70,7 @@ M562->D:$00028B // #5 Actual position (1/[Ixx08*32] cts)
 M564->D:$0002CC // #5 Position bias (1/[Ixx08*32] cts)
 M572->L:$0002D7 // #5 Variable jog position/distance (cts)
 
+M620->X:$078108,16 // HMFL6 flag input status
 M630->Y:$000340,11,1 // #6 Stopped-on-position-limit bit
 M637->X:$000330,17,1 ; #6 Running-program bit
 M638->X:$000330,18,1 // #6 Open-loop-mode bit
@@ -79,6 +83,7 @@ M662->D:$00030B // #6 Actual position (1/[Ixx08*32] cts)
 M664->D:$00034C // #6 Position bias (1/[Ixx08*32] cts)
 M672->L:$000357 // #6 Variable jog position/distance (cts)
 
+M720->X:$078110,16 // HMFL7 flag input status
 M730->Y:$0003C0,11,1 // #7 Stopped-on-position-limit bit
 M737->X:$0003B0,17,1 ; #7 Running-program bit
 M738->X:$0003B0,18,1 // #7 Open-loop-mode bit
@@ -91,6 +96,7 @@ M762->D:$00038B // #7 Actual position (1/[Ixx08*32] cts)
 M764->D:$0003CC // #7 Position bias (1/[Ixx08*32] cts)
 M772->L:$0003D7 // #7 Variable jog position/distance (cts)
 
+M820->X:$078118,16 // HMFL8 flag input status
 M830->Y:$000440,11,1 // #8 Stopped-on-position-limit bit
 M837->X:$000430,17,1 ; #8 Running-program bit
 M838->X:$000430,18,1 // #8 Open-loop-mode bit
@@ -102,7 +108,6 @@ M845->Y:$000440,10,1 // #8 Home-complete bit
 M862->D:$00040B // #8 Actual position (1/[Ixx08*32] cts)
 M864->D:$00044C // #8 Position bias (1/[Ixx08*32] cts)
 M872->L:$000457 // #8 Variable jog position/distance (cts)
-
 
 
 M962->D:$48B        // #9 Actual position (1/[Ixx08*32] cts)

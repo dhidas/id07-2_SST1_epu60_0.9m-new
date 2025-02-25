@@ -1,0 +1,274 @@
+#include "Timers.pmc"
+#include "Constants.pmc"
+
+// Homing PLC for Axis 8 on EPU (Phase Bottom Inner)
+
+
+// This homing routine will search for the home switch immediately, without first
+// doing a search for a limit switch.
+// Heidenhain encoder has a home switch that is high for half the length of the encoder.
+// It also has a home index that is a little over 1 mm from the point that the home switch
+// changes from high to low.
+// The home switch reading determines the direction of search for the home index signal.
+// For this particular equipment the home switch can be high on either the positive or negative 
+// side of the home index, depending on how the encoder was mounted. It has to be determined prior
+// to setting up the PLC for that particular axis.
+// 
+// Johnny Kirkland 2016-02-11
+// 	using template from Wayne Lewis 
+//
+// Macros:
+// - PLC: PLC number
+// - AXIS: motion axis
+// - TIMER: PMAC timer to use
+// - SERVO: first three digits of axis gate array (I7mn)
+// - HOME_POL: polarity of home switch signal
+//
+// P variables
+// P2700 - homing state (homing, not homing)
+// P2701 - homing status (limit search, home search, post-home move)
+// P2702 - post-home move (0 = return to previous, 1 = stay at zero)
+// P2705 - successfully finished homing
+
+
+// Homing State P Variable
+P2700 = 0
+
+// Homing Status P Variable
+P2701 = 0
+
+// Homing successful
+P2705 = 0
+
+OPEN PLC27 CLEAR
+
+//---- Configuring State ----
+P2700 = 1
+P2701 = 1
+P2702 = 1
+//Save high soft limits to P variable Pxx04
+P2704 = I813
+//Save the low soft limits to P variable Pxx20
+P2720 = I814
+//Save the home capture flags to P variable Pxx36
+P2736 = I7142
+//Save the homing speed/direction to P variable Pxx66
+P2766 = I823
+//Save the limit flags to P variable Pxx68
+P2768 = I824
+//Save the current home offset
+P2770 = I826
+//Save the current position to P variable Pxx84
+P2784 = M862
+//Clear the soft limits
+I813 = 0
+I814 = 0
+
+// Ensure that brake is released
+// if (M_Mtr8_Brake_Out = ENGAGED)
+//	M_Mtr8_Brake_Out = RELEASED
+//	I_CS14_Timer2 = 20 MilliSeconds	// Small delay to release brake
+//	WHILE(I_CS14_Timer2>0)
+//	END WHILE
+// endif
+
+IF(P2701 = 1)
+	IF(M820 = 1)			// Home flag now HI, -> on negative side of home flag edge.
+		IF(P2701 = 1)
+			P2700 = 8
+			I823 = kGapMtrHomeSpeed
+			I826 = 0
+			// Set home offset to 0.
+			I7143 = 0
+			// Capture on flag high =2. Capture on flag low =10.
+			I7142 = 10
+			// first searches for home flag which is above home index
+			CMD "#8HM"
+			I_CS14_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+			WHILE(I_CS14_Timer2>0)
+			END WHILE
+
+			I_CS14_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+			WHILE(M840 = 0)	// At least one motor should not be In Position
+			AND(M842 = 0) 	// No following errors should be set for any motor
+			AND(M830 = 0)	// Should not stop on position limit for selected motors
+			AND(I_CS14_Timer2>0)	// Check for timeout
+			AND(P2701 = 1)	// Check that we did not abort
+			END WHILE
+
+			IF(M842 = 1)	// If fatal following error
+				P2701 = 4
+			END IF
+			IF(M830 = 1)	// If a motor hit a limit
+				P2701 = 5
+			END IF
+			IF(I_CS14_Timer2<0 OR I_CS14_Timer2 = 0)	// If timed out
+				P2701 = 3
+			END IF
+		END IF
+	ELSE			// Home flag now LO, -> on positive side of home flag edge.
+		IF(P2701 = 1)
+			P2700 = 8
+			I823 = -kGapMtrHomeSpeed
+			I826 = 0
+			// Set home offset to 0.
+			I7143 = 0
+			// Capture on flag high =2. Capture on flag low =10.
+			I7142 = 2
+			// first searches for home flag which is above home index
+			CMD"#8HM"
+			I_CS14_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+			WHILE(I_CS14_Timer2>0)
+			END WHILE
+
+			I_CS14_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+			WHILE(M840 = 0)	// At least one motor should not be In Position
+			AND(M842 = 0) 	// No following errors should be set for any motor
+			AND(M830 = 0)	// Should not stop on position limit for selected motors
+			AND(I_CS14_Timer2>0)	// Check for timeout
+			AND(P2701 = 1)	// Check that we did not abort
+			END WHILE
+
+			IF(M842 = 1)	// If fatal following error
+				P2701 = 4
+			END IF
+			IF(M830 = 1)	// If a motor hit a limit
+				P2701 = 5
+			END IF
+			IF(I_CS14_Timer2<0 OR I_CS14_Timer2 = 0)	// If timed out
+				P2701 = 3
+			END IF
+		END IF
+	END IF
+
+	IF(P2701 = 1)
+		M872 = -5000		// This number dependent on distance between home flag and home index.
+		COMMAND "#8J^*"		// Insures move to home index will be positive.
+							// Backing off just to be sure.
+		I_CS14_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+		WHILE(I_CS14_Timer2>0)
+		END WHILE
+
+		I_CS14_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+		WHILE(M840 = 0)	// At least one motor should not be In Position
+		AND(M842 = 0) 	// No following errors should be set for any motor
+		AND(M830 = 0)	// Should not stop on position limit for selected motors
+		AND(I_CS14_Timer2>0)	// Check for timeout
+		AND(P2701 = 1)	// Check that we did not abort
+		END WHILE
+
+		IF(M842 = 1)	// If fatal following error
+			P2701 = 4
+		END IF
+		IF(M830 = 1)	// If a motor hit a limit
+			P2701 = 5
+		END IF
+		IF(I_CS14_Timer2<0 OR I_CS14_Timer2 = 0)	// If timed out
+			P2701 = 3
+		END IF
+	END IF
+
+	IF(P2701 = 1)
+		P2786 = (P2786 - M862) / (I808 * 32) - (I826 / 16)	// ??? operating on a previously undefined variable???
+	END IF		// - (actual position) - (home offset)
+
+	IF(P2701 = 1)
+		P2700 = 4
+		I7142 = 1			// capture control back to home index
+		I826 = P2770		// home offset restored
+		I823 = kGapMtrHomeSpeed			// home direction and speed set
+		COMMAND "#8HM"		// home motor
+		I_CS14_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+		WHILE(I_CS14_Timer2>0)
+		END WHILE
+
+		I_CS14_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+		WHILE(M840 = 0)	// At least one motor should not be In Position
+		AND(M842 = 0) 	// No following errors should be set for any motor
+		AND(M830 = 0)	// Should not stop on position limit for selected motors
+		AND(I_CS14_Timer2>0)	// Check for timeout
+		AND(P2701 = 1)	// Check that we did not abort
+		END WHILE
+
+		IF(M842 = 1)	// If fatal following error
+			P2701 = 4
+		END IF
+		IF(M830 = 1)	// If a motor hit a limit
+			P2701 = 5
+		END IF
+		IF(I_CS14_Timer2<0 OR I_CS14_Timer2 = 0)	// If timed out
+			P2701 = 3
+		END IF
+	END IF
+					
+	//---- Check if all motors have homed ----
+	IF(P2701 = 1) AND (M845 = 0)
+		P2701 = 6			// if home not complete
+	END IF
+			
+	//---- Set motor position ---- for gap motors only
+	//IF(P2701=1) AND (M845=1)	// if home complete
+	//	M862=35.5*5000*I808*32	// X(mm)*5000*I808*32 (encoder is 5000 cts/mm), X is mid-point position
+	//END IF
+				
+	//---- PostHomeMove State ----
+	IF(P2701 = 1)
+		IF(P2702 = 0)	// set P2702 to 0 in initialization if you want to go back to original position
+			P2700 = 5
+			M872 = P2784 / (I808 * 32)	// jog to initial position/(pos. scale factor*32)
+			COMMAND "#8J=*"
+			I_CS14_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
+			WHILE(I_CS14_Timer2>0)
+			END WHILE
+
+			I_CS14_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
+			WHILE(M840 = 0)	// At least one motor should not be In Position
+			AND(M842 = 0) 	// No following errors should be set for any moto
+			AND(M830 = 0)	// Should not stop on position limit for selected motors
+			AND(I_CS14_Timer2>0)	// Check for timeout
+			AND(P2701 = 1)	// Check that we did not abort
+			END WHILE
+
+			IF(M842 = 1)	// If fatal following error
+				P2701 = 4
+			END IF
+			IF(M830 = 1)	// If a motor hit a limit
+				P2701 = 5
+			END IF
+			IF(I_CS14_Timer2<0 OR I_CS14_Timer2 = 0)	// If timed out
+				P2701 = 3
+			END IF
+		END IF
+	END IF
+END IF
+
+//---- Done ----
+//If we have got this far without failing, set status and state done
+IF(P2701 = 1)
+	P2701 = 0
+	P2700 = 7
+	P2705 = 1
+END IF
+
+//---- Tidy Up ----
+//Stop all motors if they do not have a following error
+IF(M842 = 0)
+	COMMAND "#8J/"
+END IF
+
+//Restore the high soft limits from P variables Pxx04..x19
+I813 = P2704
+//Restore the low soft limits from P variables Pxx20..x35
+I814 = P2720
+//Restore the home capture flags from P variables Pxx36..x51
+I7142 = P2736
+//Restore the homing speed/direction from P variables Pxx66
+I823 = P2766
+//Restore the limit flags to P variables Pxx68..x83
+I824 = P2768
+//Restore the home offset from P variables Pxx70
+I826 = P2770
+
+DISABLE PLC27
+
+CLOSE
