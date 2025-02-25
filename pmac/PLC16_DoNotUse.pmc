@@ -1,0 +1,8 @@
+// This is a placeholder so that P16xx variables are
+// not used.  These are used in the macro connection
+// of PLC 17.
+
+Open PLC 16 Clear
+Disable PLC 16
+Close
+Disable PLC 16
