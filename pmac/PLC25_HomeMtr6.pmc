@@ -15,7 +15,7 @@
 // to setting up the PLC for that particular axis.
 // 
 // Johnny Kirkland 2016-02-11
-// 	using template from Wayne Lewis 
+//   using template from Wayne Lewis 
 //
 // Macros:
 // - PLC: PLC number
@@ -39,7 +39,7 @@ P2501 = 0
 // Homing successful
 P2505 = 0
 
-OPEN PLC25 CLEAR
+OPEN PLC kPLC_HomeMtr6 CLEAR
 
 //---- Configuring State ----
 P2500 = 1
@@ -65,194 +65,194 @@ I614 = 0
 
 // Ensure that brake is released
 // if(M_Mtr6_Brake_Out = ENGAGED)
-//	M_Mtr6_Brake_Out = RELEASED
-//	I_CS13_Timer2 = 20 MilliSeconds	// Small delay to release brake
-//	WHILE(I_CS13_Timer2>0)
-//	END WHILE
+//  M_Mtr6_Brake_Out = RELEASED
+//  I_CS13_Timer2 = 20 MilliSeconds  // Small delay to release brake
+//  WHILE(I_CS13_Timer2>0)
+//  END WHILE
 // endif
 
 IF(P2501 = 1)
-	IF(M620 = 0)			// Home flag now LO, -> on negative side of home flag edge.
-		IF(P2501 = 1)
-			P2500 = 8
-			I623 = kGapMtrHomeSpeed
-			I626 = 0
-			// Set the home offset to 0.
-			I7123 = 0
-			// Capture on flag high =2. Capture on flag low =10.
-			I7122 = 2
-			// first searches for home flag which is below home index
-			CMD "#6HM"
-			I_CS13_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
-			WHILE(I_CS13_Timer2>0)
-			END WHILE
+  IF(M620 = 0)      // Home flag now LO, -> on negative side of home flag edge.
+    IF(P2501 = 1)
+      P2500 = 8
+      I623 = kGapMtrHomeSpeed
+      I626 = 0
+      // Set the home offset to 0.
+      I7123 = 0
+      // Capture on flag high =2. Capture on flag low =10.
+      I7122 = 2
+      // first searches for home flag which is below home index
+      CMD "#6HM"
+      I_CS13_Timer2 = 20 * kMilliSecond  // Small delay to start moving, 100 servo cycles = 20 msec
+      WHILE(I_CS13_Timer2>0)
+      END WHILE
 
-			I_CS13_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
-			WHILE(M640 = 0)	// At least one motor should not be In Position
-			AND(M642 = 0) 	// No following errors should be set for any motor
-			AND(M630 = 0)	// Should not stop on position limit for selected motors
-			AND(I_CS13_Timer2>0)	// Check for timeout
-			AND(P2501 = 1)	// Check that we did not abort
-			END WHILE
+      I_CS13_Timer2 = 600000 * kMilliSecond  // Now start checking the conditions, = 600 sec
+      WHILE(M640 = 0)  // At least one motor should not be In Position
+      AND(M642 = 0)   // No following errors should be set for any motor
+      AND(M630 = 0)  // Should not stop on position limit for selected motors
+      AND(I_CS13_Timer2>0)  // Check for timeout
+      AND(P2501 = 1)  // Check that we did not abort
+      END WHILE
 
-			IF(M642 = 1)	// If fatal following error
-				P2501 = 4
-			END IF
-			IF(M630 = 1)	// If a motor hit a limit
-				P2501 = 5
-			END IF
-			IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)	// If timed out
-				P2501 = 3
-			END IF
-		END IF
-	ELSE			// Home flag now HI, -> on positive side of home flag edge.
-		IF(P2501 = 1)
-			P2500 = 8
-			I623 = -kGapMtrHomeSpeed
-			I626 = 0
-			// Set the home offset to 0.
-			I7123 = 0
-			// Capture on flag high =2. Capture on flag low =10.
-			I7122 = 10
-			// first searches for home flag which is below home index
-			CMD "#6HM"
-			I_CS13_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
-			WHILE(I_CS13_Timer2>0)
-			END WHILE
+      IF(M642 = 1)  // If fatal following error
+        P2501 = 4
+      END IF
+      IF(M630 = 1)  // If a motor hit a limit
+        P2501 = 5
+      END IF
+      IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)  // If timed out
+        P2501 = 3
+      END IF
+    END IF
+  ELSE      // Home flag now HI, -> on positive side of home flag edge.
+    IF(P2501 = 1)
+      P2500 = 8
+      I623 = -kGapMtrHomeSpeed
+      I626 = 0
+      // Set the home offset to 0.
+      I7123 = 0
+      // Capture on flag high =2. Capture on flag low =10.
+      I7122 = 10
+      // first searches for home flag which is below home index
+      CMD "#6HM"
+      I_CS13_Timer2 = 20 * kMilliSecond  // Small delay to start moving, 100 servo cycles = 20 msec
+      WHILE(I_CS13_Timer2>0)
+      END WHILE
 
-			I_CS13_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
-			WHILE(M640 = 0)	// At least one motor should not be In Position
-			AND(M642 = 0) 	// No following errors should be set for any motor
-			AND(M630 = 0)	// Should not stop on position limit for selected motors
-			AND(I_CS13_Timer2>0)	// Check for timeout
-			AND(P2501 = 1)	// Check that we did not abort
-			END WHILE
+      I_CS13_Timer2 = 600000 * kMilliSecond  // Now start checking the conditions, = 600 sec
+      WHILE(M640 = 0)  // At least one motor should not be In Position
+      AND(M642 = 0)   // No following errors should be set for any motor
+      AND(M630 = 0)  // Should not stop on position limit for selected motors
+      AND(I_CS13_Timer2>0)  // Check for timeout
+      AND(P2501 = 1)  // Check that we did not abort
+      END WHILE
 
-			IF(M642 = 1)	// If fatal following error
-				P2501 = 4
-			END IF
-			IF(M630 = 1)	// If a motor hit a limit
-				P2501 = 5
-			END IF
-			IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)	// If timed out
-				P2501 = 3
-			END IF
-		END IF
-	END IF
+      IF(M642 = 1)  // If fatal following error
+        P2501 = 4
+      END IF
+      IF(M630 = 1)  // If a motor hit a limit
+        P2501 = 5
+      END IF
+      IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)  // If timed out
+        P2501 = 3
+      END IF
+    END IF
+  END IF
 
-	IF(P2501 = 1)
-		M672 = -15000		// This number dependent on distance between home flag and home index.
-		COMMAND "#6J^*"		// Insures move to home index will be positive.
-							// Backing off just to be sure.
-		I_CS13_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
-		WHILE(I_CS13_Timer2>0)
-		END WHILE
+  IF(P2501 = 1)
+    M672 = -15000    // This number dependent on distance between home flag and home index.
+    COMMAND "#6J^*"    // Insures move to home index will be positive.
+              // Backing off just to be sure.
+    I_CS13_Timer2 = 20 * kMilliSecond  // Small delay to start moving, 100 servo cycles = 20 msec
+    WHILE(I_CS13_Timer2>0)
+    END WHILE
 
-		I_CS13_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
-		WHILE(M640 = 0)	// At least one motor should not be In Position
-		AND(M642 = 0) 	// No following errors should be set for any motor
-		AND(M630 = 0)	// Should not stop on position limit for selected motors
-		AND(I_CS13_Timer2>0)	// Check for timeout
-		AND(P2501 = 1)	// Check that we did not abort
-		END WHILE
+    I_CS13_Timer2 = 600000 * kMilliSecond  // Now start checking the conditions, = 600 sec
+    WHILE(M640 = 0)  // At least one motor should not be In Position
+    AND(M642 = 0)   // No following errors should be set for any motor
+    AND(M630 = 0)  // Should not stop on position limit for selected motors
+    AND(I_CS13_Timer2>0)  // Check for timeout
+    AND(P2501 = 1)  // Check that we did not abort
+    END WHILE
 
-		IF(M642 = 1)	// If fatal following error
-			P2501 = 4
-		END IF
-		IF(M630 = 1)	// If a motor hit a limit
-			P2501 = 5
-		END IF
-		IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)	// If timed out
-			P2501 = 3
-		END IF
-	END IF
+    IF(M642 = 1)  // If fatal following error
+      P2501 = 4
+    END IF
+    IF(M630 = 1)  // If a motor hit a limit
+      P2501 = 5
+    END IF
+    IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)  // If timed out
+      P2501 = 3
+    END IF
+  END IF
 
-	IF(P2501 = 1)
-		P2586 = (P2586 - M662) / (I608 * 32) - (I626 / 16)	// ??? operating on a previously undefined variable???
-	END IF							// - (actual position) - (home offset)
+  IF(P2501 = 1)
+    P2586 = (P2586 - M662) / (I608 * 32) - (I626 / 16)  // ??? operating on a previously undefined variable???
+  END IF              // - (actual position) - (home offset)
 
-	IF(P2501 = 1)
-		P2500 = 4
-		I7122 = 1			// capture control back to home index
-		I626 = P2570		// home offset restored
-		I623 = kGapMtrHomeSpeed			// home direction and speed set
-		COMMAND"#6HM"		// home motor
-		I_CS13_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
-		WHILE(I_CS13_Timer2>0)
-		END WHILE
+  IF(P2501 = 1)
+    P2500 = 4
+    I7122 = 1      // capture control back to home index
+    I626 = P2570    // home offset restored
+    I623 = kGapMtrHomeSpeed      // home direction and speed set
+    COMMAND"#6HM"    // home motor
+    I_CS13_Timer2 = 20 * kMilliSecond  // Small delay to start moving, 100 servo cycles = 20 msec
+    WHILE(I_CS13_Timer2>0)
+    END WHILE
 
-		I_CS13_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
-		WHILE(M640 = 0)	// At least one motor should not be In Position
-		AND(M642 = 0) 	// No following errors should be set for any motor
-		AND(M630 = 0)	// Should not stop on position limit for selected motors
-		AND(I_CS13_Timer2>0)	// Check for timeout
-		AND(P2501 = 1)	// Check that we did not abort
-		END WHILE
+    I_CS13_Timer2 = 600000 * kMilliSecond  // Now start checking the conditions, = 600 sec
+    WHILE(M640 = 0)  // At least one motor should not be In Position
+    AND(M642 = 0)   // No following errors should be set for any motor
+    AND(M630 = 0)  // Should not stop on position limit for selected motors
+    AND(I_CS13_Timer2>0)  // Check for timeout
+    AND(P2501 = 1)  // Check that we did not abort
+    END WHILE
 
-		IF(M642 = 1)	// If fatal following error
-			P2501 = 4
-		END IF
-		IF(M630 = 1)	// If a motor hit a limit
-			P2501 = 5
-		END IF
-		IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)	// If timed out
-			P2501 = 3
-		END IF
-	END IF
+    IF(M642 = 1)  // If fatal following error
+      P2501 = 4
+    END IF
+    IF(M630 = 1)  // If a motor hit a limit
+      P2501 = 5
+    END IF
+    IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)  // If timed out
+      P2501 = 3
+    END IF
+  END IF
 
-	//---- Check if all motors have homed ----
-	IF(P2501 = 1) AND (M645 = 0)
-		P2501 = 6			// if home not complete
-	END IF
-			
-	//---- Set motor position ----for gap motors only
-	//IF(P2501=1) AND (M645=1)	// if home complete
-	//	M662=35.5*5000*I608*32	// X(mm)*5000*I608*32 (encoder is 5000 cts/mm), X is mid-point position
-	//END IF
-				
-	//---- PostHomeMove State ----
-	IF(P2501 = 1)
-		IF(P2502 = 0)	// set P2502 to 0 in initialization if you want to go back to original position
-			P2500 = 5
-			M672 = P2584 / (I608 * 32)	// jog to initial position/(pos. scale factor*32)
-			COMMAND "#6J=*"
-			I_CS13_Timer2 = 20 * kMilliSecond	// Small delay to start moving, 100 servo cycles = 20 msec
-			WHILE(I_CS13_Timer2>0)
-			END WHILE
+  //---- Check if all motors have homed ----
+  IF(P2501 = 1) AND (M645 = 0)
+    P2501 = 6      // if home not complete
+  END IF
+      
+  //---- Set motor position ----for gap motors only
+  //IF(P2501=1) AND (M645=1)  // if home complete
+  //  M662=35.5*5000*I608*32  // X(mm)*5000*I608*32 (encoder is 5000 cts/mm), X is mid-point position
+  //END IF
+        
+  //---- PostHomeMove State ----
+  IF(P2501 = 1)
+    IF(P2502 = 0)  // set P2502 to 0 in initialization if you want to go back to original position
+      P2500 = 5
+      M672 = P2584 / (I608 * 32)  // jog to initial position/(pos. scale factor*32)
+      COMMAND "#6J=*"
+      I_CS13_Timer2 = 20 * kMilliSecond  // Small delay to start moving, 100 servo cycles = 20 msec
+      WHILE(I_CS13_Timer2>0)
+      END WHILE
 
-			I_CS13_Timer2 = 600000 * kMilliSecond	// Now start checking the conditions, = 600 sec
-			WHILE(M640 = 0)	// At least one motor should not be In Position
-			AND(M642 = 0) 	// No following errors should be set for any moto
-			AND(M630 = 0)	// Should not stop on position limit for selected motors
-			AND(I_CS13_Timer2>0)	// Check for timeout
-			AND(P2501 = 1)	// Check that we did not abort
-			END WHILE
+      I_CS13_Timer2 = 600000 * kMilliSecond  // Now start checking the conditions, = 600 sec
+      WHILE(M640 = 0)  // At least one motor should not be In Position
+      AND(M642 = 0)   // No following errors should be set for any moto
+      AND(M630 = 0)  // Should not stop on position limit for selected motors
+      AND(I_CS13_Timer2>0)  // Check for timeout
+      AND(P2501 = 1)  // Check that we did not abort
+      END WHILE
 
-			IF(M642 = 1)	// If fatal following error
-				P2501 = 4
-			END IF
-			IF(M630 = 1)	// If a motor hit a limit
-				P2501 = 5
-			END IF
-			IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)	// If timed out
-				P2501 = 3
-			END IF
-		END IF
-	END IF
+      IF(M642 = 1)  // If fatal following error
+        P2501 = 4
+      END IF
+      IF(M630 = 1)  // If a motor hit a limit
+        P2501 = 5
+      END IF
+      IF(I_CS13_Timer2<0 OR I_CS13_Timer2 = 0)  // If timed out
+        P2501 = 3
+      END IF
+    END IF
+  END IF
 END IF
 
 //---- Done ----
 //If we have got this far without failing, set status and state done
 IF(P2501 = 1)
-	P2501 = 0
-	P2500 = 7
-	P2505 = 1
+  P2501 = 0
+  P2500 = 7
+  P2505 = 1
 END IF
 
 //---- Tidy Up ----
 //Stop all motors if they do not have a following error
 IF(M642 = 0)
-	COMMAND "#6J/"
+  COMMAND "#6J/"
 END IF
 
 //Restore the high soft limits from P variables Pxx04..x19
@@ -268,6 +268,6 @@ I624 = P2568
 //Restore the home offset from P variables Pxx70
 I626 = P2570
 
-DISABLE PLC25
+DISABLE PLC kPLC_HomeMtr6
 
 CLOSE
