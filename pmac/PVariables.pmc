@@ -143,8 +143,23 @@
 #define P_Mtr7HomeFinish        P2605
 #define P_Mtr8HomeFinish        P2705
 
+#define P_LastTriggerPos        P2800
+#define P_TriggerDirection      P2801
+#define P_NextTriggerOn         P2802
+#define P_NextTriggerOff        P2803
+#define P_TriggerIncrement      P2804
 #define P_ZERO                  P2805
 #define P_ONE                   P2806
+#define P_TriggerCountUp        P2807
+#define P_TriggerCountDown      P2808
+#define P_ScanRunning           P2809
+#define P_PLC28RunCount         P2810
+#define P_TriggerArmed          P2813
+#define P_ENERGYAXIS            P2824
+#define P_BigTrigOnOrOff        P2825
+#define P_BigTrigStart          P2826
+#define P_BigTrigEnd            P2827
+#define P_SmallTrigOnOrOff      P2828
 
 #define P_Mtr9_Resolution       P4809
 #define P_Mtr10_Resolution      P4810

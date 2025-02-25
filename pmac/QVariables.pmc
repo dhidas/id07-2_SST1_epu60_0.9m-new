@@ -1,6 +1,7 @@
 #ifndef QVariables_pmc
 #define QVariables_pmc
 
+#define Q_NTriggers       Q23 ; number of triggers
 
 #define Q_X_KinDemandPos  Q77
 #define Q_Y_KinDemandPos  Q78

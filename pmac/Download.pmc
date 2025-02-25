@@ -19,3 +19,4 @@
 //#include "PLC14_CheckMotorPower.pmc"
 #include "PLC15_SafetyPLCReset.pmc"
 #include "PLC17_MacroInit.pmc"
+#include "PLC28_MonoTrigger.pmc"

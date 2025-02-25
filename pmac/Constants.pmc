@@ -78,13 +78,13 @@
 #define kPLC_CheckMotorPower       14
 #define kPLC_SafetyPLCReset        15
 #define kPLC_MacroInit             17
-#define kPLC_HomeMtr1              22
-#define kPLC_HomeMtr3              23
+//#define kPLC_HomeMtr1              22
+//#define kPLC_HomeMtr3              23
 #define kPLC_HomeMtr5              24
 #define kPLC_HomeMtr6              25
 #define kPLC_HomeMtr7              26
 #define kPLC_HomeMtr8              27
-
+#define kPLC_MonoTrigger           28
 
 
 #define kPOS_JOG_SUCCESS   7

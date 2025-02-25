@@ -1,0 +1,80 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "QVariables.pmc"
+#include "MVariables.pmc"
+
+P_ZERO = 0
+P_ONE  = 1
+P_PLC28RunCount = 0
+
+P_TriggerCountUp = 0
+P_TriggerCountDown = 0
+
+Open PLC kPLC_MonoTrigger Clear
+
+ADDRESS&6
+P_ENERGYAXIS = Q_Y_KinReportPos
+
+MXR0,M33,P_BigTrigOnOrOff
+MXR0,M34,P_SmallTrigOnOrOff
+
+// Only toggle trigger if program running
+if (M_CS6Running = kTRUE and P_ScanRunning = kTRUE and INT(P_TriggerCountDown) < INT(Q_NTriggers) and P_TriggerArmed = kTRUE)
+
+  if (P_TriggerDirection > 0)
+    if (P_ENERGYAXIS > P_BigTrigStart AND P_BigTrigOnOrOff != kON)
+      MXW0,M33,P_ONE
+      P_BigTrigStart = P_BigTrigStart + 100000  ; Big number just to avoid doubles
+    endif
+    if (P_ENERGYAXIS > P_BigTrigEnd AND P_BigTrigOnOrOff = kON)
+      MXW0,M33,P_ZERO
+    endif
+    if (P_ENERGYAXIS > P_NextTriggerOn)
+      MXW0,M34,P_ONE
+      P_LastTriggerPos = P_NextTriggerOn
+      P_NextTriggerOn = P_NextTriggerOn + P_TriggerIncrement
+      P_TriggerCountUp = P_TriggerCountUp + 1
+    endif
+    if (P_ENERGYAXIS > P_NextTriggerOff)
+      MXW0,M34,P_ZERO
+      P_NextTriggerOff = P_NextTriggerOff + P_TriggerIncrement
+      P_TriggerCountDown = P_TriggerCountDown + 1
+    endif
+  else
+    if (P_ENERGYAXIS < P_BigTrigStart AND P_BigTrigOnOrOff != 1)
+      MXW0,M33,P_ONE
+      P_BigTrigStart = P_BigTrigStart - 100000  ; Big number just to avoid doubles
+    endif
+    if (P_ENERGYAXIS < P_BigTrigEnd AND P_BigTrigOnOrOff = 1)
+      MXW0,M33,P_ZERO
+    endif
+    if (P_ENERGYAXIS < P_NextTriggerOn)
+      MXW0,M34,P_ONE
+      P_LastTriggerPos = P_NextTriggerOn
+      P_NextTriggerOn = P_NextTriggerOn - P_TriggerIncrement
+      P_TriggerCountUp = P_TriggerCountUp + 1
+    endif
+    if (P_ENERGYAXIS < P_NextTriggerOff)
+      MXW0,M34,P_ZERO
+      P_NextTriggerOff = P_NextTriggerOff - P_TriggerIncrement
+      P_TriggerCountDown = P_TriggerCountDown + 1
+    endif
+  endif
+endif
+
+if (M_CS6Running = kFALSE or P_ScanRunning = kFALSE or P_TriggerArmed = kFALSE)
+  if (P_BigTrigOnOrOff = kON)
+    MXW0,M33,P_ZERO
+  endif
+  if (P_SmallTrigOnOrOff = kON)
+    MXW0,M34,P_ZERO
+  endif
+endif
+
+if (M_CS6Running = kFALSE)
+  P_TriggerArmed = kFALSE
+  P_ScanRunning = kFALSE
+endif
+
+P_PLC28RunCount = P_PLC28RunCount + 1
+Close
