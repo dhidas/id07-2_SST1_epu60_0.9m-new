@@ -10,6 +10,7 @@
 #define M_PhaseCBrakeBrkrFlt      M21         // Breaker for BD brake tripped (0=tripped, 1=normal)
 #define M_PhaseDBrakeBrkrFlt      M22         // Breaker for BD brake tripped (0=tripped, 1=normal)
 #define M_SafetyPLCIn             M27
+#define M_ResetSystem             M28         // Reset PushButton switch from Front Panel  (0=off, 1=on)
 #define M_OpenGapSignalIn         M29
 #define M_3PhasePower             M30         // Digital input indicating power is on to drives  (0=pwr off, 1=pwr on)
 
@@ -23,6 +24,7 @@
 #define M_MotorMovingLight        M42
 #define M_MotorReadyLight         M43
 #define M_MotorDriveReset         M44
+#define M_SafetyPLCReset          M45         // Safety PLC Reset Output
 
 #define M_Mtr1StoppedOnLim       M130
 #define M_Mtr1Moving             M137

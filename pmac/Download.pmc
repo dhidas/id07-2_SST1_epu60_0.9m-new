@@ -16,4 +16,5 @@
 #include "PLC10_GapPosReadback.pmc"
 #include "PLC12_PhasePosReadback.pmc"
 #include "PLC13_Limits.pmc"
-#include "PLC14_CheckMotorPower.pmc"
+//#include "PLC14_CheckMotorPower.pmc"
+#include "PLC15_SafetyPLCReset.pmc"

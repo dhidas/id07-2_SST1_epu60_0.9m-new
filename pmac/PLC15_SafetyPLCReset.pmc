@@ -1,0 +1,103 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "MVariables.pmc"
+#include "Timers.pmc"
+
+
+// Reset is requested from front panel.
+// Stop motion and send PLC and drive resets.
+Open PLC kPLC_SafetyPLCReset Clear
+if (P_PLCResetExecuting = kFALSE)
+
+  // If PLCReset signal arrives, handle it    (M28)
+  // !!! Make sure that we ignore the situation in StopAll/InterlockState
+  // Also do not execute if any gap motor is disabled (we do not want to enable on-purpose disabled motor)
+  if (M_ResetSystem = kTRUE AND P_StopAllStat = 0)
+    OR (P_SafetyReset = kTRUE AND P_StopAllStat = 0)
+    P_PLCResetExecuting = kTRUE
+    
+    //********************
+    // Disable all PLCs that could cause movement
+    // Clear movement requests
+    //*******************
+    Disable PLC kPLC_MoveRequest
+    Disable PLC kPLC_Homing
+    P_MotorHomeRequest = 0
+    
+    // Abort all gap movements and stop all gap motors
+    CMD"^A"
+    // Wait StopTime ms for them to stop
+    I_CS8_Timer2 = kSTOP_TIME * kMilliSecond
+    while (I_CS8_Timer2 > 0)
+    endwhile
+      
+    // Make sure to bring the girders in Gap Coordinated mode
+    if (P_UpperGirderMode != kGapCoordinated OR P_LowerGirderMode != kGapCoordinated)
+      // State coordinated movement for both girders
+      P_UpperGirderModeReq = kGapCoordinated
+      P_LowerGirderModeReq = kGapCoordinated
+      // Wait for the change to happen
+      while (P_UpperGirderMode != kGapCoordinated OR P_LowerGirderMode != kGapCoordinated) 
+      endwhile 
+      
+      // Resolving bug SPR3, test 3.3.13 from 2013-03-26
+      // Added aditional delay to make sure the OpenGAP motion program sees the change
+      // It was reporting an error
+      I_CS8_Timer2 = kGirderChangeTime * kMilliSecond
+      while (I_CS8_Timer2 > 0)
+      endwhile
+    endif
+    
+    // Send reset signal
+    M_MotorDriveReset = kHIGH
+    M_SafetyPLCReset = kHIGH
+    // Wait StopTime ms for girder change commands and enable commands to process
+    I_CS8_Timer2 = kTIMEOUT_FAULTRESET * kMilliSecond
+    while (I_CS8_Timer2 > 0)
+    endwhile
+  
+    // Set reset signal back to 0
+    M_MotorDriveReset = kLOW
+    M_SafetyPLCReset = kLOW
+    P_SafetyReset = kFALSE
+    // Wait StopTime ms for girder change commands and enable commands to process
+    I_CS8_Timer2 = kTIMEOUT_FAULTRESET * kMilliSecond
+    while (I_CS8_Timer2 > 0)
+    endwhile
+  endif
+else
+  // Signal cleared
+  if (M_ResetSystem = kLOW and P_SafetyReset = kFALSE)
+  
+    // If we were still moving, stop movement  
+    if (M_CS1Running = kTRUE)
+      // If there is movement abort it.
+      // Abort all moves and stop all motors
+      ADDRESS &1
+      CMD"A"
+        
+      // Wait StopTime ms for them to stop
+      I_CS8_Timer2 = kSTOP_TIME * kMilliSecond
+      while (I_CS8_Timer2 > 0)
+      endwhile
+      
+      // Kill motors      
+      CMD"^K"
+      // Wait StopTime ms for them to stop
+      I_CS8_Timer2 = kSTOP_TIME * kMilliSecond
+      while (I_CS8_Timer2 > 0)
+      endwhile      
+    endif  
+
+    //********************
+    // Enable all PLCs that could cause movement
+    // Clear movement conditions
+    //*******************
+    P_MotorHomeRequest = 0 // Disable request if any
+    Enable PLC kPLC_Homing
+    Enable PLC kPLC_MoveRequest
+    P_PLCResetExecuting = kFALSE
+  endif
+endif
+
+Close

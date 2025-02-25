@@ -116,6 +116,10 @@
 #define P_PhaseAccel            P1120   // Phase accel
 #define P_CS6RunningPrev        P1121   // CS6Running flag previous value
 
+
+#define P_SafetyReset           P1501   // Software Reset Safety PLC and Motor drives
+#define P_PLCResetExecuting     P1511   // PLC Reset is executing
+
 #define P_BetaPrime             P1601   // Beta prime read from PGM
 #define P_K0                    P1602   // K0 from PGM
 #define P_MirrorOffset          P1604   // Mirror offset read from PGM
