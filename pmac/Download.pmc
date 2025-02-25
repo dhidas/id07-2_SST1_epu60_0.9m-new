@@ -24,3 +24,4 @@
 #include "PLC26_HomeMtr7.pmc"
 #include "PLC27_HomeMtr8.pmc"
 #include "PLC28_MonoTrigger.pmc"
+#include "PLC29_RemoteVarsCollisionSw.pmc"

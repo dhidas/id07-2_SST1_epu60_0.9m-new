@@ -38,6 +38,7 @@ M142->Y:$0000C0,2,1 // #1 Fatal-following-error bit
 M143->Y:$0000C0,3,1 // #1 Amplifier-fault-error bit
 M145->Y:$0000C0,10,1 // #1 Home-complete bit
 M154->Y:$003440,14,1 // MACRO IC 0 Node 0 amplifier enable flag
+M159->X:$003440,19,1    // MACRO IC 0 Node 0 user flag
 M162->D:$00008B // #1 Actual position (1/[Ixx08*32] cts)
 M164->D:$0000CC // #1 Position bias (1/[Ixx08*32] cts)
 M172->L:$0000D7 // #1 Variable jog position/distance (cts)

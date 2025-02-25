@@ -36,6 +36,7 @@
 #define M_Mtr1AmpFault           M143
 #define M_Mtr1HomeComplete       M145
 #define M_Mtr9AmpEnabled         M154
+#define M_PGMCollisionSwitch     M159
 #define M_Mtr1ActPos             M162
 #define M_Mtr1PosBias            M164
 #define M_Mtr1VarJojPos          M172

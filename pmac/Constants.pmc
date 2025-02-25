@@ -85,6 +85,7 @@
 #define kPLC_HomeMtr7              26
 #define kPLC_HomeMtr8              27
 #define kPLC_MonoTrigger           28
+#define kPLC_PGMCopyColSw          29
 
 
 #define kPOS_JOG_SUCCESS   7

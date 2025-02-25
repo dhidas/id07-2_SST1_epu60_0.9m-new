@@ -161,6 +161,8 @@
 #define P_BigTrigEnd            P2827
 #define P_SmallTrigOnOrOff      P2828
 
+#define P_PLC29MacroTmp         P2900
+
 #define P_Mtr9_Resolution       P4809
 #define P_Mtr10_Resolution      P4810
 #define P_Mtr9_Offset           P4909

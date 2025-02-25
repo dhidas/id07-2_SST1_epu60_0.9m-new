@@ -1,0 +1,43 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "MVariables.pmc"
+#include "Timers.pmc"
+
+// PLC to read remote variables over macro for fly scan/move
+// Check the collision switch on PGM.  If detected, kill and kick out of macro mode.
+
+Open PLC kPLC_PGMCopyColSw Clear
+
+// Should check macro connection first
+if (P_MacroRequest & $4 = $4)
+
+  if (M_CS6Running = kFALSE)
+    MXR0,P120,P_PLC29MacroTmp              ; Copy remote Mtr1_Offset -> Mtr9
+    P_Mtr9_Offset = P_PLC29MacroTmp
+    MXR0,P121,P_PLC29MacroTmp              ; Copy remote Mtr2_Offset -> Mtr10
+    P_Mtr10_Offset = P_PLC29MacroTmp
+ 
+    MXR0,P182,P_K0
+    MXR0,P183,P_MDiffractionOrder
+  endif
+
+  ; Check collision switch on PGM.  Kill motors if detected
+  ; and cancel the macro mode.
+  if (M_PGMCollisionSwitch = kHIGH)
+    if (P_MacroRequest & $4 = $4)
+      CMD"^K"
+      
+      I_CS15_Timer2 = 200 * kMilliSecond While (I_CS15_Timer2 > 0) EndW
+      P_MacroRequest = 0
+      I_CS15_Timer2 = 200 * kMilliSecond While (I_CS15_Timer2 > 0) EndW
+    endif
+
+    CMD"#9K#10K"
+    I_CS15_Timer2 = 200 * kMilliSecond While (I_CS15_Timer2 > 0) EndW
+    P_MacroRequest = 0
+    I_CS15_Timer2 = 200 * kMilliSecond While (I_CS15_Timer2 > 0) EndW
+  endif
+endif
+
+Close
+
