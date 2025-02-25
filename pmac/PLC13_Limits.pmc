@@ -1,0 +1,89 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "IVariables.pmc"
+
+// ******************************************************************************
+// PLC that applies new motor axis limits when limit parameters change
+// Disable existing hardware/software limit and update new software limits
+// on the system.
+// ******************************************************************************
+
+// for NYX must be $2A001 for disable limits, $A001 enable limits until we get Drive enable signal
+
+Open PLC kPLC_Limits Clear
+
+  // Check for disable limits req
+  if (P_DisableLimitsReq != P_DisableLimitsStat)
+    if (P_DisableLimitsReq != 0)
+      // Disable limit switches on all 8 motors, even though only 2 & 4 are not being used
+      I124 = kMotorFlagDisableLimits
+      I324 = kMotorFlagDisableLimits
+      I524 = kMotorFlagDisableLimits
+      I624 = kMotorFlagDisableLimits
+      I724 = kMotorFlagDisableLimits
+      I824 = kMotorFlagDisableLimits
+
+      // Disable software limits on all axes
+      I113 = 0
+      I313 = 0
+      I513 = 0
+      I613 = 0
+      I713 = 0
+      I813 = 0
+      I114 = 0
+      I314 = 0
+      I514 = 0
+      I614 = 0
+      I714 = 0
+      I814 = 0
+
+    endif    
+    P_DisableLimitsStat = P_DisableLimitsReq
+  endif  
+  
+  if (P_DisableLimitsStat = 0)
+    if (P_MaximumGap != P_MaximumGapPrev OR I113 = 0 OR I313 = 0)
+      I113 = P_MaximumGap * kEncCntsPerUm / 2 - P_GapMotor1Offset + kLimitMargin 
+      I313 = P_MaximumGap * kEncCntsPerUm / 2 - P_GapMotor3Offset + kLimitMargin
+      
+      I513 = P_MaximumEngPhase * kEncCntsPerUm + kLimitMargin
+      I613 = I513
+      I713 = I513
+      I813 = I513
+
+      // Make sure limits are enabled on gap motors
+      I124 = kMotorFlagModeCtrl
+      I324 = kMotorFlagModeCtrl
+      I524 = kMotorFlagModeCtrl
+      I624 = kMotorFlagModeCtrl
+      I724 = kMotorFlagModeCtrl
+      I824 = kMotorFlagModeCtrl
+
+      // Clear request
+      P_MaximumGapPrev = P_MaximumGap
+    endif
+    
+    // Minimum GAP
+    // Check if change was requested or EPICS reset some of the offsets
+    if (P_MinimumGap != P_MinimumGapPrev OR I114 = 0 OR I314 = 0)
+      I114 = P_MinimumGap * kEncCntsPerUm / 2 - P_GapMotor1Offset - kLimitMargin
+      I314 = P_MinimumGap * kEncCntsPerUm / 2 - P_GapMotor3Offset - kLimitMargin
+      I514 = -P_MaximumEngPhase * kEncCntsPerUm + kLimitMargin  ; XXX Check this.  I think it should be -kLimitMargin
+      I614 = I514
+      I714 = I514
+      I814 = I514
+
+      // Make sure limits are enabled on gap motors
+      I124 = kMotorFlagModeCtrl
+      I324 = kMotorFlagModeCtrl
+      I524 = kMotorFlagModeCtrl
+      I624 = kMotorFlagModeCtrl
+      I724 = kMotorFlagModeCtrl
+      I824 = kMotorFlagModeCtrl
+
+      // Clear request
+      P_MinimumGapPrev = P_MinimumGap
+    endif        
+  endif
+
+CLOSE

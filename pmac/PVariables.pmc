@@ -17,6 +17,8 @@
 #define P_MIPCounter            P215    // Motor Moving Light counter
 #define P_UpperHmStatus         P219    // Upper girder homing status
 #define P_LowerHmStatus         P220    // Lower girder homing status
+#define P_DisableLimitsReq      P221    // Request to disable software limits on all motors
+#define P_DisableLimitsStat     P222    // Limits-disabled status
 
 #define P_StopAllReq            P300    // Request stop all
 #define P_StopAllStat           P301    // Stop all active
@@ -88,6 +90,8 @@
 #define P_MinimumGap            P1032   // Minimum gap position
 #define P_MaximumEngPhase       P1033   // Maximum phase position
 #define P_MaximumOpPhase        P1034   // Maximum user phase
+#define P_MaximumGapPrev        P1036   // Last minimum gap position
+#define P_MinimumGapPrev        P1037   // Last maximum gap position
 #define P_MotorHomeRequest      P1055   // 1-4 request homing for motor. 0 no home
 #define P_MotorHomeStatus       P1056   // 1-4 motor being homed
 #define P_StopMotor1            P1061   // Command to stop the motor 1

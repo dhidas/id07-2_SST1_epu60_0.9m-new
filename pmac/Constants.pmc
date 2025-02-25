@@ -26,6 +26,7 @@
 #define kEncCntsPerUm  (kEncCntsPerMm/kmm2um)
 
 #define kMotorFlagModeCtrl      $90A401
+#define kMotorFlagDisableLimits $92A001   ; XXX Check.  This really needs to be checked!!
 #define kGapMtrSpeed            2
 #define kGapMtrAccel            0.01
 #define kGapMtrHomeSpeed        0.5
@@ -44,7 +45,7 @@
 #define kGirderChangeTime    2000
 #define kPRE_KILL_DELAY         5
 #define kENABLE_RETRIES         5
-
+#define kBG_COMMAND_DELAY     200
 #define kLimitMargin           50    // in cts
 
 // Girder Modes
