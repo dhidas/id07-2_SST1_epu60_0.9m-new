@@ -122,14 +122,21 @@
 
 #define P_BetaPrime             P1601   // Beta prime read from PGM
 #define P_K0                    P1602   // K0 from PGM
+#define P_B2                    P1603   // B2 from PGM
 #define P_MirrorOffset          P1604   // Mirror offset read from PGM
 #define P_GratingOffset         P1605   // Grating offset read from PGM
+#define P_R1                    P1606   // R1 from PGM
+#define P_R2                    P1607   // R2 from PGM
 #define P_MDiffractionOrder     P1610   // Diffraction order from PGM
+#define P_ENERGY_MODE           P1611   // energy mode from PGM
 #define P_Lambda                P1615   // Lambda from PGM
 #define P_MonoOffsetDir         P1616   // Offset direction from PGM (or static)
 #define P_BeamInAngle           P1620   // Beam-In angle read from PGM
 
 #define P_MacroRequest          P1700
+#define P_PLC17Counter          P1701
+#define P_MacroStatus           P1703
+#define P_MacroTmp              P1707
 
 #define P_Mtr5HomeFinish        P2405
 #define P_Mtr6HomeFinish        P2505

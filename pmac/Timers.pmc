@@ -10,6 +10,6 @@
 #define I_CS5_Timer2        I5512     // C.S.5 timer 2 (Used in PLC8 and 9)
 #define I_CS7_Timer1        I5711     // C.S.7 timer 2 (Used in PLC9)
 #define I_CS8_Timer2        I5812     // C.S.8 timer 2 (Used in PLC15)
-
+#define I_CS9_TImer2        I5912     // C.S.9 timer 2 (Used in PLC17)
 
 #endif

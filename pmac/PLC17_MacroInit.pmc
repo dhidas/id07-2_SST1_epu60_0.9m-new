@@ -1,0 +1,233 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "MVariables.pmc"
+#include "Timers.pmc"
+#include "QVariables.pmc"
+
+// Local defines only.  Not to be used outside of this file
+#define lWAIT50  I_CS9_TImer2 =  50 * kMilliSecond While (I_CS9_TImer2 > 0) EndW
+#define lWAIT250 I_CS9_TImer2 = 250 * kMilliSecond While (I_CS9_TImer2 > 0) EndW
+
+
+
+/******
+  P_MacroRequest bits are:
+     0x1: Request control
+     0x2: Read back I do not have control
+     0x4: Read back I *do* have control
+     0x8: Idle, no information
+    0x10: ERROR
+    The readbacks are same codes as remote host.
+    Clear all bits to request release of control.
+******/
+
+// Set some defaults
+P_MacroRequest = 8    ; Do nothign to macro control linking to start
+P_PLC17Counter = 0    ; Start counter wherever you want
+
+
+Open PLC kPLC_MacroInit Clear
+
+P_PLC17Counter = P_PLC17Counter + 1           ; Counter to make sure we're running
+P_MacroRequest = P_MacroRequest & $f          ; Don't let a dummy write random things
+
+// Change mode by requested status
+if (P_MacroRequest = 0 or P_MacroRequest = 1)
+
+  CMD"#1A#3A#9A#10A" lWAIT50   ; Abort motor
+  CMD"#1K#3K#9K#10K" lWAIT50   ; Kill motor
+
+  if (P_MacroRequest = 1)
+
+    Enable PLC 6  ; Run spline calc in background
+
+    CMD"MSCLRF15" ; Macro clear
+    lWAIT250
+
+    ; TODO: Grab all variables you need from slave
+
+    // Copy I-var info from remote pmac
+    MXR0,I169,I969          ; Copy command limit for safety
+    MXR0,I269,I1069         ; Copy command limit for safety
+
+    MXR0,I157,I957          ; Copy I2T variables. Not specified
+    MXR0,I158,I958          ; in stepper-stepper LV manual
+    MXR0,I257,I1057         ; Copy I2T variables. Not specified
+    MXR0,I258,I1058         ; in stepper-stepper LV manual
+
+    MXR0,I111,I911          ; Motor xx Fatal Following Error Limit
+    MXR0,I112,I912          ; Motor xx Warning Following Error Limit
+    MXR0,I113,I913          ; Motor xx Positive Software Position Limit
+    MXR0,I114,I914          ; Motor xx Negative Software Position Limit
+    MXR0,I115,I915          ; Motor xx Abort/Limit Deceleration Rate
+    MXR0,I116,I916          ; Motor xx Maximum Program Velocity
+    MXR0,I117,I917          ; Motor xx Maximum Program Acceleration
+    MXR0,I119,I919          ; Motor xx Maximum Jog/Home Acceleration
+    MXR0,I120,I920          ; Motor xx Jog/Home Acceleration Time
+    MXR0,I121,I921          ; Motor xx Jog/Home S-Curve Time
+    MXR0,I122,I922          ; Motor xx Jog Speed
+    MXR0,I123,I923          ; Motor xx Home Speed and Direction
+    MXR0,I126,I926          ; Motor xx Home Offset
+    MXR0,I128,I928          ; Motor xx In-Position Band
+    MXR0,I130,I930          ; Motor xx PID Proportional Gain
+    MXR0,I131,I931          ; Motor xx PID Derivative Gain
+    MXR0,I132,I932          ; Motor xx PID Velocity Feedforward Gain
+    MXR0,I133,I933          ; Motor xx PID Integral Gain
+    MXR0,I134,I934          ; Motor xx PID Integration Mode
+    MXR0,I135,I935          ; Motor xx PID Acceleration Feedforward Gain
+    MXR0,I141,I941          ; Motor xx Desired Position Limit Band
+    MXR0,I161,I961          ; Motor xx Current look forward path
+    MXR0,I163,I963          ; Motor xx Integration Limit
+    MXR0,I164,I964          ; Motor xx Deadband Gain Factor
+    MXR0,I165,I965          ; Motor xx Deadband Size
+    MXR0,I167,I967          ; Motor xx Position Error Limit
+    MXR0,I168,I968          ; Motor xx Friction Feedforward
+
+    MXR0,I162,I962          ; Motor xx
+    MXR0,I166,I966          ; Motor xx
+    MXR0,I172,I972          ; Motor xx
+    MXR0,I176,I976          ; Motor xx
+    MXR0,I177,I977          ; Motor xx
+    MXR0,I184,I984          ; Motor xx
+
+
+    MXR0,I211,I1011         ; Motor xx Fatal Following Error Limit
+    MXR0,I212,I1012         ; Motor xx Warning Following Error Limit
+    MXR0,I213,I1013         ; Motor xx Positive Software Position Limit
+    MXR0,I214,I1014         ; Motor xx Negative Software Position Limit
+    MXR0,I215,I1015         ; Motor xx Abort/Limit Deceleration Rate
+    MXR0,I216,I1016         ; Motor xx Maximum Program Velocity
+    MXR0,I217,I1017         ; Motor xx Maximum Program Acceleration
+    MXR0,I219,I1019         ; Motor xx Maximum Jog/Home Acceleration
+    MXR0,I220,I1020         ; Motor xx Jog/Home Acceleration Time
+    MXR0,I221,I1021         ; Motor xx Jog/Home S-Curve Time
+    MXR0,I222,I1022         ; Motor xx Jog Speed
+    MXR0,I223,I1023         ; Motor xx Home Speed and Direction
+    MXR0,I226,I1026         ; Motor xx Home Offset
+    MXR0,I228,I1028         ; Motor xx In-Position Band
+    MXR0,I230,I1030         ; Motor xx PID Proportional Gain
+    MXR0,I231,I1031         ; Motor xx PID Derivative Gain
+    MXR0,I232,I1032         ; Motor xx PID Velocity Feedforward Gain
+    MXR0,I233,I1033         ; Motor xx PID Integral Gain
+    MXR0,I234,I1034         ; Motor xx PID Integration Mode
+    MXR0,I235,I1035         ; Motor xx PID Acceleration Feedforward Gain
+    MXR0,I241,I1041         ; Motor xx Desired Position Limit Band
+    MXR0,I261,I1061         ; Motor xx Current look forward path
+    MXR0,I263,I1063         ; Motor xx Integration Limit
+    MXR0,I264,I1064         ; Motor xx Deadband Gain Factor
+    MXR0,I265,I1065         ; Motor xx Deadband Size
+    MXR0,I267,I1067         ; Motor xx Position Error Limit
+    MXR0,I268,I1068         ; Motor xx Friction Feedforward
+
+    MXR0,I262,I1062          ; Motor xx
+    MXR0,I266,I1066          ; Motor xx
+    MXR0,I272,I1072          ; Motor xx
+    MXR0,I276,I1076          ; Motor xx
+    MXR0,I277,I1077          ; Motor xx
+    MXR0,I284,I1084          ; Motor xx
+
+    I982  = $078206
+    I1082 = $07820e
+  else
+    CMD"&6#1A#3A" lWAIT50  ; Abort
+    CMD"&6#1K#3K" lWAIT50  ; Kill
+    CMD"&6#1->0#3->0" lWAIT50  ; Release from fly coord system
+
+    CMD"&1#1->I#3->I" lWAIT50  ; Put back in gap coord system
+    I_CS9_TImer2 = 0.5 * kSecond
+    while (I_CS9_TImer2 > 0) endw
+
+    ; Set back to gap mode
+    P_UpperGirderModeReq = kGapCoordinated
+    P_LowerGirderModeReq = kGapCoordinated
+    while (P_UpperGirderMode != kGapCoordinated OR P_LowerGirderMode != kGapCoordinated)
+    endwhile
+
+    P_MacroRequest = (P_MacroRequest | $8)
+  endif
+
+
+  P_MacroTmp = P_MacroRequest & 1                   ; Just in case P_MacroRequest bit change in wait
+  MXW0,P2400,P_MacroTmp                             ; Send macro request (0=off,1=on)
+
+  I_CS9_TImer2 = 20 * kSecond                       ; Listening timeout
+  P_MacroStatus = 0                           ; Initial readback status
+  while (I_CS9_TImer2 > 0 and P_MacroStatus < 4 and P_MacroStatus != 2)   ; Wait for status of >= 2
+    MXR0,P2400,P_MacroStatus
+  endw
+  if (I_CS9_TImer2 < 0)
+    P_MacroStatus = P_MacroStatus | $10       ; Set error bit if this timed out
+  endif
+
+
+  if (P_MacroStatus & 4 != 0)     ; If the result remote status is connected bit high
+    P_UpperGirderModeReq = kFlyCoordinated
+    P_LowerGirderModeReq = kFlyCoordinated
+    // Wait for the change to happen
+    while (P_UpperGirderMode != kFlyCoordinated OR P_LowerGirderMode != kFlyCoordinated)
+    endwhile
+ 
+    MXR0,M162,M_Mtr9ActPos                ; read remote position and write it to local
+    MXR0,M262,M_Mtr10ActPos               ; read remote position and write it to local
+    MXR0,M164,M_Mtr9PosBias               ; read remote offset and write it to local
+    MXR0,M264,M_Mtr10PosBias              ; read remote offset and write it to local
+
+    ; Comment out if PLC 29 running
+    MXR0,P180,P_MacroTmp              ; Copy remote Mtr1_Resolution -> Mtr9
+    P_Mtr9_Resolution = 1/P_MacroTmp
+    MXR0,P180,P_MacroTmp              ; Copy remote Mtr2_Resolution -> Mtr10   XXX Check.  this is using P180 just like Mtr9 ?
+    P_Mtr10_Resolution = 1/P_MacroTmp
+    MXR0,P120,P_MacroTmp              ; Copy remote Mtr1_Offset -> Mtr9
+    P_Mtr9_Offset = P_MacroTmp
+    MXR0,P121,P_MacroTmp              ; Copy remote Mtr2_Offset -> Mtr10
+    P_Mtr10_Offset = P_MacroTmp
+
+    MXR0,M145,M_Mtr9HomeComplete                ; Copy Home Status bit
+    MXR0,M245,M_Mtr10HomeComplete               ; Copy Home Status bit
+
+    ; Copying pgm-energy data from mono controller
+    P_BetaPrime = 0
+    MXR0,P182,P_K0
+    MXR0,P195,P_B2
+    MXR0,M164,P_MirrorOffset        ; XXX Check this and the one below.  I dont love that we
+    MXR0,M264,P_GratingOffset       ; take offset and write it to a p-var
+    MXR0,P193,P_R1
+    MXR0,P194,P_R2
+    MXR0,P183,P_MDiffractionOrder
+    P_ENERGY_MODE = 2
+    if (P_B2 < 0)
+      P_ENERGY_MODE = 3
+    endif
+    P_MonoOffsetDir = -1
+    P_BeamInAngle = 0
+
+    
+    MXR0,P184,P_MacroTmp          ; Read CFF from PGM controller
+    ADDRESS &6
+    Q_Z_KinDemandPos = P_MacroTmp
+
+    CMD"&1#1->0#3->0"  ; Remove from gap coord system
+    CMD"&6#1->I#3->I#9->I#10->I"  ; 
+    CMD"&6 END GATHER" 
+    CMD"&6 DELETE GATHER" 
+    CMD"&6 DELETE LOOKAHEAD" 
+    CMD"&6 DEFINE LOOKAHEAD 50,50" 
+    lWAIT250
+  endif
+
+  if (P_MacroStatus = 2 or P_MacroStatus = 4)                     ; If readback is a valid state
+    P_MacroRequest = (P_MacroRequest & 9) | (P_MacroStatus & 6)   ; write it to the request variable
+  endif
+endif
+
+; TODO: recommend in once macro up
+MXR0,P2400,P_MacroStatus                                          ; Read the status according to remote
+P_MacroRequest = (P_MacroRequest & 9) | (P_MacroStatus & 6)       ; Only look at lowest 4 bits
+
+// This only needs to occassionally check status
+// And update macro connection link
+lWAIT250
+
+Close
+
+

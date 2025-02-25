@@ -105,9 +105,11 @@
 
 
 #define M_Mtr9ActPos             M962
+#define M_Mtr9HomeComplete       M945
 #define M_Mtr9PosBias            M964
 
 #define M_Mtr10ActPos            M1062
+#define M_Mtr10HomeComplete      M1045
 #define M_Mtr10PosBias           M1064
 
 

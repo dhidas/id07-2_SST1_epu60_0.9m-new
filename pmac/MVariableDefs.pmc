@@ -106,9 +106,11 @@ M872->L:$000457 // #8 Variable jog position/distance (cts)
 
 
 M962->D:$48B        // #9 Actual position (1/[Ixx08*32] cts)
+M945->Y:$4C0,10     // #9 Home-complere bit
 M964->D:$4CC        // #9 Position bias (1/[Ixx08*32] cts)
 
 M1062->D:$50B       // #10 Actual position (1/[Ixx08*32] cts)
+M1045->Y:$540,10    // #10 Home-complete bit
 M1064->D:$54C       // #10 Position bias (1/[Ixx08*32] cts)
 
 M5180->X:$002040,0,1 ; &1 Program-running bit
