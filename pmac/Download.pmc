@@ -18,3 +18,4 @@
 #include "PLC13_Limits.pmc"
 //#include "PLC14_CheckMotorPower.pmc"
 #include "PLC15_SafetyPLCReset.pmc"
+#include "PLC17_MacroInit.pmc"
