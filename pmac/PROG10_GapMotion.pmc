@@ -1,5 +1,7 @@
 #include "Constants.pmc"
 #include "PVariables.pmc"
+#include "MVariables.pmc"
+#include "QVariables.pmc"
 
 // ******************************************************************************
 // Gap Motion program

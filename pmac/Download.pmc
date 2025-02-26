@@ -26,3 +26,4 @@
 #include "PLC28_MonoTrigger.pmc"
 #include "PLC29_RemoteVarsCollisionSw.pmc"
 #include "PROG08_SplineCalc.pmc"
+#include "PROG10_GapMotion.pmc"
