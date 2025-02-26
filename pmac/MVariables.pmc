@@ -123,9 +123,11 @@
 
 
 #define M_CS1Running             M5180
+#define M_CS1Error               M5182   // Coordinate system 1 error bit
 #define M_CS2Running             M5280
+#define M_CS2Error               M5282   // Coordinate system 2 error bit
 #define M_CS6Running             M5680
-
+#define M_CS6Error               M5682   // Coordinate system 2 error bit
 
 
 #endif

@@ -119,9 +119,12 @@ M1062->D:$50B       // #10 Actual position (1/[Ixx08*32] cts)
 M1045->Y:$540,10    // #10 Home-complete bit
 M1064->D:$54C       // #10 Position bias (1/[Ixx08*32] cts)
 
-M5180->X:$002040,0,1 ; &1 Program-running bit
-M5280->X:$002140,0,1 ; &2 Program-running bit
-M5680->X:$002540,0,1 ; &6 Program-running bit
+M5180->X:$002040,0,1  ; &1 Program-running bit
+M5182->Y:$00203F,22,1 ; &1 Run-time-error bit
+M5280->X:$002140,0,1  ; &2 Program-running bit
+M5282->Y:$00213F,22,1 ; &2 Run-time-error bit
+M5680->X:$002540,0,1  ; &6 Program-running bit
+M5682->Y:$253F,22,1   ; &6 Run-time-error bit
 
 
 #endif

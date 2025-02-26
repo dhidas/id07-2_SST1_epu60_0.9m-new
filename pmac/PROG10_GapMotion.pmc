@@ -1,0 +1,34 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+
+// ******************************************************************************
+// Gap Motion program
+// If system is not in interlock and girders are in coordinated mode, zero the
+// taper and then move to new gap position and apply the original taper back.
+// ******************************************************************************
+Open PROG 10 Clear
+
+// Select mode
+LINEAR
+ABS
+
+// Prevent movement while interlock active
+if (P_InterlockState = kFALSE AND P_StopAllStat = 0 AND P_UpperGirderMode = kGapCoordinated AND P_LowerGirderMode = kGapCoordinated)
+  // Clear error bit
+  M_CS1Error = kFALSE
+
+  TA(P_GapAccel * 1000)
+  TS(P_GapAccel/(2 * 1000))
+
+  F(P_GapVelocity) 
+
+  // Go to new center offset and gap
+  X(Q_X_KinDemandPos) Y(P_CoordinatedCenterOffset)
+  DWELL(100)
+
+else
+  M_CS1Error = kTRUE
+endif
+
+Close
+
