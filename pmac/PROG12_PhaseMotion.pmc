@@ -1,0 +1,48 @@
+#include "Constants.pmc"
+#include "PVariables.pmc"
+#include "MVariables.pmc"
+#include "QVariables.pmc"
+
+// ******************************************************************************
+// Phase Motion program
+// If system is not in interlock and griders are in coordinated mode, zero the
+// taper and then move to new gap position and apply the original taper back.
+// ******************************************************************************
+
+
+Open PROG 12 Clear
+
+  // Select mode
+  LINEAR
+  ABS
+  
+  // Prevent movement while interlock active
+  if (P_InterlockState = 0 AND P_StopAllStat = 0)
+    // Clear error bit
+    M_CS2Error = 0  
+
+    TA(P_PhaseAccel * 1000)
+    TS(P_PhaseAccel/(2 * 1000))
+
+    // Feedrate
+    FRAX(X,Y,Z)
+    F(P_PhaseVelocity) 
+
+    // If change in phase mode is required, move phase to 0 first
+    IF(P_PhaseModeReq != P_PhaseModeStat)
+      X(0)
+      DWELL(0)
+    ENDIF
+
+    // Setup the phase mode to the requested
+    P_PhaseModeStat = P_PhaseModeReq
+
+    // Go to new center offset and gap
+    X(Q_X_KinDemandPos)Y(0)Z(0)
+    DWELL(500)
+
+  else
+    M_CS2Error = 1 // Declare error on the CS
+  endif
+CLOSE
+
