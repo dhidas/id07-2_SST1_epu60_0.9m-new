@@ -13,12 +13,12 @@ file gap.template
 
 	pattern
 	{ 
-		SYS, DEV, AXIS, PMACPORT, 
-		COORDPORT, S, MRES, VELOCITY, ACCEL, CTS_PER_EGU
+		AXIS,
+		COORDPORT, S, MRES, VELOCITY, ACCEL
 	}
 
 	{
-		"SR:C07-ID:G1A", "SST1:1", "Ax:Gap", "PMAC_ETH_PORT", 
-		"PMAC-GAP", "6", "0.20", "800", "0.25", "1"
+		"Ax:Gap",
+		"PMAC-GAP", "6", "0.20", "800", "0.25"
 	}
 }

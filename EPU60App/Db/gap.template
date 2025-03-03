@@ -18,32 +18,32 @@ record(motor, "$(SYS){$(DEV)-$(AXIS)}-Mtr") {
 }
 
 record(ai, "$(SYS){$(DEV)-$(AXIS)}Taper-RB") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Measured gap taper")
   field(SCAN, "1 second")
   field(EGU, "um")
-  field(INP, "@asyn(PMAC_REG_PORT)var(P209)scale($(CTS_PER_EGU))")
+  field(INP, "@pmac.proto getVar(P209) $(PORT)")
   field(PREC, "2")
 }
 
 record(ai, "$(SYS){$(DEV)-$(AXIS)}MaxGap-RB") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Maximum Gap")
   field(SCAN, "Passive")
   field(EGU, "um")
   field(PINI, "RUNNING")
-  field(INP, "@asyn(PMAC_REG_PORT)var(P1031)scale($(CTS_PER_EGU))")
+  field(INP, "@pmac.proto getVar(P1031) $(PORT)")
   field(FLNK, "$(SYS){$(DEV)-$(AXIS)}MaxGap-Pass")
   field(PREC, "2")
 }
 
 record(ao, "$(SYS){$(DEV)-$(AXIS)}MaxGap-SP") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Maximum Gap")
   field(SCAN, "Passive")
   field(FLNK, "$(SYS){$(DEV)-$(AXIS)}MaxGap-RB")
   field(EGU, "um")
-  field(OUT, "@asyn(PMAC_REG_PORT)var(P1031)scale($(CTS_PER_EGU))")
+  field(OUT, "@pmac.proto setVar(P1031) $(PORT)")
   field(PREC, "2")
 }
 
@@ -57,23 +57,23 @@ record(transform, "$(SYS){$(DEV)-$(AXIS)}MaxGap-Pass") {
 }
 
 record(ai, "$(SYS){$(DEV)-$(AXIS)}MinGap-RB") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Minimum Gap")
   field(SCAN, "Passive")
   field(EGU, "um")
   field(PINI, "RUNNING")
-  field(INP, "@asyn(PMAC_REG_PORT)var(P1032)scale($(CTS_PER_EGU))")
+  field(INP, "@pmac.proto setVar(P1032) $(PORT)")
   field(FLNK, "$(SYS){$(DEV)-$(AXIS)}MinGap-Pass")
   field(PREC, "2")
 }
 
 record(ao, "$(SYS){$(DEV)-$(AXIS)}MinGap-SP") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Minimum Gap")
   field(SCAN, "Passive")
   field(FLNK, "$(SYS){$(DEV)-$(AXIS)}MinGap-RB")
   field(EGU, "um")
-  field(OUT, "@asyn(PMAC_REG_PORT)var(P1032)scale($(CTS_PER_EGU))")
+  field(OUT, "@pmac.proto setVar(P1032) $(PORT)")
   field(PREC, "2")
 }
 
@@ -87,61 +87,61 @@ record(transform, "$(SYS){$(DEV)-$(AXIS)}MinGap-Pass") {
 }
 
 record(ai, "$(SYS){$(DEV)-$(AXIS)}ReqCenter-RB") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Requested Operator Offset")
   field(SCAN, "Passive")
   field(EGU, "um")
   field(PINI, "RUNNING")
-  field(INP, "@asyn(PMAC_REG_PORT)var(P206)scale($(CTS_PER_EGU))")
+  field(INP, "@pmac.proto getVar(P206) $(PORT)")
   field(PREC, "2")
 }
 
 record(ao, "$(SYS){$(DEV)-$(AXIS)}ReqCenter-SP") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Requested Operator Offset")
   field(SCAN, "Passive")
   field(FLNK, "$(SYS){$(DEV)-$(AXIS)}ReqCenter-RB")
   field(EGU, "um")
-  field(OUT, "@asyn(PMAC_REG_PORT)var(P206)scale($(CTS_PER_EGU))")
+  field(OUT, "@pmac.proto setVar(P206) $(PORT)")
   field(PREC, "2")
 }
 
 record(ai, "$(SYS){$(DEV)-$(AXIS)}ReqTaper-RB") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Requested Operator Taper")
   field(SCAN, "Passive")
   field(EGU, "um")
   field(PINI, "RUNNING")
-  field(INP, "@asyn(PMAC_REG_PORT)var(P207)scale($(CTS_PER_EGU))")
+  field(INP, "@pmac.proto getVar(P207) $(PORT)")
   field(PREC, "2")
 }
 
 record(ao, "$(SYS){$(DEV)-$(AXIS)}ReqTaper-SP") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Requested Operator Taper")
   field(SCAN, "Passive")
   field(FLNK, "$(SYS){$(DEV)-$(AXIS)}ReqTaper-RB")
   field(EGU, "um")
-  field(OUT, "@asyn(PMAC_REG_PORT)var(P207)scale($(CTS_PER_EGU))")
+  field(OUT, "@pmac.proto setVar(P207) $(PORT)")
   field(PREC, "2")
 }
 
 record(ao, "$(SYS){$(DEV)-$(AXIS)}-Mtr-SP") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Motor position setpoint,limits included.")
   field(SCAN, "Passive")
-  field(OUT, "@asyn(PMAC_REG_PORT)var(P1112)scale($(CTS_PER_EGU))")
+  field(OUT, "@pmac.proto setVar(P1112) $(PORT)")
   field(EGU, "um")
   field(PREC, "2")
   field(FLNK, "$(SYS){$(DEV)-$(AXIS)}-MtrCalc")
 }
 
 record(ai, "$(SYS){$(DEV)-$(AXIS)}Center-RB") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Measured gap center offset")
   field(SCAN, "1 second")
   field(EGU, "um")
-  field(INP, "@asyn(PMAC_REG_PORT)var(P208))scale($(CTS_PER_EGU))")
+  field(INP, "@pmac.proto getVar(P208) $(PORT)")
   field(PREC, "2")
 }
 
@@ -149,7 +149,7 @@ record(asyn, "$(SYS){$(DEV)-$(AXIS)}-MvReq-Cmd") {
   field(DESC, "Trigers PLC to start gap movement")
   field(SCAN, "Passive")
   field(DTYP, "asynRecordDevice")
-  field(PORT, "$(PMACPORT)")
+  field(PORT, "$(PORT)")
   field(ADDR, "-1")
   field(TMOD, "Write/Read")
   field(AOUT, "P1111=1")
@@ -166,19 +166,19 @@ record(transform, "$(SYS){$(DEV)-$(AXIS)}-MtrCalc") {
 }
 
 record(ao, "$(SYS){$(DEV)-$(AXIS)}-Mtr-VELO") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Sends motor VELO to PMAC")
   field(SCAN, "Passive")
-  field(OUT, "@asyn(PMAC_REG_PORT)var(P1114)scale($(CTS_PER_EGU))")
+  field(OUT, "@pmac.proto setVar(P1114) $(PORT)")
   field(EGU, "um/s")
   field(PREC, "2")
 }
 
 record(ao, "$(SYS){$(DEV)-$(AXIS)}-Mtr-ACCL") {
-  field(DTYP, "asynFloat64")
+  field(DTYP, "stream")
   field(DESC, "Sends motor ACCL to PMAC")
   field(SCAN, "Passive")
-  field(OUT, "@asyn(PMAC_REG_PORT)var(P1115)")
+  field(OUT, "@pmac.proto setVar(P1115) $(PORT)")
   field(EGU, "um/s^2")
   field(PREC, "2")
 }
