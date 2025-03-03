@@ -1,0 +1,38 @@
+#include "QVariables.pmc"
+#include "PVariables.pmc"
+#include "Constants.pmc"
+
+// ******************************************************************************
+// GAP Inverse and Forward kinematics, motion program and position reporting PLC
+//
+// Make sure: Isx13 Segmentation time is setup
+//            Isx50 Coordinate System x Kinematic Calculations Enable
+//
+// ******************************************************************************
+
+
+// ******************************************************************************
+// Gap Forward kinematic
+// ******************************************************************************
+&1 Open FORWARD Clear
+  // Compensate for the offsets
+  Q_Fwd_Tmp1 = (P_Mtr01_KinPos + P_GapMotor1Offset) / kEncCntsPerUm
+  Q_Fwd_Tmp2 = (P_Mtr03_KinPos + P_GapMotor3Offset) / kEncCntsPerUm
+
+  Q_X_kinPos = (Q_Fwd_Tmp1 + Q_Fwd_Tmp2)    // Q7 = X axis: GAP
+  Q_Y_kinPos = (Q_Fwd_Tmp1 - Q_Fwd_Tmp2)/2  // Q8 = Y axis: CENTER OFFSET
+
+Close
+
+// ******************************************************************************
+// Gap Inverse kinematic
+// ******************************************************************************
+&1 Open INVERSE Clear
+  Q_Inv_Tmp1 = Q_X_kinPos/(2 * kmm2um)   // Gap term (Q7 = X axis)
+  Q_Inv_Tmp2 = Q_Y_kinPos/kmm2um      // Center Offset term (Q8 = Y axis)
+
+  // Calculate motor positions and apply offsets
+  P_Mtr01_KinPos = (Q_Inv_Tmp1 + Q_Inv_Tmp2) * kEncCntsPerMm - P_GapMotor1Offset
+  P_Mtr03_KinPos = (Q_Inv_Tmp1 - Q_Inv_Tmp2) * kEncCntsPerMm - P_GapMotor3Offset
+
+Close

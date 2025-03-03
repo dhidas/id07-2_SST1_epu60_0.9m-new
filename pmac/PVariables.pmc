@@ -1,6 +1,14 @@
 #ifndef PVariables_pmc
 #define PVariables_pmc
 
+#define P_Mtr01_KinPos      P1
+#define P_Mtr03_KinPos      P3
+#define P_Mtr05_KinPos      P5
+#define P_Mtr06_KinPos      P6
+#define P_Mtr07_KinPos      P7
+#define P_Mtr08_KinPos      P8
+
+
 #define P_MoveAborted             P86
 #define P_MotorNo                 P87
 #define P_MotorError              P89
