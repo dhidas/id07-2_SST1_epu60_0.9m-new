@@ -1,6 +1,3 @@
-#ifndef PLC07_FlyPosReporting_pmc
-#define PLC07_FlyPosReporting_pmc
-
 #include "QVariables.pmc"
 #include "MVariables.pmc"
 #include "PVariables.pmc"
@@ -68,15 +65,4 @@ Q_X_KinReportPos = Q_PRTmp_EnGap
 Q_Y_KinReportPos = Q_PRTmp_PGM
 Q_Z_KinReportPos = Q_PRTmp_CFF
 
-
-
-
-
-
-
-
-
-
 Close
-
-#endif

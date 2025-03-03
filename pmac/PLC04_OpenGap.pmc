@@ -1,6 +1,3 @@
-#ifndef PLC04_OpenGap_pmc
-#define PLC04_OpenGap_pmc
-
 #include "Constants.pmc"
 #include "PVariables.pmc"
 #include "Timers.pmc"
@@ -100,4 +97,3 @@ endif
 
 Close
 
-#endif

@@ -1,6 +1,3 @@
-#ifndef PLC05_Home_pmc
-#define PLC05_Home_pmc
-
 #include "Constants.pmc"
 #include "PVariables.pmc"
 #include "MVariables.pmc"
@@ -289,9 +286,4 @@ Open PLC kPLC_Homing Clear
   // If it is not cleared homing will unexpectedly start if conditions are correct (no movement, and girder mode is correct).
   P_MotorHomeRequest = 0
   P_MotorHomeStatus = 0
-CLOSE
-
-
-
-
-#endif
+Close

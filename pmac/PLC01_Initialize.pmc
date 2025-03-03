@@ -1,6 +1,3 @@
-#ifndef PLC01_Initialize_pmc
-#define PLC01_Initialize_pmc
-
 #include "Constants.pmc"
 #include "MVariables.pmc"
 #include "PVariables.pmc"
@@ -103,7 +100,3 @@ Enable PLC kPLCFlyPosReporting
 Disable PLC 1
 Close
 
-
-
-
-#endif
