@@ -86,6 +86,8 @@
 #define P_FlyMoveSetpoint   P817
 #define P_FlyMoveReq        P818
 #define P_FlyScanReq        P820
+#define P_FlyMoveSpeed_eV   P819
+#define P_FMError           P824
 #define P_TestPLC8          P899
 
 
