@@ -1,0 +1,91 @@
+#include "QVariables.pmc"
+#include "PVariables.pmc"
+#include "Constants.pmc"
+
+// ******************************************************************************
+// Phase Inverse and Forward kinematics, motion program and position reporting PLC
+//
+// Make sure: Isx13 Segmentation time is setup
+//            Isx50 Coordinate System x Kinematic Calculations Enable
+//
+// ******************************************************************************
+
+// ******************************************************************************
+// Phase Forward kinematic
+// ******************************************************************************
+&2 Open FORWARD Clear
+
+  // Compensate for the offsets
+  Q_Fwd_Tmp1 = (P_Mtr05_KinPos + P_PhaseMotor5Offset)  / kEncCntsPerUm
+  Q_Fwd_Tmp2 = (P_Mtr06_KinPos + P_PhaseMotor6Offset)  / kEncCntsPerUm
+  Q_Fwd_Tmp3 = (P_Mtr07_KinPos + P_PhaseMotor7Offset)  / kEncCntsPerUm
+  Q_Fwd_Tmp4 = (P_Mtr08_KinPos + P_PhaseMotor8Offset)  / kEncCntsPerUm
+
+  if (P_PhaseModeStat = kParallelZ2Z3)
+       Q_X_kinPos = (Q_Fwd_Tmp2 + Q_Fwd_Tmp3)/2          // Q7 = X axis: Phase
+       Q_Y_kinPos = Q_Fwd_Tmp1                          // Q8 = Y axis: ZERO
+       Q_Z_kinPos = Q_Fwd_Tmp4                          // Q9 = Z axis: ZERO
+    endif
+
+  if (P_PhaseModeStat = kParallelZ1Z4)
+       Q_X_kinPos = (Q_Fwd_Tmp1 + Q_Fwd_Tmp4)/2          // Q7 = X axis: Phase
+       Q_Y_kinPos = Q_Fwd_Tmp2                          // Q8 = Y axis: ZERO
+       Q_Z_kinPos = Q_Fwd_Tmp3                          // Q9 = Z axis: ZERO
+    endif
+
+  if (P_PhaseModeStat = kAntiParallelZ2Z3)
+       Q_X_kinPos = (Q_Fwd_Tmp2 - Q_Fwd_Tmp3)/2          // Q7 = X axis: Phase
+       Q_Y_kinPos = Q_Fwd_Tmp1                          // Q8 = Y axis: ZERO
+       Q_Z_kinPos = Q_Fwd_Tmp4                          // Q9 = Z axis: ZERO
+    endif
+
+  if (P_PhaseModeStat = kAntiParallelZ1Z4)
+       Q_X_kinPos = (Q_Fwd_Tmp1 - Q_Fwd_Tmp4)/2          // Q7 = X axis: Phase
+       Q_Y_kinPos = Q_Fwd_Tmp2                          // Q8 = Y axis: ZERO
+       Q_Z_kinPos = Q_Fwd_Tmp3                          // Q9 = Z axis: ZERO
+    endif
+    
+CLOSE
+
+// ******************************************************************************
+// Phase Inverse kinematic
+// ******************************************************************************
+&2 OPEN INVERSE Clear
+    // Q7 - X - Phase
+
+    // All to zero
+
+    P_Mtr05_KinPos = - P_PhaseMotor5Offset
+    P_Mtr06_KinPos = - P_PhaseMotor6Offset
+    P_Mtr07_KinPos = - P_PhaseMotor7Offset
+    P_Mtr08_KinPos = - P_PhaseMotor8Offset
+
+  if (P_PhaseModeStat = kParallelZ2Z3)
+       P_Mtr06_KinPos = (Q_X_kinPos * kEncCntsPerUm) - P_PhaseMotor6Offset          // P2
+       P_Mtr07_KinPos = (Q_X_kinPos * kEncCntsPerUm) - P_PhaseMotor7Offset          // P3
+       P_Mtr05_KinPos = (Q_Y_kinPos * kEncCntsPerUm) - P_PhaseMotor5Offset          // 
+       P_Mtr08_KinPos = (Q_Z_kinPos * kEncCntsPerUm) - P_PhaseMotor8Offset          // 
+    endif
+
+  if (P_PhaseModeStat = kParallelZ1Z4)
+       P_Mtr05_KinPos = (Q_X_kinPos * kEncCntsPerUm) - P_PhaseMotor5Offset          // P1
+       P_Mtr08_KinPos = (Q_X_kinPos * kEncCntsPerUm) - P_PhaseMotor8Offset          // P4
+       P_Mtr06_KinPos = (Q_Y_kinPos * kEncCntsPerUm) - P_PhaseMotor6Offset          // 
+       P_Mtr07_KinPos = (Q_Z_kinPos * kEncCntsPerUm) - P_PhaseMotor7Offset          // 
+    endif
+
+  if (P_PhaseModeStat = kAntiParallelZ2Z3)
+       P_Mtr06_KinPos = ( Q_X_kinPos * kEncCntsPerUm) - P_PhaseMotor6Offset          // P2
+       P_Mtr07_KinPos = (-Q_X_kinPos * kEncCntsPerUm) - P_PhaseMotor7Offset          // P3
+       P_Mtr05_KinPos = ( Q_Y_kinPos * kEncCntsPerUm) - P_PhaseMotor5Offset          // 
+       P_Mtr08_KinPos = ( Q_Z_kinPos * kEncCntsPerUm) - P_PhaseMotor8Offset          // 
+    endif
+
+  if (P_PhaseModeStat = kAntiParallelZ1Z4)
+       P_Mtr05_KinPos = ( Q_X_kinPos * kEncCntsPerUm) - P_PhaseMotor5Offset          // P1
+       P_Mtr08_KinPos = (-Q_X_kinPos * kEncCntsPerUm) - P_PhaseMotor8Offset          // P4
+       P_Mtr06_KinPos = ( Q_Y_kinPos * kEncCntsPerUm) - P_PhaseMotor6Offset          // 
+       P_Mtr07_KinPos = ( Q_Z_kinPos * kEncCntsPerUm) - P_PhaseMotor7Offset          // 
+    endif
+
+CLOSE

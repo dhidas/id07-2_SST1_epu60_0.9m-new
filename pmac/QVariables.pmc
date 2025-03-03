@@ -3,6 +3,7 @@
 
 #define Q_X_kinPos         Q7
 #define Q_Y_kinPos         Q8
+#define Q_Z_kinPos         Q8
 
 
 
@@ -28,6 +29,8 @@
 
 #define Q_Fwd_Tmp1        Q128
 #define Q_Fwd_Tmp2        Q129
+#define Q_Fwd_Tmp3        Q130
+#define Q_Fwd_Tmp4        Q131
 
 #define Q_Inv_Tmp1        Q228
 #define Q_Inv_Tmp2        Q229

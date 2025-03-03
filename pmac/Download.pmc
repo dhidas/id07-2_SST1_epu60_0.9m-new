@@ -29,3 +29,4 @@
 #include "PROG10_GapMotion.pmc"
 #include "PROG12_PhaseMotion.pmc"
 #include "Kinematics_GapMotors.pmc"
+#include "Kinematics_PhaseMotors.pmc"
