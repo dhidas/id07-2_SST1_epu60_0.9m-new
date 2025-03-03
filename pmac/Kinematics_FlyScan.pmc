@@ -29,116 +29,119 @@
 
 &6 Open FORWARD Clear
 
-// Calculate gap from motor positions
-Q_Fwd_Tmp1 = ((M_Mtr1ActPos + M_Mtr1PosBias)/(I108*32) + P_GapMotor1Offset) / kEncCntsPerUm
-Q_Fwd_Tmp3 = ((M_Mtr3ActPos + M_Mtr3PosBias)/(I308*32) + P_GapMotor3Offset) / kEncCntsPerUm
-Q_FwdTmp_Gap  = (Q_Fwd_Tmp1 + Q_Fwd_Tmp3)    // gap
+  // Calculate gap from motor positions
+  Q_Fwd_Tmp1 = ((M_Mtr1ActPos + M_Mtr1PosBias)/(I108*32) + P_GapMotor1Offset) / kEncCntsPerUm
+  Q_Fwd_Tmp3 = ((M_Mtr3ActPos + M_Mtr3PosBias)/(I308*32) + P_GapMotor3Offset) / kEncCntsPerUm
+  Q_FwdTmp_Gap  = (Q_Fwd_Tmp1 + Q_Fwd_Tmp3)    // gap
 
-// Fake some energy if we're outside of the table on the high end
-if (Q_FwdTmp_Gap > P_LastGapPoint)
-  Q_FwdTmp_Slope = (P_LastGapPoint - P_NextToLastGapPoint) / (P_LastEnergyPoint - P_NextToLastEnergyPoint)
-  Q_FwdTmp_Offset = P_LastGapPoint - Q_FwdTmp_Slope * P_LastEnergyPoint
+  // Fake some energy if we're outside of the table on the high end
+  if (Q_FwdTmp_Gap > P_LastGapPoint)
+    Q_FwdTmp_Slope = (P_LastGapPoint - P_NextToLastGapPoint) / (P_LastEnergyPoint - P_NextToLastEnergyPoint)
+    Q_FwdTmp_Offset = P_LastGapPoint - Q_FwdTmp_Slope * P_LastEnergyPoint
 
-  Q_FwdTmp_EnGap = (Q_FwdTmp_Gap - Q_FwdTmp_Offset) / Q_FwdTmp_Slope
-else
-  Q_FwdTmp_klo = 0
-  Q_FwdTmp_khi = kNSPLINE - 1
+    Q_FwdTmp_EnGap = (Q_FwdTmp_Gap - Q_FwdTmp_Offset) / Q_FwdTmp_Slope
+  else
+    Q_FwdTmp_klo = 0
+    Q_FwdTmp_khi = kNSPLINE - 1
 
-  while (Q_FwdTmp_khi - Q_FwdTmp_klo > 1)
-    Q_FwdTmp_k = INT((Q_FwdTmp_khi + Q_FwdTmp_klo)/2)
-    if (lFwdYk > Q_FwdTmp_Gap)
-      Q_FwdTmp_khi = Q_FwdTmp_k
-    else
-      Q_FwdTmp_klo = Q_FwdTmp_k
-    endif
-  endw
+    while (Q_FwdTmp_khi - Q_FwdTmp_klo > 1)
+      Q_FwdTmp_k = INT((Q_FwdTmp_khi + Q_FwdTmp_klo)/2)
+      if (lFwdYk > Q_FwdTmp_Gap)
+        Q_FwdTmp_khi = Q_FwdTmp_k
+      else
+        Q_FwdTmp_klo = Q_FwdTmp_k
+      endif
+    endw
 
-  Q_FwdTmp_h = lFwdYhi - lFwdYlo
-  Q_FwdTmp_a = (lFwdYhi - Q_FwdTmp_Gap) / Q_FwdTmp_h
-  Q_FwdTmp_b = (Q_FwdTmp_Gap - lFwdYlo) / Q_FwdTmp_h
+    Q_FwdTmp_h = lFwdYhi - lFwdYlo
+    Q_FwdTmp_a = (lFwdYhi - Q_FwdTmp_Gap) / Q_FwdTmp_h
+    Q_FwdTmp_b = (Q_FwdTmp_Gap - lFwdYlo) / Q_FwdTmp_h
 
-  Q_FwdTmp_EnGap = P_SplineHarmonic*(Q_FwdTmp_a*lFwdXlo+Q_FwdTmp_b*lFwdXhi+((Q_FwdTmp_a*Q_FwdTmp_a*Q_FwdTmp_a-Q_FwdTmp_a)*lFwdXPPlo+(Q_FwdTmp_b*Q_FwdTmp_b*Q_FwdTmp_b-Q_FwdTmp_b)*lFwdXPPhi)*Q_FwdTmp_h*Q_FwdTmp_h/6)
-endif
+    Q_FwdTmp_EnGap = P_SplineHarmonic*(Q_FwdTmp_a*lFwdXlo+Q_FwdTmp_b*lFwdXhi+((Q_FwdTmp_a*Q_FwdTmp_a*Q_FwdTmp_a-Q_FwdTmp_a)*lFwdXPPlo+(Q_FwdTmp_b*Q_FwdTmp_b*Q_FwdTmp_b-Q_FwdTmp_b)*lFwdXPPhi)*Q_FwdTmp_h*Q_FwdTmp_h/6)
+  endif
 
 
-Q_FwdTmp_MirMtrPos = P_Mtr9_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr9_Offset
-Q_FwdTmp_GrtMtrPos = P_Mtr10_Resolution*(M_Mtr10ActPos + M_Mtr10PosBias)/(I1008*32) + P_Mtr10_Offset
+  Q_FwdTmp_MirMtrPos = P_Mtr9_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr9_Offset
+  Q_FwdTmp_GrtMtrPos = P_Mtr10_Resolution*(M_Mtr10ActPos + M_Mtr10PosBias)/(I1008*32) + P_Mtr10_Offset
 
-Q_FwdTmp_MirPos = Q_FwdTmp_MirMtrPos - P_MirrorOffset - P_BeamInAngle
-Q_FwdTmp_GrtPos = Q_FwdTmp_GrtMtrPos - P_GratingOffset - P_BeamInAngle
+  Q_FwdTmp_MirPos = Q_FwdTmp_MirMtrPos - P_MirrorOffset - P_BeamInAngle
+  Q_FwdTmp_GrtPos = Q_FwdTmp_GrtMtrPos - P_GratingOffset - P_BeamInAngle
 
-I15=kDegrees
-Q_FwdTmp_Phi = 90 - Q_FwdTmp_MirPos * P_MonoOffsetDir
-Q_FwdTmp_Beta = Q_FwdTmp_GrtPos * P_MonoOffsetDir - 90 + P_BetaPrime
-Q_FwdTmp_Alpha = 2 * Q_FwdTmp_Phi + Q_FwdTmp_Beta - P_BetaPrime
-Q_FwdTmp_Lambda = (SIN(Q_FwdTmp_Alpha) + SIN(Q_FwdTmp_Beta)) / (P_MDiffractionOrder * P_K0)
-Q_FwdTmp_PGM = kEV_TO_MM / Q_FwdTmp_Lambda
-Q_FwdTmp_CFF = COS(-1*Q_FwdTmp_Beta) / COS(Q_FwdTmp_Alpha)
+  I15=kDegrees
+  Q_FwdTmp_Phi = 90 - Q_FwdTmp_MirPos * P_MonoOffsetDir
+  Q_FwdTmp_Beta = Q_FwdTmp_GrtPos * P_MonoOffsetDir - 90 + P_BetaPrime
+  Q_FwdTmp_Alpha = 2 * Q_FwdTmp_Phi + Q_FwdTmp_Beta - P_BetaPrime
+  Q_FwdTmp_Lambda = (SIN(Q_FwdTmp_Alpha) + SIN(Q_FwdTmp_Beta)) / (P_MDiffractionOrder * P_K0)
+  Q_FwdTmp_PGM = kEV_TO_MM / Q_FwdTmp_Lambda
+  Q_FwdTmp_CFF = COS(-1*Q_FwdTmp_Beta) / COS(Q_FwdTmp_Alpha)
 
-Q_X_KinPos = Q_FwdTmp_EnGap
-Q_Y_KinPos = Q_FwdTmp_PGM
-Q_Z_KinPos = Q_FwdTmp_CFF
+  Q_X_KinPos = Q_FwdTmp_EnGap
+  Q_Y_KinPos = Q_FwdTmp_PGM
+  Q_Z_KinPos = Q_FwdTmp_CFF
 
 Close
 
 
 
 &6 Open INVERSE Clear
-// Calculate motor positions from eV
+  // Calculate motor positions from eV
 
-if (Q_X_KinPos > P_LastEnergyPoint)
-  Q_InvTmp_Slope = (P_LastGapPoint - P_NextToLastGapPoint) / (P_LastEnergyPoint - P_NextToLastEnergyPoint)
-  Q_InvTmp_Offset = P_LastGapPoint - Q_InvTmp_Slope * P_LastEnergyPoint
+  if (Q_X_KinPos > P_LastEnergyPoint)
+    Q_InvTmp_Slope = (P_LastGapPoint - P_NextToLastGapPoint) / (P_LastEnergyPoint - P_NextToLastEnergyPoint)
+    Q_InvTmp_Offset = P_LastGapPoint - Q_InvTmp_Slope * P_LastEnergyPoint
 
-  Q_InvTmp_Gap = (Q_InvTmp_Slope * Q_X_KinPos + Q_InvTmp_Offset) * kEncCntsPerUm
-else
+    Q_InvTmp_Gap = (Q_InvTmp_Slope * Q_X_KinPos + Q_InvTmp_Offset) * kEncCntsPerUm
+  else
 
-  Q_InvTmp_klo = 0
-  Q_InvTmp_khi = kNSPLINE - 1
+    Q_InvTmp_klo = 0
+    Q_InvTmp_khi = kNSPLINE - 1
 
-  while (Q_InvTmp_khi - Q_InvTmp_klo > 1)
-    Q_InvTmp_k = INT((Q_InvTmp_khi + Q_InvTmp_klo)/2)
-    if (lInvXk > Q_X_KinPos)
-      Q_InvTmp_khi = Q_InvTmp_k
-    else
-      Q_InvTmp_klo = Q_InvTmp_k
+    while (Q_InvTmp_khi - Q_InvTmp_klo > 1)
+      Q_InvTmp_k = INT((Q_InvTmp_khi + Q_InvTmp_klo)/2)
+      if (lInvXk > Q_X_KinPos)
+        Q_InvTmp_khi = Q_InvTmp_k
+      else
+        Q_InvTmp_klo = Q_InvTmp_k
+      endif
+    endw
+
+    Q_InvTmp_h = lInvXhi - lInvXlo
+    Q_InvTmp_a = (lInvXhi - Q_InvTmp_Gap) / Q_InvTmp_h
+    Q_InvTmp_b = (Q_InvTmp_Gap - lInvXlo) / Q_InvTmp_h
+
+
+    Q_InvTmp_Gap = (Q_InvTmp_a*lInvYlo+Q_InvTmp_b*lInvYhi+((Q_InvTmp_a*Q_InvTmp_a*Q_InvTmp_a-Q_InvTmp_a)*lInvYPPlo+(Q_InvTmp_b*Q_InvTmp_b*Q_InvTmp_b-Q_InvTmp_b)*lInvYPPhi)*Q_InvTmp_h*Q_InvTmp_h/6)*kEncCntsPerUm
+
+  endif
+
+  // PGM
+  if (M_Mtr9HomeComplete = kTRUE and M_Mtr10HomeComplete = kTRUE)
+    // Ensure degrees
+    I15 = kDegrees
+
+    Q_InvTmp_Lambda = kEV_TO_MM / Q_Y_KinPos
+    Q_Inv_Tmp1 = (Q_Z_KinPos * P_MDiffractionOrder * P_K0 * Q_InvTmp_Lambda) / (Q_Z_KinPos*Q_Z_KinPos - 1)
+    Q_Inv_Tmp2 = SQRT(1 + Q_Inv_Tmp1*Q_Inv_Tmp1)
+    Q_Inv_Tmp1 = -(P_MDiffractionOrder * P_K0 * Q_InvTmp_Lambda) / (Q_Z_KinPos*Q_Z_KinPos - 1)
+    Q_InvTmp_SinAlpha = Q_Inv_Tmp1 + Q_Inv_Tmp2
+    Q_InvTmp_Alpha = ASIN(Q_InvTmp_SinAlpha)
+    Q_InvTmp_Beta = -ACOS(Q_Z_KinPos * COS(Q_InvTmp_Alpha))
+    Q_InvTmp_Phi = (Q_InvTmp_Alpha - Q_InvTmp_Beta + P_BetaPrime) / 2
+
+    Q_MirPitch = P_MonoOffsetDir * (90 - Q_InvTmp_Phi)
+    Q_GrtPitch = P_MonoOffsetDir * (90 + Q_InvTmp_Beta - P_BetaPrime)
+    Q_MirPitch = Q_MirPitch + P_MirrorOffset + P_BeamInAngle
+    Q_GrtPitch = Q_GrtPitch + P_GratingOffset + P_BeamInAngle
+
+    if (P_MonoOffsetDir * Q_MirPitch !> 0) or (P_MonoOffsetDir * Q_GrtPitch !> 0)
+      M_CS6Error = kTRUE
     endif
-  endw
 
-  Q_InvTmp_h = lInvXhi - lInvXlo
-  Q_InvTmp_a = (lInvXhi - Q_InvTmp_Gap) / Q_InvTmp_h
-  Q_InvTmp_b = (Q_InvTmp_Gap - lInvXlo) / Q_InvTmp_h
-
-
-  Q_InvTmp_Gap = (Q_InvTmp_a*lInvYlo+Q_InvTmp_b*lInvYhi+((Q_InvTmp_a*Q_InvTmp_a*Q_InvTmp_a-Q_InvTmp_a)*lInvYPPlo+(Q_InvTmp_b*Q_InvTmp_b*Q_InvTmp_b-Q_InvTmp_b)*lInvYPPhi)*Q_InvTmp_h*Q_InvTmp_h/6)*kEncCntsPerUm
-
-endif
-
-// PGM
-if (M_Mtr9HomeComplete = kTRUE and M_Mtr10HomeComplete = kTRUE)
-  // Ensure degrees
-  I15 = kDegrees
-
-  Q_InvTmp_Lambda = kEV_TO_MM / Q_Y_KinPos
-  Q_Inv_Tmp1 = (Q_Z_KinPos * P_MDiffractionOrder * P_K0 * Q_InvTmp_Lambda) / (Q_Z_KinPos*Q_Z_KinPos - 1)
-  Q_Inv_Tmp2 = SQRT(1 + Q_Inv_Tmp1*Q_Inv_Tmp1)
-  Q_Inv_Tmp1 = -(P_MDiffractionOrder * P_K0 * Q_InvTmp_Lambda) / (Q_Z_KinPos*Q_Z_KinPos - 1)
-  Q_InvTmp_SinAlpha = Q_Inv_Tmp1 + Q_Inv_Tmp2
-  Q_InvTmp_Alpha = ASIN(Q_InvTmp_SinAlpha)
-  Q_InvTmp_Beta = -ACOS(Q_Z_KinPos * COS(Q_InvTmp_Alpha))
-  Q_InvTmp_Phi = (Q_InvTmp_Alpha - Q_InvTmp_Beta + P_BetaPrime) / 2
-
-  Q_MirPitch = P_MonoOffsetDir * (90 - Q_InvTmp_Phi)
-  Q_GrtPitch = P_MonoOffsetDir * (90 + Q_InvTmp_Beta - P_BetaPrime)
-  Q_MirPitch = Q_MirPitch + P_MirrorOffset + P_BeamInAngle
-  Q_GrtPitch = Q_GrtPitch + P_GratingOffset + P_BeamInAngle
-
-  if (P_MonoOffsetDir * Q_MirPitch !> 0) or (P_MonoOffsetDir * Q_GrtPitch !> 0)
+    P_Mtr09_KinPos = (Q_MirPitch - P_Mtr9_Offset) / P_Mtr9_Resolution
+    P_Mtr10_KinPos = (Q_GrtPitch - P_Mtr10_Offset) / P_Mtr10_Resolution
+  else
     M_CS6Error = kTRUE
   endif
 
-  P_Mtr09_KinPos = (Q_MirPitch - P_Mtr9_Offset) / P_Mtr9_Resolution
-  P_Mtr10_KinPos = (Q_GrtPitch - P_Mtr10_Offset) / P_Mtr10_Resolution
-endif
 Close
 
