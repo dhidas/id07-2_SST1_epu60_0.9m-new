@@ -7,6 +7,8 @@
 #define P_Mtr06_KinPos      P6
 #define P_Mtr07_KinPos      P7
 #define P_Mtr08_KinPos      P8
+#define P_Mtr09_KinPos      P9
+#define P_Mtr10_KinPos      P10
 
 
 #define P_MoveAborted             P86

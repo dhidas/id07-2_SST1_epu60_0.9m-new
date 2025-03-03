@@ -1,9 +1,9 @@
 #ifndef QVariables_pmc
 #define QVariables_pmc
 
-#define Q_X_kinPos         Q7
-#define Q_Y_kinPos         Q8
-#define Q_Z_kinPos         Q8
+#define Q_X_KinPos         Q7
+#define Q_Y_KinPos         Q8
+#define Q_Z_KinPos         Q8
 
 
 
@@ -32,8 +32,46 @@
 #define Q_Fwd_Tmp3        Q130
 #define Q_Fwd_Tmp4        Q131
 
-#define Q_Inv_Tmp1        Q228
-#define Q_Inv_Tmp2        Q229
+#define Q_FwdTmp_Gap         Q135
+#define Q_FwdTmp_Offset      Q136
+#define Q_FwdTmp_Slope       Q137
+#define Q_FwdTmp_EnGap       Q138
+#define Q_FwdTmp_klo         Q139
+#define Q_FwdTmp_khi         Q140
+#define Q_FwdTmp_k           Q141
+#define Q_FwdTmp_h           Q142
+#define Q_FwdTmp_a           Q143
+#define Q_FwdTmp_b           Q144
+#define Q_FwdTmp_MirMtrPos   Q145
+#define Q_FwdTmp_GrtMtrPos   Q146
+#define Q_FwdTmp_MirPos      Q147
+#define Q_FwdTmp_GrtPos      Q148
+#define Q_FwdTmp_Phi         Q149
+#define Q_FwdTmp_Beta        Q150
+#define Q_FwdTmp_Alpha       Q151
+#define Q_FwdTmp_Lambda      Q152
+#define Q_FwdTmp_PGM         Q153
+#define Q_FwdTmp_CFF         Q154
+
+#define Q_Inv_Tmp1           Q228
+#define Q_Inv_Tmp2           Q229
+
+#define Q_InvTmp_Slope       Q235
+#define Q_InvTmp_Offset      Q236
+#define Q_InvTmp_Gap         Q237
+#define Q_InvTmp_klo         Q239
+#define Q_InvTmp_khi         Q240
+#define Q_InvTmp_k           Q241
+#define Q_InvTmp_h           Q242
+#define Q_InvTmp_a           Q243
+#define Q_InvTmp_b           Q244
+#define Q_InvTmp_Phi         Q249
+#define Q_InvTmp_Beta        Q250
+#define Q_InvTmp_Alpha       Q251
+#define Q_InvTmp_Lambda      Q252
+#define Q_InvTmp_SinAlpha    Q253
+#define Q_MirPitch           Q254
+#define Q_GrtPitch           Q255
 
 #define Q_PRTmp_Gap           Q328
 #define Q_PRTmp_klo           Q329

@@ -19,8 +19,8 @@
   Q_Fwd_Tmp1 = (P_Mtr01_KinPos + P_GapMotor1Offset) / kEncCntsPerUm
   Q_Fwd_Tmp2 = (P_Mtr03_KinPos + P_GapMotor3Offset) / kEncCntsPerUm
 
-  Q_X_kinPos = (Q_Fwd_Tmp1 + Q_Fwd_Tmp2)    // Q7 = X axis: GAP
-  Q_Y_kinPos = (Q_Fwd_Tmp1 - Q_Fwd_Tmp2)/2  // Q8 = Y axis: CENTER OFFSET
+  Q_X_KinPos = (Q_Fwd_Tmp1 + Q_Fwd_Tmp2)    // Q7 = X axis: GAP
+  Q_Y_KinPos = (Q_Fwd_Tmp1 - Q_Fwd_Tmp2)/2  // Q8 = Y axis: CENTER OFFSET
 
 Close
 
@@ -28,8 +28,8 @@ Close
 // Gap Inverse kinematic
 // ******************************************************************************
 &1 Open INVERSE Clear
-  Q_Inv_Tmp1 = Q_X_kinPos/(2 * kmm2um)   // Gap term (Q7 = X axis)
-  Q_Inv_Tmp2 = Q_Y_kinPos/kmm2um      // Center Offset term (Q8 = Y axis)
+  Q_Inv_Tmp1 = Q_X_KinPos/(2 * kmm2um)   // Gap term (Q7 = X axis)
+  Q_Inv_Tmp2 = Q_Y_KinPos/kmm2um      // Center Offset term (Q8 = Y axis)
 
   // Calculate motor positions and apply offsets
   P_Mtr01_KinPos = (Q_Inv_Tmp1 + Q_Inv_Tmp2) * kEncCntsPerMm - P_GapMotor1Offset

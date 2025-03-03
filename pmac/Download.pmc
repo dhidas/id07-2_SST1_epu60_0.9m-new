@@ -30,3 +30,4 @@
 #include "PROG12_PhaseMotion.pmc"
 #include "Kinematics_GapMotors.pmc"
 #include "Kinematics_PhaseMotors.pmc"
+#include "Kinematics_FlyScan.pmc"
