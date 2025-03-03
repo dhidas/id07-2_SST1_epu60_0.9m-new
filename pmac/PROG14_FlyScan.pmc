@@ -1,0 +1,303 @@
+#include "PVariables.pmc"
+#include "QVariables.pmc"
+#include "MVariables.pmc"
+#include "Timers.pmc"
+#include "Constants.pmc"
+
+P_ZERO = 0
+P_ONE  = 1
+
+Open PROG 14 Clear
+    // Reset Counts and Bits
+    Q_ErrorBits = 0
+    P_ScanRunning = 1
+    P_TriggerCountUp = 0
+    P_TriggerCountDown = 0
+    P_TriggerArmed = 0
+    P_ScanPaused = 0
+
+
+    // Feedrate is X
+    FRAX(X)
+
+    // check spline is OK, check harmonic
+    if (P_SplineOK = 0 or P_SplineERROR = 1)
+        // Set error flag
+        Q_ErrorBits = Q_ErrorBits | $1
+        return
+    endif
+    if (P_SplineHarmonic < 0 or P_SplineHarmonic = 0)
+        // Set error flag
+        Q_ErrorBits = Q_ErrorBits | $2
+        return
+    endif
+
+
+    // Get scan direction
+    if (Q_FirstTrigger < Q_LastTrigger)
+        Q_ScanDirection = 1
+    else
+        Q_ScanDirection = -1
+    endif
+
+    // Start with one second run-up to first trigger, depends on scan direction
+    Q_eVStart   = Q_FirstTrigger - (Q_eVTriggerWidth/2 + Q_eVPerSecond) * Q_ScanDirection
+    Q_eVStop    = Q_LastTrigger  + (Q_eVTriggerWidth/2 + Q_eVPerSecond) * Q_ScanDirection
+    Q_eVStartID = Q_eVStart + Q_IDEnergyOffset
+    Q_eVStopID  = Q_eVStop + Q_IDEnergyOffset
+
+    // Check that neither start nor stop are beyond gap limits
+    // Check that gap is within current limits
+    CALL 8.0 A(Q_eVStartID / P_SplineHarmonic)
+    if (Q_CallAIO < P_MinimumGap or Q_CallAIO > P_MaximumGap)
+        // Set error flag
+        Q_ErrorBits = Q_ErrorBits | $4
+        return
+    endif
+    CALL 8.0 A(Q_eVStopID / P_SplineHarmonic)
+    if (Q_CallAIO < P_MinimumGap or Q_CallAIO > P_MaximumGap)
+        // Set error flag
+        Q_ErrorBits = Q_ErrorBits | $8
+        return
+    endif
+
+
+    // Check Trigger Width
+    if (ABS(Q_FirstTrigger - Q_LastTrigger) / (Q_NTriggers - 1) < Q_eVTriggerWidth)
+        Q_ErrorBits = Q_ErrorBits | $10
+        return
+    endif
+
+    // Check the girder mode is correct for fly movement
+    if (P_UpperGirderMode != kFlyCoordinated OR P_LowerGirderMode != kFlyCoordinated)
+        Q_ErrorBits = Q_ErrorBits | $20
+        return
+    endif
+
+    // Check that the eV requested is within proper range for harmonic
+    if (Q_eVStartID / P_SplineHarmonic < P_SplineEvMin or Q_eVStartID / P_SplineHarmonic > P_SplineEvMax)
+        Q_ErrorBits = Q_ErrorBits | $80
+        return
+    endif
+    if (Q_eVStopID / P_SplineHarmonic < P_SplineEvMin or Q_eVStopID / P_SplineHarmonic > P_SplineEvMax)
+        Q_ErrorBits = Q_ErrorBits | $80
+        return
+    endif
+
+    // Check that CFF is not crazy
+    if (Q_Z_KinDemandPos < 1.2 or Q_Z_KinDemandPos > 2.6)
+        Q_ErrorBits = Q_ErrorBits | $100
+        return
+    endif
+
+    if (P_InterlockState = 0 AND P_StopAllStat = 0)
+        // Clear error bit
+        M_CS6Error = 0
+    else
+        M_CS6Error = 1
+        return
+    endif
+
+    // Setup mode and acceleration times
+    LINEAR
+    ABS
+    TA800
+    TS200
+
+    // Set loop counter to zero
+    Q_IScan = 0
+
+    // Main loop over number of number of scans depending on scan type
+    if (P_FlyScanType = 0) 
+
+        P_TriggerArmed = 0
+
+        while (Q_IScan < Q_NScans)
+ 
+            // Feedrate to move velocity
+            ;F(Q_eVPerSecond / P_SplineHarmonic)
+            F(20 / P_SplineHarmonic)
+
+            // Initial position
+            B(0) X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+            Dwell 500
+
+            // Dwell or wait for unpause signal
+            if (Q_IScan > 0)
+              if (P_ScanPausedTimeout = 0)
+                I_CS15_Timer1 = P_ScanDwellTime * kSecond
+                while (I_CS15_Timer1 > 0)
+                  Dwell 200
+                endW
+              else
+                I_CS15_Timer1 = P_ScanPausedTimeout * kSecond
+                //P_ScanPaused = 1
+                while (I_CS15_Timer1 > 0)
+                  Dwell 200
+                  if (P_ScanPaused = 0)
+                    I_CS15_Timer1 = 0
+                  endif
+                endW
+                if (I_CS15_Timer1 < 0 AND P_ScanPaused = 1)
+                  GOTO 1800
+                endif
+              endif
+            endif
+
+
+            // Feedrate to move velocity
+            F(Q_eVPerSecond / P_SplineHarmonic)
+ 
+            // Arm Trigger
+            P_TriggerArmed = 0
+            P_LastTriggerPos    = 0
+            P_TriggerDirection  = Q_ScanDirection
+            P_BigTrigStart      = Q_FirstTrigger
+            P_BigTrigEnd        = Q_LastTrigger
+            P_NextTriggerOn     = Q_FirstTrigger - Q_eVTriggerWidth/2 * Q_ScanDirection + Q_TriggerOffset
+            P_NextTriggerOff    = Q_FirstTrigger + Q_eVTriggerWidth/2 * Q_ScanDirection + Q_TriggerOffset
+            P_TriggerIncrement  = ABS(Q_LastTrigger - Q_FirstTrigger) / (Q_NTriggers - 1)
+            P_TriggerCountUp    = 0
+            P_TriggerCountDown  = 0
+            P_TriggerArmed      = 1
+ 
+ 
+            // Final position
+            B(0) X(Q_eVStopID / P_SplineHarmonic) Y(Q_eVStop) Z(Q_Z_KinDemandPos)
+            Dwell 0
+            P_TriggerArmed      = 0
+            Dwell 500
+
+            // Increment scan counter
+            Q_IScan = Q_IScan + 1
+
+            // Set paused bit if using pausing
+            if (P_ScanPausedTimeout > 0 AND Q_IScan < Q_NScans)
+              P_ScanPaused = 1
+            endif
+        endw
+    endif
+    if (P_FlyScanType = 1) 
+        P_TriggerArmed = 0
+
+        // Feedrate to move velocity for first move
+        ;F(Q_eVPerSecond / P_SplineHarmonic)
+        F(20 / P_SplineHarmonic)
+
+        // Initial position
+        B(0) X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+        Dwell 500
+
+        // Set feedrate to scan speed
+        F(Q_eVPerSecond / P_SplineHarmonic)
+
+        while (Q_IScan < Q_NScans)
+
+            // Arm Trigger
+            P_TriggerArmed      = 0
+            P_LastTriggerPos    = 0
+            P_TriggerDirection  = Q_ScanDirection
+            P_BigTrigStart      = Q_FirstTrigger
+            P_BigTrigEnd        = Q_LastTrigger
+            P_NextTriggerOn     = Q_FirstTrigger - Q_eVTriggerWidth/2 * Q_ScanDirection + Q_TriggerOffset
+            P_NextTriggerOff    = Q_FirstTrigger + Q_eVTriggerWidth/2 * Q_ScanDirection + Q_TriggerOffset
+            P_TriggerIncrement  = ABS(Q_LastTrigger - Q_FirstTrigger) / (Q_NTriggers - 1)
+            P_TriggerCountUp    = 0
+            P_TriggerCountDown  = 0
+            P_TriggerArmed      = 1
+ 
+ 
+            // Final position
+            B(0) X(Q_eVStopID / P_SplineHarmonic) Y(Q_eVStop) Z(Q_Z_KinDemandPos)
+            Dwell 0
+            P_TriggerArmed = 0
+            Dwell 500
+
+            // Increment scan counter
+            Q_IScan = Q_IScan + 1
+
+            // Allow for odd number of bi-diectional scans
+            if (Q_IScan > Q_NScans - 1)
+                GOTO 1800
+            endif
+
+            // Dwell or wait for unpause signal
+            if (P_ScanPausedTimeout = 0)
+              I_CS15_Timer1 = P_ScanDwellTime * kSecond
+              while (I_CS15_Timer1 > 0)
+                Dwell 200
+              endW
+            else
+              I_CS15_Timer1 = P_ScanPausedTimeout * kSecond
+              P_ScanPaused = 1
+              while (I_CS15_Timer1 > 0)
+                Dwell 200
+                if (P_ScanPaused = 0)
+                  I_CS15_Timer1 = 0
+                endif
+              endW
+              if (I_CS15_Timer1 < 0 AND P_ScanPaused = 1)
+                GOTO 1800
+              endif
+            endif
+
+            // Switch direction
+            Q_TriggerOffset = -1*Q_TriggerOffset
+            Q_ScanDirection = -1*Q_ScanDirection
+
+
+            // Arm Trigger
+            P_TriggerArmed      = 0
+            P_LastTriggerPos    = 0
+            P_TriggerDirection  = Q_ScanDirection
+            P_BigTrigStart      = Q_LastTrigger
+            P_BigTrigEnd        = Q_FirstTrigger
+            P_NextTriggerOn     = Q_LastTrigger - Q_eVTriggerWidth/2 * Q_ScanDirection + Q_TriggerOffset
+            P_NextTriggerOff    = Q_LastTrigger + Q_eVTriggerWidth/2 * Q_ScanDirection + Q_TriggerOffset
+            P_TriggerIncrement  = ABS(Q_LastTrigger - Q_FirstTrigger) / (Q_NTriggers - 1)
+            P_TriggerCountUp    = 0
+            P_TriggerCountDown  = 0
+            P_TriggerArmed      = 1
+
+
+            // Initial position
+            B(0) X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+            Dwell 0
+            P_TriggerArmed      = 0
+            Dwell 500
+ 
+            // Increment scan counter
+            Q_IScan = Q_IScan + 1
+
+            // Dwell or wait for unpause signal
+            if (P_ScanPausedTimeout = 0)
+              I_CS15_Timer1 = P_ScanDwellTime * kSecond
+              while (I_CS15_Timer1 > 0)
+                Dwell 200
+              endW
+            else
+              I_CS15_Timer1 = P_ScanPausedTimeout * kSecond
+              P_ScanPaused = 1
+              while (I_CS15_Timer1 > 0)
+                Dwell 200
+                if (P_ScanPaused = 0)
+                  I_CS15_Timer1 = 0
+                endif
+              endW
+              if (I_CS15_Timer1 < 0 AND P_ScanPaused = 1)
+                GOTO 1800
+              endif
+            endif
+            // Switch direction
+            Q_TriggerOffset = -1*Q_TriggerOffset
+            Q_ScanDirection = -1*Q_ScanDirection
+        endw
+    endif
+
+
+
+
+    N1800
+    P_TriggerArmed = 0
+    P_ScanRunning = 0
+Close

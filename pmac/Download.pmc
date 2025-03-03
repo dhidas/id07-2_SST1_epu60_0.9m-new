@@ -28,6 +28,7 @@
 #include "PROG08_SplineCalc.pmc"
 #include "PROG10_GapMotion.pmc"
 #include "PROG12_PhaseMotion.pmc"
+#include "PROG14_FlyScan.pmc"
 #include "PROG15_FlyMove.pmc"
 #include "Kinematics_GapMotors.pmc"
 #include "Kinematics_PhaseMotors.pmc"

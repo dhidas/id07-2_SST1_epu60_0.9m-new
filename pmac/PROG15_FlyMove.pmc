@@ -1,0 +1,68 @@
+#include "PVariables.pmc"
+#include "QVariables.pmc"
+#include "Constants.pmc"
+#include "MVariables.pmc"
+
+Open PROG 15 Clear
+
+    P_FMError = 0
+    // Setup mode and acceleration times
+    LINEAR
+    ABS
+    TA500
+    TS200
+
+    // F is given by eV/s
+    FRAX(X)
+    F(P_FlyMoveSpeed_eV / P_SplineHarmonic)
+
+    // Check the spline and harmonic are okay
+    if (P_SplineOK = kFALSE or P_SplineERROR = kTRUE)
+        // Set an error flag and return
+        P_FMError = P_FMError + 1
+        return
+    endif
+
+    if (P_SplineHarmonic < 0 or P_SplineHarmonic = 0)
+        // Set error flag
+        P_FMError = P_FMError + 2
+        return
+    endif
+
+    // Check the girder mode is correct for fly movement
+    if (P_UpperGirderMode != kFlyCoordinated OR P_LowerGirderMode != kFlyCoordinated)
+        P_FMError = P_FMError + 4
+        return
+    endif
+
+    // Check that the eV requested is within proper range for harmonic
+    // Possibly add back calculation of max energy and add something to kick you out here.
+    if ((Q_X_KinDemandPos + Q_IDEnergyOffset) / P_SplineHarmonic < P_SplineEvMin)
+        P_FMError = P_FMError + $10
+        return
+    endif
+
+    // Check that gap is within current limits
+    CALL 8.0 A((Q_X_KinDemandPos + Q_IDEnergyOffset) / P_SplineHarmonic)
+    if (Q_CallAIO < P_MinimumGap or Q_CallAIO > P_MaximumGap)
+        P_FMError = P_FMError + $20
+        return
+    endif
+
+    // Check that CFF is not crazy
+    if (Q_Z_KinDemandPos < 1.2 or Q_Z_KinDemandPos > 2.6)
+        P_FMError = P_FMError + $40
+        return
+    endif
+
+    if (P_InterlockState = 0 AND P_StopAllStat = 0)
+			// Clear error bit
+			M_CS6Error = 0
+
+      B(0) X((Q_X_KinDemandPos + Q_IDEnergyOffset) / P_SplineHarmonic) Y(Q_X_KinDemandPos) Z(Q_Z_KinDemandPos)
+    Dwell 0
+  else
+		M_CS6Error = 1 // Declare error on the CS
+	endif
+
+Close

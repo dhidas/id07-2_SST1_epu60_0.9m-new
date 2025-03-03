@@ -92,6 +92,11 @@ P_PhaseModeStat = kParallelZ2Z3
 // Make sure StopAll is NOT requested
 P_StopAllReq  = kFALSE
 
+// One is one and zero is zero
+P_ZERO = 0
+P_ONE = 1
+
+
 // Enable PLCs here
 Enable PLC kPLC_MovementInProgress
 Enable PLC kPLC_FlySplineCalc

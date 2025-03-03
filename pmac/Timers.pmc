@@ -15,5 +15,6 @@
 #define I_CS13_Timer2       I6312     // C.S.13 timer 2 (Used in PLC25)
 #define I_CS14_Timer1       I6411     // C.S.14 timer 1 (Used in PLC26)
 #define I_CS14_Timer2       I6412     // C.S.14 timer 2 (Used in PLC27)
-#define I_CS15_Timer2       I6512     // C.S.14 timer 2 (Used in PLC29)
+#define I_CS15_Timer1       I6511     // C.S.15 timer 1 (Used in PLC29)
+#define I_CS15_Timer2       I6512     // C.S.15 timer 2 (Used in PLC29)
 #endif

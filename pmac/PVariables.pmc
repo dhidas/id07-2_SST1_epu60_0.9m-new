@@ -168,7 +168,11 @@
 #define P_TriggerCountDown      P2808
 #define P_ScanRunning           P2809
 #define P_PLC28RunCount         P2810
+#define P_FlyScanType           P2811
 #define P_TriggerArmed          P2813
+#define P_ScanPaused            P2814
+#define P_ScanPausedTimeout     P2815
+#define P_ScanDwellTime         P2816
 #define P_ENERGYAXIS            P2824
 #define P_BigTrigOnOrOff        P2825
 #define P_BigTrigStart          P2826

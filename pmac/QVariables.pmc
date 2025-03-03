@@ -3,12 +3,28 @@
 
 #define Q_X_KinPos         Q7
 #define Q_Y_KinPos         Q8
-#define Q_Z_KinPos         Q8
+#define Q_Z_KinPos         Q9
 
 
 
+// For comunicating with the outside world setup variables
+#define Q_FirstTrigger    Q20 ; eV first trigger
+#define Q_LastTrigger     Q21 ; eV last  trigger
+#define Q_eVPerSecond     Q22 ; eV / s
 #define Q_NTriggers       Q23 ; number of triggers
+#define Q_eVTriggerWidth  Q24 ; eV trigger width
+#define Q_eVStart         Q25 ; Starting eV
+#define Q_eVStop          Q26 ; Stopping eV
+#define Q_LoopI           Q27 ; Loop index
+#define Q_evStep          Q28 ; eV Step
+#define Q_ErrorBits       Q29 ; error bits
+#define Q_ScanDirection   Q30 ; Positive or neg eV scan dir
+#define Q_TriggerOffset   Q31 ; Offset trigger in eV
+#define Q_NScans          Q32 ; Number of scans to do
+#define Q_IScan           Q33 ; which scan you are on (starting at zero)
 #define Q_IDEnergyOffset  Q34 ; Offset for ID in energy
+#define Q_eVStartID       Q35 ; Starting eV for ID (contains Q_IDEnergyOffset)
+#define Q_eVStopID        Q36 ; Stopping eV for ID (contains Q_IDEnergyOffset)
 
 #define Q_X_KinDemandPos  Q77
 #define Q_Y_KinDemandPos  Q78
