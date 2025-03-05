@@ -99,8 +99,20 @@ P_ONE = 1
 
 // Enable PLCs here
 Enable PLC kPLC_MovementInProgress
-Enable PLC kPLC_FlySplineCalc
+Enable PLC kPLC_Interlock
+Enable PLC kPLC_Homing
+Enable PLC kPLC_FlySplineCalca
 Enable PLC kPLCFlyPosReporting
+Enable PLC kPLC_Limits
+Enable PLC kPLC_MoveRequest
+Enable PLC kPLC_KillMotors
+Enable PLC kPLC_GapPosReadback
+Enable PLC kPLC_PhasePosReadback
+Enable PLC kPLC_CheckMotorPower
+Enable PLC kPLC_SafetyPLCReset
+Enable PLC kPLC_MacroInit
+Enable PLC kPLC_MonoTrigger
+Enable PLC kPLC_PGMCopyColSw
 
 Disable PLC 1
 Close

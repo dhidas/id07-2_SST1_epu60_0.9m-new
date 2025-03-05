@@ -5,6 +5,8 @@ include $(TOP)/configure/CONFIG
 
 # Install databases, templates & substitutions like this
 DB += EPU60.db
+DB += interlock.template interlock.substitutions
+DB += velocity.template motorDisable.template motor.template motor.substitutions
 DB += gap.template gap.substitutions
 
 

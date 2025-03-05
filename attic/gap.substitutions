@@ -13,12 +13,10 @@ file gap.template
 
 	pattern
 	{ 
-		AXIS,
-		COORDPORT, S, MRES, VELOCITY, ACCEL
+		AXIS, S, MRES, VELOCITY, ACCEL
 	}
 
 	{
-		"Ax:Gap",
-		"PMAC-GAP", "6", "0.20", "800", "0.25"
+		"Ax:Gap", "6", "0.20", "800", "0.25"
 	}
 }

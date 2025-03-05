@@ -1,0 +1,14 @@
+record(calcout, "$(SYS){$(DEV)-$(AXIS)}-CalcDisable") {
+  field(SCAN, ".5 second")
+  field(PINI, "RUNNING")
+  field(CALC, "(A=0)||((A=$(NUM))&&(C=0))||D||(A=$(CNUM))")
+  field(INPA, "$(SYS){$(DEV)-$(GIRDER)}Sw:Axis-Sts")
+  field(INPB, "$(SYS){$(DEV)-$(AXIS)}Sw:AmpEn-Sts")
+  field(INPC, "$(SYS){$(DEV)-$(COMP_AXIS)}Sw:AmpEn-Sts")
+  field(INPD, "$(SYS){$(DEV)-$(AXIS)}-MtrDisable.RVAL")
+  field(OUT, "$(SYS){$(DEV)-$(AXIS)}-Mtr.DISP PP NMS")
+}
+
+record(bo, "$(SYS){$(DEV)-$(AXIS)}-MtrDisable") {
+}
+

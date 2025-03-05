@@ -145,14 +145,12 @@ record(ai, "$(SYS){$(DEV)-$(AXIS)}Center-RB") {
   field(PREC, "2")
 }
 
-record(asyn, "$(SYS){$(DEV)-$(AXIS)}-MvReq-Cmd") {
+record(bo, "$(SYS){$(DEV)-$(AXIS)}-MvReq-Cmd") {
   field(DESC, "Trigers PLC to start gap movement")
   field(SCAN, "Passive")
-  field(DTYP, "asynRecordDevice")
-  field(PORT, "$(PORT)")
-  field(ADDR, "-1")
-  field(TMOD, "Write/Read")
-  field(AOUT, "P1111=1")
+  field(DTYP, "stream")
+  field(VAL,  "1")
+  field(OUT,  "@pmac.proto setIntVar(P111) $(PORT)")
 }
 
 record(transform, "$(SYS){$(DEV)-$(AXIS)}-MtrCalc") {

@@ -1,0 +1,25 @@
+
+
+record(ao, "$(SYS){$(DEV)}-$(TYPE)MtrSpd") {
+  field(DESC, "Velocity for $(TYPE) of indiv.mtrs")
+  field(SCAN, "Passive")
+  field(FLNK, "$(SYS){$(DEV)}-$(TYPE)MtrSpdTrans")
+  field(PREC, "2")
+  field(EGU, "um")
+  field(VAL, "$(INITIAL)")
+  field(PINI, "RUNNING")
+}
+
+record(transform, "$(SYS){$(DEV)}-$(TYPE)MtrSpdTrans") {
+  field(DESC, "Distributes velocity to single mtr.recs")
+  field(SCAN, "Passive")
+  field(CLCA, "A")
+  field(INPA, "$(SYS){$(DEV)}-$(TYPE)MtrSpd.VAL")
+  field(OUTA, "$(MOTOR1).VELO PP NMS")
+  field(OUTB, "$(MOTOR2).VELO PP NMS")
+  field(OUTC, "$(MOTOR3).VELO PP NMS")
+  field(OUTD, "$(MOTOR4).VELO PP NMS")
+  field(EGU, "um")
+  field(PREC, "2")
+}
+
