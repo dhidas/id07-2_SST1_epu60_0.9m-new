@@ -15,6 +15,8 @@ DB += motor.template motorHome.template motor_sst1.substitutions
 DB += motorStatus.template motorStatus_sst1.substitutions
 DB += motorDisable.template velocity.template
 
+DB += EPU60FlyScan.db
+
 DB_INSTALLS += $(EPICS_BASE)/db/pmacStatus.db
 DB_INSTALLS += $(EPICS_BASE)/db/pmacStatusAxis.db
 DB_INSTALLS += $(EPICS_BASE)/db/pmac_asyn_motor.db

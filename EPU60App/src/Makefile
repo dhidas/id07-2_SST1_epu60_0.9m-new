@@ -66,7 +66,7 @@ EPU60_LIBS += reccaster
 EPU60_DBD += pmac_vector.dbd
 EPU60_SRCS_DEFAULT += pmac_vector.c
 
-
+EPU60_SRCS += pmacRegisterDriver.c
 
 include $(TOP)/configure/RULES
 #----------------------------------------
