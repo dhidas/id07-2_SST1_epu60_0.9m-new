@@ -62,6 +62,12 @@ EPU60_LIBS += caPutLog
 EPU60_LIBS += ether_ip
 EPU60_LIBS += reccaster
 
+
+EPU60_DBD += pmac_vector.dbd
+EPU60_SRCS_DEFAULT += pmac_vector.c
+
+
+
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD EXTRA GNUMAKE RULES BELOW HERE

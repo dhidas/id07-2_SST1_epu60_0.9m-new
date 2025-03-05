@@ -1,0 +1,14 @@
+OutTerminator = "";
+InTerminator = ACK;
+Separator = CR;
+
+get_vector {
+  extrainput = ignore;
+  replyTimeout = 1000;
+  @init {
+    out "\$1";
+    in "%f";
+  }
+  out "\$1";
+  in "%f";
+}

@@ -1,0 +1,934 @@
+record(motor, "$(SYS){$(DEV)}FlyScan-Mtr") {
+  field(DTYP, "asynMotor")
+  field(OUT, "@asyn(PMAC-FLY,6)")
+  field(EGU, "eV")
+  field(DESC, "Fly scan energy")
+  field(MRES, "1")
+  field(RTRY, "0")
+  field(NTM, "NO")
+  field(HLM, "100")
+  field(LLM, "20000")
+  field(DHLM, "100")
+  field(DLLM, "20000")
+  #field(VELO, "100")
+  #field(ACCL, "100000")
+  field(PREC, "1")
+}
+
+record(bi, "$(SYS){$(DEV)}FlySplineOK-RB") {
+  field(DESC, "Fly spline calc status")
+  field(DTYP, "asynInt32")
+  field(SCAN, ".1 second")
+  field(ZNAM, "Not OK")
+  field(ONAM, "OK")
+  field(INP, "@asyn($(REGPORT))var(P600)")
+}
+
+
+record(bi, "$(SYS){$(DEV)}FlySplineError-RB") {
+  field(DESC, "Fly spline error status")
+  field(DTYP, "asynInt32")
+  field(SCAN, "2 second")
+  field(ZNAM, "OK")
+  field(ONAM, "ERROR")
+  field(INP, "@asyn($(REGPORT))var(P601)")
+}
+
+
+
+record(ao, "$(SYS){$(DEV)}FlyHarmonic-SP") {
+  field(DESC, "Harmonic")
+  field(DTYP, "asynFloat64")
+  field(PREC, "1")
+  field(VAL,  "1")
+  field(DRVL, "0.001")
+  field(DRVH, "1000")
+  field(PINI, "YES")
+  field(FLNK, "$(SYS){$(DEV)}FlyHarmonic-RB")
+  field(OUT, "@asyn($(REGPORT))var(P602)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+record(ai, "$(SYS){$(DEV)}FlyHarmonic-RB") {
+  field(DESC, "Harmonic")
+  field(DTYP, "asynFloat64")
+  field(PREC, "1")
+  field(SCAN, "Passive")
+  field(INP, "@asyn($(REGPORT))var(P602)")
+}
+
+record(asyn, "$(SYS){$(DEV)}CalculateSpline") {
+  field(DESC, "Harmonic")
+  field(SCAN, "Passive")
+  field(DTYP, "asynRecordDevice")
+  field(PORT, "$(PORT)")
+  field(ADDR, "-1")
+  field(TMOD, "Write/Read")
+  field(AOUT, "enaplc6")
+}
+
+record(ai, "$(SYS){$(DEV)}FlyEnergyID-RB") {
+  field(DESC, "Energy ID")
+  field(DTYP, "asynFloat64")
+  field(PREC, "2")
+  field(EGU,  "eV")
+  field(SCAN, "1 second")
+  field(INP, "@asyn($(REGPORT))var(&6Q87)")
+}
+record(ai, "$(SYS){$(DEV)}FlyEnergyPGM-RB") {
+  field(DESC, "Energy PGM")
+  field(DTYP, "asynFloat64")
+  field(PREC, "2")
+  field(EGU,  "eV")
+  field(SCAN, "1 second")
+  field(INP, "@asyn($(REGPORT))var(&6Q88)")
+}
+
+
+
+record(ao, "$(SYS){$(DEV)}FlyCFF-SP") {
+  field(DESC, "PGM CFF")
+  field(DTYP, "asynFloat64")
+  field(PREC, "2")
+  field(DRVL, "1.2")
+  field(DRVH, "2.6")
+  field(PINI, "NO")
+  field(FLNK, "$(SYS){$(DEV)}FlyCFF-RB")
+  field(OUT, "@asyn($(REGPORT))var(&6Q79)")
+}
+record(ai, "$(SYS){$(DEV)}FlyCFF-RB") {
+  field(DESC, "PGM CFF")
+  field(DTYP, "asynFloat64")
+  field(PREC, "2")
+  field(SCAN, "1 second")
+  field(INP, "@asyn($(REGPORT))var(&6Q79)")
+}
+
+
+record(calc, "$(SYS){$(DEV)}FlyEnergyID-H1-RB") {
+  field(DESC, "First harmonic energy")
+  field(INPA, "$(SYS){$(DEV)}FlyEnergyID-RB CP")
+  field(INPB, "$(SYS){$(DEV)}FlyHarmonic-RB CP")
+  field(CALC, "A / B")
+}
+
+
+
+
+
+record(motor, "$(SYS){$(DEV)}FlyMove-Mtr") {
+  field(DTYP, "asynMotor")
+  field(OUT, "@asyn(PMAC-FLYb,6)")
+  field(EGU, "eV")
+  field(DESC, "Fly scan energy")
+  field(MRES, "1")
+  field(RTRY, "0")
+  field(NTM, "NO")
+  field(HLM, "100")
+  field(LLM, "20000")
+  field(DHLM, "100")
+  field(DLLM, "20000")
+  #field(VELO, "100")
+  #field(ACCL, "100000")
+  field(PREC, "1")
+}
+
+record(ao, "$(SYS){$(DEV)}FlyMove-Mtr-SP") {
+  field(DTYP, "asynFloat64")
+  field(DESC, "Fly Move setpoint")
+  field(EGU, "eV")
+  field(PREC, "2")
+  field(DRVL, "100")
+  field(DRVH, "20000")
+  field(OUT, "@asyn($(REGPORT))var(P817)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(asyn, "$(SYS){$(DEV)}FlyMove-Mtr-Go") {
+  field(DTYP, "asynRecordDevice")
+  field(DESC, "Fly Move go")
+  field(SCAN, "Passive")
+  field(PORT, "$(PORT)")
+  field(ADDR, "-1")
+  field(TMOD, "Write/Read")
+  field(AOUT, "P818=1")
+}
+
+
+
+
+#record(ao, "$(SYS){$(DEV)}FlyMove-Mtr-SP-Go") {
+#  field(DESC, "Fly Move position setpoint and go")
+#  field(EGU, "eV")
+#  field(PREC, "2")
+#  field(OUT, "$(SYS){$(DEV)}FlyMove-Mtr-SP PP")
+#  field(FLNK, "$(SYS){$(DEV)}FlyMove-Mtr-Go PP")
+#  info(autosaveFields_pass0, "VAL")
+#  info(autosaveFields, "VAL")
+#}
+
+
+#record(ao, "$(SYS){$(DEV)}FlyMove-MvReq-Cmd") {
+#  field(DESC, "Trigers PLC to start fly move")
+#  field(SCAN, "Passive")
+#  field(DTYP, "asynInt32")
+#  field(VAL, "1")
+#  field(OUT, "@asyn($(REGPORT))var(P818)")
+#}
+
+#record(ao, "$(SYS){$(DEV)}FlyScan-Mtr-Go") {
+#  field(DESC, "Starts Fly Scan")
+#  field(SCAN, "Passive")
+#  field(DTYP, "asynInt32")
+#  field(VAL, "1")
+#  field(OUT, "@asyn($(REGPORT))var(P820)")
+#}
+
+record(asyn, "$(SYS){$(DEV)}FlyScan-Mtr-Go") {
+  field(DTYP, "asynRecordDevice")
+  field(DESC, "Fly Scan go")
+  field(SCAN, "Passive")
+  field(PORT, "$(PORT)")
+  field(ADDR, "-1")
+  field(TMOD, "Write/Read")
+  field(AOUT, "P820=1")
+}
+
+
+record(ao, "$(SYS){$(DEV)}FlyMove-Speed-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Speed SP")
+  field(SCAN, "Passive")
+  field(FLNK, "$(SYS){$(DEV)}FlyMove-Speed-RB PP")
+  field(EGU, "eV/s")
+  field(PREC, "2")
+  field(DRVL, "0.001")
+  field(DRVH, "60")
+  field(VAL,  "1")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(P819)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}FlyMove-Speed-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Speed SP")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+  field(EGU, "eV/s")
+  field(PREC, "2")
+  field(INP, "@asyn($(REGPORT))var(P819)")
+}
+
+
+
+
+
+
+
+
+
+#record(ao, "$(SYS){$(DEV)-Ax:FlyMove-E}-MvReq-Cmd") {
+#  field(DESC, "Trigers PLC to start fly move")
+#  field(SCAN, "Passive")
+#  field(DTYP, "asynFloat64")
+#  field(VAL, "1")
+#  field(OUT, "@asyn($(REGPORT))var(P818)")
+#}
+
+#record(ao, "$(SYS){$(DEV)-Ax:FlyScan-E}-MvReq-Cmd") {
+#  field(DESC, "Trigers PLC to start fly scan")
+#  field(SCAN, "Passive")
+#  field(DTYP, "asynFloat64")
+#  field(VAL, "1")
+#  field(OUT, "@asyn($(REGPORT))var(P820)")
+#}
+
+
+
+record(ao, "$(SYS){$(DEV)}EScan-Speed-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Speed SP")
+  field(SCAN, "Passive")
+  field(FLNK, "$(SYS){$(DEV)}EScan-Speed-RB")
+  field(EGU, "eV/s")
+  field(PREC, "2")
+  field(DRVL, "0.001")
+  field(DRVH, "60")
+  field(VAL,  "1")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(&6Q22)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScan-Speed-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Speed SP")
+  field(SCAN, "1 second")
+  field(EGU, "eV/s")
+  field(PREC, "2")
+  field(INP, "@asyn($(REGPORT))var(&6Q22)")
+}
+
+
+
+
+
+
+
+record(ao, "$(SYS){$(DEV)}EScanFirst-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan First Trigger")
+  field(FLNK, "$(SYS){$(DEV)}EScanFirst-RB")
+  field(EGU, "eV")
+  field(PREC, "2")
+  field(DRVL, "10")
+  field(DRVH, "20000")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(&6Q20)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScanFirst-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan First Trigger")
+  field(SCAN, "1 second")
+  field(EGU, "eV")
+  field(PREC, "2")
+  field(INP, "@asyn($(REGPORT))var(&6Q20)")
+}
+
+
+
+record(ao, "$(SYS){$(DEV)}EScanLast-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan Last Trigger")
+  field(SCAN, "Passive")
+  field(FLNK, "$(SYS){$(DEV)}EScanLast-RB")
+  field(EGU, "eV")
+  field(PREC, "2")
+  field(DRVL, "10")
+  field(PINI, "YES")
+  field(DRVH, "20000")
+  field(OUT, "@asyn($(REGPORT))var(&6Q21)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+
+record(ai, "$(SYS){$(DEV)}EScanLast-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan Last Trigger")
+  field(SCAN, "1 second")
+  field(EGU, "eV")
+  field(PREC, "2")
+  field(INP, "@asyn($(REGPORT))var(&6Q21)")
+}
+
+
+
+record(ao, "$(SYS){$(DEV)}EScanNTriggers-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan number of triggers")
+  field(SCAN, "Passive")
+  field(FLNK, "$(SYS){$(DEV)}EScanNTriggers-RB")
+  field(VAL, "10")
+  field(DRVL, "2")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(&6Q23)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScanNTriggers-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan number of triggers")
+  field(SCAN, "1 second")
+  field(INP,  "@asyn($(REGPORT))var(&6Q23)")
+}
+
+
+
+record(ao, "$(SYS){$(DEV)}EScanTriggerWidth-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Width of trigger")
+  field(FLNK, "$(SYS){$(DEV)}EScanTriggerWidth-RB")
+  field(EGU, "eV")
+  field(PREC, "3")
+  field(VAL, "0.1")
+  field(DRVH, "999999")
+  field(DRVL, "0.001")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(&6Q24)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScanTriggerWidth-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Width of trigger")
+  field(SCAN, "1 second")
+  field(EGU,  "eV")
+  field(PREC, "3")
+  field(INP,  "@asyn($(REGPORT))var(&6Q24)")
+}
+
+
+record(ao, "$(SYS){$(DEV)}EScanTriggerOffset-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Offset of trigger")
+  field(FLNK, "$(SYS){$(DEV)}EScanTriggerOffset-RB")
+  field(EGU, "eV")
+  field(PREC, "3")
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(&6Q31)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScanTriggerOffset-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Offset of trigger")
+  field(SCAN, "1 second")
+  field(EGU,  "eV")
+  field(PREC, "3")
+  field(INP,  "@asyn($(REGPORT))var(&6Q31)")
+}
+
+
+record(ao, "$(SYS){$(DEV)}EScanIDEnergyOffset-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Offset of ID energy in scan")
+  field(FLNK, "$(SYS){$(DEV)}EScanIDEnergyOffset-RB")
+  field(EGU, "eV")
+  field(PREC, "3")
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(&6Q34)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScanIDEnergyOffset-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Offset of ID energy in scan")
+  field(SCAN, "1 second")
+  field(EGU,  "eV")
+  field(PREC, "3")
+  field(INP,  "@asyn($(REGPORT))var(&6Q34)")
+}
+
+
+record(ai, "$(SYS){$(DEV)}EScanTriggerCount-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Count of triggers")
+  field(SCAN, "1 second")
+  field(INP,  "@asyn($(REGPORT))var(P2807)")
+}
+
+
+
+
+
+record(ao, "$(SYS){$(DEV)}EScanNScans-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Number of scans")
+  field(FLNK, "$(SYS){$(DEV)}EScanNScans-RB")
+  field(VAL, "1")
+  field(DRVL, "1")
+  field(DRVH, "1000000")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(&6Q32)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScanNScans-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Number of scans")
+  field(SCAN, "1 second")
+  field(INP,  "@asyn($(REGPORT))var(&6Q32)")
+}
+
+
+
+
+
+record(ai, "$(SYS){$(DEV)}EScanIScan-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Current scan number")
+  field(SCAN, "1 second")
+  field(INP,  "@asyn($(REGPORT))var(&6Q33)")
+}
+
+
+
+record(mbbo, "$(SYS){$(DEV)}FlyScan-Type-SP") {
+  field(DESC, "Fly scan type")
+  field(SCAN, "Passive")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(ZRST, "Unidirectional")
+  field(ONST, "Bidirectional")
+  field(DTYP, "asynInt32")
+  field(PINI, "YES")
+  field(OUT,  "@asyn($(REGPORT))var(P2811)")
+  field(FLNK, "$(SYS){$(DEV)}FlyScan-Type-RB CP")
+}
+record(mbbi, "$(SYS){$(DEV)}FlyScan-Type-RB") {
+  field(DESC, "Fly scan type")
+  field(SCAN, "2 second")
+  field(DTYP, "asynInt32")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(ZRST, "Unidirectional")
+  field(ONST, "Bidirectional")
+  field(INP, "@asyn($(REGPORT))var(P2811)")
+}
+
+
+
+
+
+record (waveform, "$(SYS){$(DEV)}FlyLUT-Energy-RB") {
+  field (DTYP, "stream")
+  field (SCAN, "Passive")
+  field (INP, "@pmacvector.proto get_vector(P620..639) $(PORT)")
+  field (FTVL, "FLOAT")
+  field (NELM, "20")
+}
+
+
+
+
+record(bi, "$(SYS){$(DEV)}FlyScan-Running-Sts")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Fly scan running sts")
+  field(SCAN, ".5 second")
+  field(ZNAM, "Not running")
+  field(ONAM, "RUNNING")
+  field(INP, "@asyn($(REGPORT))var(P2809)")
+}
+
+
+record(bi, "$(SYS){$(DEV)}MACRO-Sts") {
+  field(DESC, "MACRO link status")
+  field(DTYP, "asynInt32")
+  field(SCAN, "5 second")
+  field(ZNAM, "OK")
+  field(ONAM, "ERROR")
+  field(INP,  "@asyn($(REGPORT))var(M85)")
+}
+
+
+#record(stringout, "$(SYS){$(DEV)}MACRO-CLRF") {
+#  field(DESC, "Reset MACRO link")
+#  field(DTYP, "stream")
+#  field(PROC, 1)
+#  field(VAL, "MSCLRF15")
+#  field(OUT, "@pmac.proto sendString() $(PORT)")
+#}
+record(asyn, "$(SYS){$(DEV)}MACRO-CLRF") {
+  field(DTYP, "asynRecordDevice")
+  field(SCAN, "Passive")
+  field(PORT, "$(PORT)")
+  field(ADDR, "-1")
+  field(TMOD, "Write/Read")
+  field(AOUT, "CLRF")
+  field(DESC, "Reset MACRO link")
+}
+
+
+record(asyn, "$(SYS){$(DEV)}CS6LOOKAHEAD") {
+  field(DTYP, "asynRecordDevice")
+  field(SCAN, "Passive")
+  field(PORT, "$(PORT)")
+  field(ADDR, "-1")
+  field(TMOD, "Write/Read")
+  field(AOUT, "&6 define lookahead 50,50")
+  #field(AOUT, "P8012=P8012+1")
+  field(DESC, "Reset lookahead")
+}
+record(calcout, "$(SYS){$(DEV)}FlyCheckLookahead") {
+  field(CALC, "(A & 4) >> 1")
+  field(INPA, "$(SYS){$(DEV)}MACROControl-RB CPP")
+  field(OOPT, "Transition To Non-zero")
+  #field(FLNK, "$(SYS){$(DEV)}CS6LOOKAHEAD")
+  field(OUT , "$(SYS){$(DEV)}CS6LOOKAHEAD.PROC")
+}
+
+
+record(ao, "$(SYS){$(DEV)}MACROControl-SP")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "MACRO Control and Status")
+  field(SCAN, "Passive")
+  field(FLNK, "$(SYS){$(DEV)}MACROControl-RB")
+  field(VAL, "8")
+  field(DRVL, "0")
+  field(OUT, "@asyn($(REGPORT))var(P1700)")
+}
+
+record(ai, "$(SYS){$(DEV)}MACROControl-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "MACRO Control and Status")
+  field(SCAN, "1 second")
+  field(PINI, "YES")
+  field(INP,  "@asyn($(REGPORT))var(P1700)")
+}
+
+
+record(ai, "$(SYS){$(DEV)}FlyScanError-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Fly Scan Error Status")
+  field(SCAN, "1 second")
+  field(PINI, "YES")
+  field(INP,  "@asyn($(REGPORT))var(&6Q29)")
+}
+
+
+
+
+
+
+
+
+
+record (waveform, "$(SYS){$(DEV)}FlyLUT-Gap-RB") {
+  field (DTYP, "stream")
+  field (SCAN, "Passive")
+  field (INP, "@pmacvector.proto get_vector(P640..659) $(PORT)")
+  field (FTVL, "FLOAT")
+  field (NELM, "20")
+}
+
+
+
+record (waveform, "$(SYS){$(DEV)}FlyLUT-Energy-SP") {
+  field (FTVL, "FLOAT")
+  field (NELM, "20")
+  field (FLNK, "$(SYS){$(DEV)}CalculateSpline")
+  info(autosaveFields_pass1, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+
+record (aSub, "$(SYS){$(DEV)}FlyLUT-Energy-Write")
+{
+  field (SNAM, "write_pmac_pvector")
+  field (INPA, "$(SYS){$(DEV)}FlyLUT-Energy-SP CP")  # Input waveform
+  field (FTA,  "FLOAT")
+  field (NOA,  "20")                                  # Number of elements
+  field (INPB, "$(SYS){$(DEV)}Asyn.PORT")             # Asyn port
+  field (FTB,  "STRING")
+  field (NOB,  "1")
+  field (INPC, "620")                                 # First P-variable number
+  field (FTC,  "SHORT")
+  field (FLNK, "$(SYS){$(DEV)}FlyLUT-Energy-RB")
+}
+
+
+
+
+record (waveform, "$(SYS){$(DEV)}FlyLUT-Gap-SP") {
+  field (FTVL, "FLOAT")
+  field (NELM, "20")
+  field (FLNK, "$(SYS){$(DEV)}CalculateSpline")
+  info(autosaveFields_pass1, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+
+record (aSub, "$(SYS){$(DEV)}FlyLUT-Gap-Write")
+{
+  field (SNAM, "write_pmac_pvector")
+  field (INPA, "$(SYS){$(DEV)}FlyLUT-Gap-SP CP")  # Input waveform
+  field (FTA,  "FLOAT")
+  field (NOA,  "20")                                  # Number of elements
+  field (INPB, "$(SYS){$(DEV)}Asyn.PORT")             # Asyn port
+  field (FTB,  "STRING")
+  field (NOB,  "1")
+  field (INPC, "640")                                 # First P-variable number
+  field (FTC,  "SHORT")
+  field (FLNK, "$(SYS){$(DEV)}FlyLUT-Gap-RB")
+}
+
+
+
+
+
+
+
+
+record(bo, "$(SYS){$(DEV)}EScanPaused-SP")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Fly Scan Paused Flag")
+  field(FLNK, "$(SYS){$(DEV)}EScanPaused-RB CP")
+  field(OUT, "@asyn($(REGPORT))var(P2814)")
+}
+
+record(bi, "$(SYS){$(DEV)}EScanPaused-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Fly Scan Paused Flag")
+  field(SCAN, ".1 second")
+  field(ZNAM, "Not Paused")
+  field(ONAM, "Paused")
+  field(INP,  "@asyn($(REGPORT))var(P2814)")
+}
+
+record(ao, "$(SYS){$(DEV)}EScanPausedTimeout-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan Pause Timeout")
+  field(FLNK, "$(SYS){$(DEV)}EScanPausedTimeout-RB PP")
+  field(EGU, "s")
+  field(PREC, "1")
+  field(VAL, "10")
+  field(DRVL, "0")
+  field(DRVH, "43200")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(P2815)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScanPausedTimeout-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan Pause Timeout")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+  field(EGU,  "s")
+  field(PREC, "1")
+  field(INP,  "@asyn($(REGPORT))var(P2815)")
+}
+
+
+record(ao, "$(SYS){$(DEV)}EScanDwellTime-SP")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan Dwell Time")
+  field(FLNK, "$(SYS){$(DEV)}EScanDwellTime-RB PP")
+  field(EGU, "s")
+  field(PREC, "2")
+  field(VAL,  "1")
+  field(DRVL, "0")
+  field(DRVH, "4")
+  field(PINI, "YES")
+  field(OUT, "@asyn($(REGPORT))var(P2816)")
+  info(autosaveFields_pass0, "VAL")
+  info(autosaveFields, "VAL")
+}
+
+record(ai, "$(SYS){$(DEV)}EScanDwellTime-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Scan Dwell Time")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+  field(EGU,  "s")
+  field(PREC, "2")
+  field(INP,  "@asyn($(REGPORT))var(P2816)")
+}
+
+
+
+record(ai, "$(SYS){$(DEV)}MirP-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Mirror")
+  field(SCAN, "1 second")
+  field(EGU,  "cts")
+  field(PREC, "2")
+  field(INP,  "@asyn($(REGPORT))var(P700)")
+}
+
+record(ai, "$(SYS){$(DEV)}GrtP-RB")
+{
+  field(DTYP, "asynFloat64")
+  field(DESC, "Grating")
+  field(SCAN, "1 second")
+  field(EGU,  "cts")
+  field(PREC, "2")
+  field(INP,  "@asyn($(REGPORT))var(P701)")
+}
+
+
+
+
+
+
+record(bi, "$(SYS){$(DEV)}Mtr9-HMFL-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 9 home flag Status")
+  field(SCAN, "1 second")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(INP,  "@asyn($(REGPORT))var(M156)")
+}
+record(bi, "$(SYS){$(DEV)}Mtr9-PLIM-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 9 positive limit Status")
+  field(SCAN, "1 second")
+  field(ZNAM, "No error")
+  field(ONAM, "Main error present")
+  field(OSV, "MAJOR")
+  field(INP,  "@asyn($(REGPORT))var(M157)")
+}
+record(bi, "$(SYS){$(DEV)}Mtr9-MLIM-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 9 negative limit Status")
+  field(SCAN, "1 second")
+  field(ZNAM, "No error")
+  field(ONAM, "Main error present")
+  field(OSV, "MAJOR")
+  field(INP,  "@asyn($(REGPORT))var(M158)")
+}
+record(bi, "$(SYS){$(DEV)}Mtr9-AmpFault-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 9 amp fault")
+  field(SCAN, "1 second")
+  field(ZNAM, "No error")
+  field(ONAM, "Main error present")
+  field(OSV, "MAJOR")
+  field(INP,  "@asyn($(REGPORT))var(M155)")
+}
+record(bi, "$(SYS){$(DEV)}Mtr9-FFE-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 9 fatal following")
+  field(SCAN, "1 second")
+  field(ZNAM, "No error")
+  field(ONAM, "Main error present")
+  field(OSV, "MAJOR")
+  field(INP,  "@asyn($(REGPORT))var(M942)")
+}
+
+
+record(bi, "$(SYS){$(DEV)}Mtr10-HMFL-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 10 home flag Status")
+  field(SCAN, "1 second")
+  field(ZNAM, "0")
+  field(ONAM, "1")
+  field(INP,  "@asyn($(REGPORT))var(M256)")
+}
+record(bi, "$(SYS){$(DEV)}Mtr10-PLIM-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 10 positive limit Status")
+  field(SCAN, "1 second")
+  field(ZNAM, "No error")
+  field(ONAM, "Main error present")
+  field(OSV, "MAJOR")
+  field(INP,  "@asyn($(REGPORT))var(M257)")
+}
+record(bi, "$(SYS){$(DEV)}Mtr10-MLIM-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 10 negative limit Status")
+  field(SCAN, "1 second")
+  field(ZNAM, "No error")
+  field(ONAM, "Main error present")
+  field(OSV, "MAJOR")
+  field(INP,  "@asyn($(REGPORT))var(M258)")
+}
+record(bi, "$(SYS){$(DEV)}Mtr10-AmpFault-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 10 amp fault")
+  field(SCAN, "1 second")
+  field(ZNAM, "No error")
+  field(ONAM, "Main error present")
+  field(OSV, "MAJOR")
+  field(INP,  "@asyn($(REGPORT))var(M255)")
+}
+record(bi, "$(SYS){$(DEV)}Mtr10-FFE-RB")
+{
+  field(DTYP, "asynInt32")
+  field(DESC, "Motor 10 fatal following")
+  field(SCAN, "1 second")
+  field(ZNAM, "No error")
+  field(ONAM, "Main error present")
+  field(OSV, "MAJOR")
+  field(INP,  "@asyn($(REGPORT))var(M1042)")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+#record(ai, "$(SYS){$(DEV)}P_ScanRunning") {
+#  field(DTYP, "asynFloat64")
+#  field(SCAN, ".1 second")
+#  field(INP, "@asyn($(REGPORT))var(P2809)")
+#}
+#record(ai, "$(SYS){$(DEV)}P_TriggerCountDown") {
+#  field(DTYP, "asynFloat64")
+#  field(SCAN, ".1 second")
+#  field(INP, "@asyn($(REGPORT))var(P2808)")
+#}
+#record(ai, "$(SYS){$(DEV)}P_TriggerArmed") {
+#  field(DTYP, "asynFloat64")
+#  field(SCAN, ".1 second")
+#  field(INP, "@asyn($(REGPORT))var(P2813)")
+#}
+#record(ai, "$(SYS){$(DEV)}P_ENERGYAXIS") {
+#  field(DTYP, "asynFloat64")
+#  field(PREC, "3")
+#  field(SCAN, ".1 second")
+#  field(INP, "@asyn($(REGPORT))var(P2824)")
+#}
+record(ai, "$(SYS){$(DEV)}P_BigTrigOnOrOff") {
+  field(DTYP, "asynFloat64")
+  field(SCAN, ".1 second")
+  field(INP, "@asyn($(REGPORT))var(P2825)")
+}
+#record(ai, "$(SYS){$(DEV)}M816") {
+#  field(DTYP, "asynFloat64")
+#  field(SCAN, ".1 second")
+#  field(INP, "@asyn($(REGPORT))var(MX0,M816)")
+#}

@@ -10,7 +10,10 @@ DB += interlock.template interlock_sst1.substitutions
 DB += globalStatus.template globalStatus_sst1.substitutions
 DB += girderAxis.template girderAxis_sst1.substitutions
 DB += calibration.template calibration_sst1.substitutions
-
+DB += phase.template phase_sst1.substitutions
+DB += motor.template motorHome.template motor_sst1.substitutions
+DB += motorStatus.template motorStatus_sst1.substitutions
+DB += motorDisable.template velocity.template
 
 DB_INSTALLS += $(EPICS_BASE)/db/pmacStatus.db
 DB_INSTALLS += $(EPICS_BASE)/db/pmacStatusAxis.db

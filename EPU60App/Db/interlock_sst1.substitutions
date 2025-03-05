@@ -1,0 +1,25 @@
+file interlock.template 
+{	
+
+	# SYS,DEV: All records are prefixed with $(SYS){$(DEV)}
+	# PMACPORT: Asyn port driver name for talking to the PMAC controller
+	# MOTORX: Individual motors affected by the interlock
+	# MOTORGAP: Gap virtual motor affected by the interlock
+	# MOTORPHASE: Phase virtual motor affected by the interlock
+
+	pattern
+	{ 	PMACPORT,
+		MOTOR1, MOTOR3, 
+		MOTOR5, MOTOR6, 
+		MOTOR7, MOTOR8,
+		MOTORGAP, MOTORPHASE 
+	}
+
+	{ 	
+		"PMAC_ETH_PORT",
+		"$(SYS){$(DEV)-Ax:TU}-MtrDisable", "$(SYS){$(DEV)-Ax:BU}-MtrDisable", 
+		"$(SYS){$(DEV)-Ax:TO}-Mtr", "$(SYS){$(DEV)-Ax:TI}-Mtr", 
+		"$(SYS){$(DEV)-Ax:BO}-Mtr", "$(SYS){$(DEV)-Ax:BI}-Mtr",
+		"$(SYS){$(DEV)-Ax:Gap}-Mtr","$(SYS){$(DEV)-Ax:Phase}-Mtr" 
+	}
+}
