@@ -12,7 +12,7 @@
 #define lXPPlo P(kSplineXPPStart + Q_PRTmp_klo)
 #define lYk P(kSplineYStart + Q_PRTmp_k)
 
-Open PLC kPLCFlyPosReporting Clear
+Open PLC kPLC_FlyPosReporting Clear
 
 ADDRESS &6
 
@@ -47,7 +47,7 @@ else
   Q_PRTmp_EnGap=P_SplineHarmonic*(Q_PRTmp_a*lXlo+Q_PRTmp_b*lXhi+((Q_PRTmp_a*Q_PRTmp_a*Q_PRTmp_a-Q_PRTmp_a)*lXPPlo+(Q_PRTmp_b*Q_PRTmp_b*Q_PRTmp_b-Q_PRTmp_b)*lXPPhi)*Q_PRTmp_h*Q_PRTmp_h/6)
 endif
 
-P_MirrorMtrPosPR  = P_Mtr9_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr9_Offset
+P_MirrorMtrPosPR  = P_Mtr09_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr09_Offset
 P_GratingMtrPosPR = P_Mtr10_Resolution*(M_Mtr10ActPos + M_Mtr10PosBias)/(I1008*32) + P_Mtr10_Offset
 
 P_MirrorPosPR = P_MirrorMtrPosPR - P_MirrorOffset - P_BeamInAngle

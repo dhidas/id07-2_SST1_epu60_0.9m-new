@@ -14,6 +14,7 @@ if (P_PLCResetExecuting = kFALSE)
   // Also do not execute if any gap motor is disabled (we do not want to enable on-purpose disabled motor)
   if (M_ResetSystem = kTRUE AND P_StopAllStat = 0)
     OR (P_SafetyReset = kTRUE AND P_StopAllStat = 0)
+P1598 = P1598 + 1
     P_PLCResetExecuting = kTRUE
     
     //********************
@@ -56,6 +57,7 @@ if (P_PLCResetExecuting = kFALSE)
     while (I_CS8_Timer2 > 0)
     endwhile
   
+P1597 = P1597 + 1
     // Set reset signal back to 0
     M_MotorDriveReset = kLOW
     M_SafetyPLCReset = kLOW
@@ -100,4 +102,5 @@ else
   endif
 endif
 
+P1599 = P1599 + 1
 Close

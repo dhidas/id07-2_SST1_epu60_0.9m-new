@@ -174,11 +174,11 @@ if (P_MacroRequest = 0 or P_MacroRequest = 1)
 
     ; Comment out if PLC 29 running
     MXR0,P180,P_MacroTmp              ; Copy remote Mtr1_Resolution -> Mtr9
-    P_Mtr9_Resolution = 1/P_MacroTmp
+    P_Mtr09_Resolution = 1/P_MacroTmp
     MXR0,P180,P_MacroTmp              ; Copy remote Mtr2_Resolution -> Mtr10   XXX Check.  this is using P180 just like Mtr9 ?
     P_Mtr10_Resolution = 1/P_MacroTmp
     MXR0,P120,P_MacroTmp              ; Copy remote Mtr1_Offset -> Mtr9
-    P_Mtr9_Offset = P_MacroTmp
+    P_Mtr09_Offset = P_MacroTmp
     MXR0,P121,P_MacroTmp              ; Copy remote Mtr2_Offset -> Mtr10
     P_Mtr10_Offset = P_MacroTmp
 

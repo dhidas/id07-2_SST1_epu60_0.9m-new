@@ -9,6 +9,7 @@ I3=2                                    ; Communication protocol
 I4=0                                    ; Communications Integrity Mode for pmac driver
 I5=3                                    ; PLC Program Control
 I6=1                                    ; Error Reporting Mode
+I10=1677653                             ; Servo Interrupt Time
 I36=1                                   ; Enable/Abort Separation Control XXX Check
 I62=1                                   ; Internal Message Carriage Return Control *
 I63=1                                   ; Control-X Echo Enable
@@ -121,8 +122,8 @@ I5698=60                            ; Isx98 Coordinate System x Maximum Feedrate
 
 // The following is done for MACRO
 I6800=1473                          ; Macro IC0 MaxPhase/PWM Frequency Control
-I6801=1                             ; Macro IC0 Phase Clock Frequency Control
-I6802=3                             ; Macro IC0 Servo Clock Frequency Control
+I6801=3                             ; Macro IC0 Phase Clock Frequency Control
+I6802=1                             ; Macro IC0 Servo Clock Frequency Control
 I6840=$4030                         ; Macro IC0 Ring Configuration/Status, typical master IC setting
 I6841=$0FF333                       ; Macro IC0 Node Activate Ctrl (Servo nodes 0, 1, 4, 5, 8, 9, 12, 13) – User Input
 
@@ -136,7 +137,7 @@ I7004,2,100=3                       ; I7m04 Servo IC m PWM Deadtime / PFM Pulse 
 
 
 // Rotary encoder direction encoding
-I7010,2,20=3   // Enc 1,3           ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
+I7010,2,20=3    // Enc 1,3          ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
 I7110=3         // Enc 5            ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
 I7120=7         // Enc 6            ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
 I7130=7         // Enc 7            ; I7mn0 Servo IC m Channel n Encoder/Timer Decode Control
@@ -174,7 +175,7 @@ I8007=$78118                        ; Mtr8 $3508
 I8008=$2F8420                       ; MACRO PGM Mtr1
 I8009=$18000                        ;      $350a
 I8010=$2F8424                       ; MACRO PGM Mtr3
-I8011=$18000                        ;      $250c
+I8011=$18000                        ;      $350c
 I8012=$0                            ; End of ECT $350d
 
 

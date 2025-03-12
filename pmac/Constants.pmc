@@ -38,7 +38,7 @@
 #define kENABLE_DELAY         200
 #define kPOST_KILL_DELAY      400
 #define kTIMEOUT_KILL         600
-#define kTIMEOUT_FAULTRESET   500
+#define kTIMEOUT_FAULTRESET  1000
 #define kTIMEOUT_ABORT        300
 #define kSTOP_TIME            500
 #define kABORT_DELAY          250
@@ -69,7 +69,7 @@
 #define kPLC_OpenGap                4
 #define kPLC_Homing                 5
 #define kPLC_FlySplineCalc          6
-#define kPLCFlyPosReporting         7
+#define kPLC_FlyPosReporting        7
 #define kPLC_MoveRequest            8
 #define kPLC_KillMotors             9
 #define kPLC_GapPosReadback        10

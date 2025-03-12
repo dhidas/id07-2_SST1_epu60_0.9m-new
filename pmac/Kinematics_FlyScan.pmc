@@ -30,8 +30,8 @@
 &6 Open FORWARD Clear
 
   // Calculate gap from motor positions
-  Q_Fwd_Tmp1 = ((M_Mtr1ActPos + M_Mtr1PosBias)/(I108*32) + P_GapMotor1Offset) / kEncCntsPerUm
-  Q_Fwd_Tmp3 = ((M_Mtr3ActPos + M_Mtr3PosBias)/(I308*32) + P_GapMotor3Offset) / kEncCntsPerUm
+  Q_Fwd_Tmp1 = (P_Mtr01_KinPos + P_GapMotor1Offset) / kEncCntsPerUm
+  Q_Fwd_Tmp3 = (P_Mtr03_KinPos + P_GapMotor3Offset) / kEncCntsPerUm
   Q_FwdTmp_Gap  = (Q_Fwd_Tmp1 + Q_Fwd_Tmp3)    // gap
 
   // Fake some energy if we're outside of the table on the high end
@@ -61,7 +61,7 @@
   endif
 
 
-  Q_FwdTmp_MirMtrPos = P_Mtr9_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr9_Offset
+  Q_FwdTmp_MirMtrPos = P_Mtr09_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr09_Offset
   Q_FwdTmp_GrtMtrPos = P_Mtr10_Resolution*(M_Mtr10ActPos + M_Mtr10PosBias)/(I1008*32) + P_Mtr10_Offset
 
   Q_FwdTmp_MirPos = Q_FwdTmp_MirMtrPos - P_MirrorOffset - P_BeamInAngle
@@ -142,6 +142,9 @@ Close
   else
     M_CS6Error = kTRUE
   endif
+
+  P_Mtr01_KinPos = Q_InvTmp_Gap / 2
+  P_Mtr03_KinPos = Q_InvTmp_Gap / 2
 
 Close
 

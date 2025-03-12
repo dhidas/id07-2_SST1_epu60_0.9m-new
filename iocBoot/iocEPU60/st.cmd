@@ -1,6 +1,5 @@
 #!../../bin/linux-x86_64/EPU60
 
-
 < envPaths
 
 epicsEnvSet("BASEDIR", "$(TOP)/..")

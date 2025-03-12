@@ -13,7 +13,7 @@ if (P_MacroRequest & $4 = $4)
 
   if (M_CS6Running = kFALSE)
     MXR0,P120,P_PLC29MacroTmp              ; Copy remote Mtr1_Offset -> Mtr9
-    P_Mtr9_Offset = P_PLC29MacroTmp
+    P_Mtr09_Offset = P_PLC29MacroTmp
     MXR0,P121,P_PLC29MacroTmp              ; Copy remote Mtr2_Offset -> Mtr10
     P_Mtr10_Offset = P_PLC29MacroTmp
  

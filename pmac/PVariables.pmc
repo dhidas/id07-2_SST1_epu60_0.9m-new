@@ -181,9 +181,9 @@
 
 #define P_PLC29MacroTmp         P2900
 
-#define P_Mtr9_Resolution       P4809
+#define P_Mtr09_Resolution      P4809
 #define P_Mtr10_Resolution      P4810
-#define P_Mtr9_Offset           P4909
+#define P_Mtr09_Offset          P4909
 #define P_Mtr10_Offset          P4910
 
 #endif

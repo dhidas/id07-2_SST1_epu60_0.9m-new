@@ -1,6 +1,24 @@
 #ifndef MVariableDefs_pmc
 #define MVariableDefs_pmc
 
+
+M1->Y:$78800,0,1 //  Input 01 J6 	Pin#1
+M2->Y:$78800,1,1 //  Input 02 J6 	Pin#20
+M3->Y:$78800,2,1 //  Input 03 J6 	Pin#2
+M4->Y:$78800,3,1 //  Input 04 J6 	Pin#21
+M5->Y:$78800,4,1 //  Input 05 J6 	Pin#3
+M6->Y:$78800,5,1 //  Input 06 J6 	Pin#22
+M7->Y:$78800,6,1 //  Input 07 J6 	Pin#4
+M8->Y:$78800,7,1 //  Input 08 J6 	Pin#23
+M9->Y:$78801,0,1 //  Input 09 J6 	Pin#5
+M10->Y:$78801,1,1 // Input 10 J6 	Pin#24
+M11->Y:$78801,2,1 // Input 11 J6 	Pin#6
+M12->Y:$78801,3,1 // Input 12 J6 	Pin#25
+M13->Y:$78801,4,1 // Input 13 J6 	Pin#7
+M14->Y:$78801,5,1 // Input 14 J6 	Pin#26
+M15->Y:$78801,6,1 // Input 15 J6 	Pin#8
+M16->Y:$78801,7,1 // Input 16 J6 	Pin#27
+
 M17->Y:$78803,0,1 //  Input 17 J7   Pin#1
 M18->Y:$78803,1,1 //  Input 18 J7   Pin#20
 M19->Y:$78803,2,1 //  Input 19 J7   Pint#2
