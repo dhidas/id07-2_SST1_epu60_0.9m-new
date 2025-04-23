@@ -22,10 +22,9 @@
 
 // The following is for fly scanning
 // Kinematic positions are:
-//   A - unused
-//   B - Elevation
-//   X - Energy
-//   Y - Energy Subtraction (typically zero)
+//   X - Energy ID
+//   Y - Energy PGM
+//   Z - Energy CFF
 
 &6 Open FORWARD Clear
 
@@ -106,8 +105,8 @@ Close
     endw
 
     Q_InvTmp_h = lInvXhi - lInvXlo
-    Q_InvTmp_a = (lInvXhi - Q_InvTmp_Gap) / Q_InvTmp_h
-    Q_InvTmp_b = (Q_InvTmp_Gap - lInvXlo) / Q_InvTmp_h
+    Q_InvTmp_a = (lInvXhi - Q_X_KinPos) / Q_InvTmp_h
+    Q_InvTmp_b = (Q_X_KinPos - lInvXlo) / Q_InvTmp_h
 
 
     Q_InvTmp_Gap = (Q_InvTmp_a*lInvYlo+Q_InvTmp_b*lInvYhi+((Q_InvTmp_a*Q_InvTmp_a*Q_InvTmp_a-Q_InvTmp_a)*lInvYPPlo+(Q_InvTmp_b*Q_InvTmp_b*Q_InvTmp_b-Q_InvTmp_b)*lInvYPPhi)*Q_InvTmp_h*Q_InvTmp_h/6)*kEncCntsPerUm
@@ -137,7 +136,7 @@ Close
       M_CS6Error = kTRUE
     endif
 
-    P_Mtr09_KinPos = (Q_MirPitch - P_Mtr9_Offset) / P_Mtr9_Resolution
+    P_Mtr09_KinPos = (Q_MirPitch - P_Mtr09_Offset) / P_Mtr09_Resolution
     P_Mtr10_KinPos = (Q_GrtPitch - P_Mtr10_Offset) / P_Mtr10_Resolution
   else
     M_CS6Error = kTRUE

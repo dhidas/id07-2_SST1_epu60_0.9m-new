@@ -206,8 +206,12 @@ if (P_MacroRequest = 0 or P_MacroRequest = 1)
     ADDRESS &6
     Q_Z_KinDemandPos = P_MacroTmp
 
-    CMD"&1#1->0#3->0"  ; Remove from gap coord system
-    CMD"&6#1->I#3->I#9->I#10->I"  ; 
+    CMD"&1#1->0#3->0" lWAIT50 ; Remove from gap coord system
+#ifdef kIDFLYONLY
+    CMD"&6#1->I#3->I" lWAIT50
+#else
+    CMD"&6#1->I#3->I#9->I#10->I" lWAIT50
+#endif
     CMD"&6 END GATHER" 
     CMD"&6 DELETE GATHER" 
     CMD"&6 DELETE LOOKAHEAD" 

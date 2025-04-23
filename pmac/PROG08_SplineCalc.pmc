@@ -7,9 +7,9 @@
 #define lP8Xlo P(kSplineXStart + Q_P8_klo)
 #define lP8Yhi P(kSplineYStart + Q_P8_khi)
 #define lP8Ylo P(kSplineYStart + Q_P8_klo)
-#define lP8XPPhi P(kSplineXPPStart + Q_P8_khi)
-#define lP8XPPlo P(kSplineXPPStart + Q_P8_klo)
-#define lP8Yk P(kSplineYStart + Q_P8_k)
+#define lP8YPPhi P(kSplineYPPStart + Q_P8_khi)
+#define lP8YPPlo P(kSplineYPPStart + Q_P8_klo)
+#define lP8Xk P(kSplineXStart + Q_P8_k)
 
 /***
     This program is only intended to calculate the gap for a given energy.
@@ -36,18 +36,18 @@ else
 
   while (Q_P8_khi - Q_P8_klo > 1)
     Q_P8_k = INT((Q_P8_khi + Q_P8_klo)/2)
-    if (lP8Yk > Q_CallAIO)
+    if (lP8Xk > Q_CallAIO)
       Q_P8_khi = Q_P8_k
     else
       Q_P8_klo = Q_P8_k
     endif
   endw
 
-  Q_P8_h = lP8Yhi - lP8Ylo
-  Q_P8_a = (lP8Yhi - Q_CallAIO) / Q_P8_h
-  Q_P8_b = (Q_CallAIO - lP8Ylo) / Q_P8_h
+  Q_P8_h = lP8Xhi - lP8Xlo
+  Q_P8_a = (lP8Xhi - Q_CallAIO) / Q_P8_h
+  Q_P8_b = (Q_CallAIO - lP8Xlo) / Q_P8_h
 
-  Q_CallAIO = (Q_P8_a*lP8Xlo+Q_P8_b*lP8Xhi+((Q_P8_a*Q_P8_a*Q_P8_a-Q_P8_a)*lP8XPPlo+(Q_P8_b*Q_P8_b*Q_P8_b-Q_P8_b)*lP8XPPhi)*Q_P8_h*Q_P8_h/6)  ; XXX Check.  may have to multiply by P_SplineHarmonic
+  Q_CallAIO = (Q_P8_a*lP8Ylo+Q_P8_b*lP8Yhi+((Q_P8_a*Q_P8_a*Q_P8_a-Q_P8_a)*lP8YPPlo+(Q_P8_b*Q_P8_b*Q_P8_b-Q_P8_b)*lP8YPPhi)*Q_P8_h*Q_P8_h/6)  ; XXX Check.  may have to multiply by P_SplineHarmonic
 
 endif
 

@@ -110,7 +110,7 @@ P_ONE = 1
 Enable PLC kPLC_MovementInProgress
 Enable PLC kPLC_Interlock
 Enable PLC kPLC_Homing
-Enable PLC kPLC_FlySplineCalca
+Enable PLC kPLC_FlySplineCalc
 Enable PLC kPLC_FlyPosReporting
 Enable PLC kPLC_Limits
 Enable PLC kPLC_MoveRequest

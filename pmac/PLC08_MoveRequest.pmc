@@ -174,7 +174,11 @@ OPEN PLC kPLC_MoveRequest CLEAR
         M_Mtr1_Amp_Enable = kTRUE
         M_Mtr3_Amp_Enable = kTRUE
 
+#ifdef kIDFLYONLY
+        CMD"#1J/#3J/"
+#else
         CMD"#1J/#3J/#9J/#10J/"
+#endif
         P_TestPLC8 = 2
         I_CS5_Timer1 = kENABLE_DELAY * kMilliSecond
         while(I_CS5_Timer1 > 0)

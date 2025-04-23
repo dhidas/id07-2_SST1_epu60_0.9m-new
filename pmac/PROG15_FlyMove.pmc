@@ -59,7 +59,11 @@ Open PROG 15 Clear
 			// Clear error bit
 			M_CS6Error = 0
 
-      B(0) X((Q_X_KinDemandPos + Q_IDEnergyOffset) / P_SplineHarmonic) Y(Q_X_KinDemandPos) Z(Q_Z_KinDemandPos)
+#ifdef kIDFLYONLY
+      X((Q_X_KinDemandPos + Q_IDEnergyOffset) / P_SplineHarmonic)
+#else
+      X((Q_X_KinDemandPos + Q_IDEnergyOffset) / P_SplineHarmonic) Y(Q_X_KinDemandPos) Z(Q_Z_KinDemandPos)
+#endif
     Dwell 0
   else
 		M_CS6Error = 1 // Declare error on the CS

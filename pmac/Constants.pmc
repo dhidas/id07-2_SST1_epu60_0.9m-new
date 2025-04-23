@@ -1,6 +1,9 @@
 #ifndef Constants_pmc
 #define Constants_pmc
 
+#define kIDFLYONLY
+
+
 #define kTRUE                   1
 #define kFALSE                  0
 #define kON                     1
