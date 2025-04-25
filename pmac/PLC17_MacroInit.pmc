@@ -60,7 +60,8 @@ if (P_MacroRequest = 0 or P_MacroRequest = 1)
     MXR0,I113,I913          ; Motor xx Positive Software Position Limit
     MXR0,I114,I914          ; Motor xx Negative Software Position Limit
     MXR0,I115,I915          ; Motor xx Abort/Limit Deceleration Rate
-    MXR0,I116,I916          ; Motor xx Maximum Program Velocity
+    ;MXR0,I116,I916          ; Motor xx Maximum Program Velocity
+    I916 = 1800
     MXR0,I117,I917          ; Motor xx Maximum Program Acceleration
     MXR0,I119,I919          ; Motor xx Maximum Jog/Home Acceleration
     MXR0,I120,I920          ; Motor xx Jog/Home Acceleration Time
@@ -96,7 +97,8 @@ if (P_MacroRequest = 0 or P_MacroRequest = 1)
     MXR0,I213,I1013         ; Motor xx Positive Software Position Limit
     MXR0,I214,I1014         ; Motor xx Negative Software Position Limit
     MXR0,I215,I1015         ; Motor xx Abort/Limit Deceleration Rate
-    MXR0,I216,I1016         ; Motor xx Maximum Program Velocity
+    ;MXR0,I216,I1016         ; Motor xx Maximum Program Velocity
+    I1016 = 1800
     MXR0,I217,I1017         ; Motor xx Maximum Program Acceleration
     MXR0,I219,I1019         ; Motor xx Maximum Jog/Home Acceleration
     MXR0,I220,I1020         ; Motor xx Jog/Home Acceleration Time
@@ -189,8 +191,6 @@ if (P_MacroRequest = 0 or P_MacroRequest = 1)
     P_BetaPrime = 0
     MXR0,P182,P_K0
     MXR0,P195,P_B2
-    MXR0,M164,P_MirrorOffset        ; XXX Check this and the one below.  I dont love that we
-    MXR0,M264,P_GratingOffset       ; take offset and write it to a p-var
     MXR0,P193,P_R1
     MXR0,P194,P_R2
     MXR0,P183,P_MDiffractionOrder
@@ -215,7 +215,7 @@ if (P_MacroRequest = 0 or P_MacroRequest = 1)
     CMD"&6 END GATHER" 
     CMD"&6 DELETE GATHER" 
     CMD"&6 DELETE LOOKAHEAD" 
-    CMD"&6 DEFINE LOOKAHEAD 50,50" 
+    CMD"&6 DEFINE LOOKAHEAD 25,50" 
     lWAIT250
   endif
 

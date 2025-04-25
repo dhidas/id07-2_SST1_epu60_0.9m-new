@@ -60,11 +60,11 @@
   endif
 
 
-  Q_FwdTmp_MirMtrPos = P_Mtr09_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr09_Offset
-  Q_FwdTmp_GrtMtrPos = P_Mtr10_Resolution*(M_Mtr10ActPos + M_Mtr10PosBias)/(I1008*32) + P_Mtr10_Offset
+  Q_FwdTmp_MirMtrPos = P_Mtr09_Resolution * P_Mtr09_KinPos + P_Mtr09_Offset
+  Q_FwdTmp_GrtMtrPos = P_Mtr10_Resolution * P_Mtr10_KinPos + P_Mtr10_Offset
 
-  Q_FwdTmp_MirPos = Q_FwdTmp_MirMtrPos - P_MirrorOffset - P_BeamInAngle
-  Q_FwdTmp_GrtPos = Q_FwdTmp_GrtMtrPos - P_GratingOffset - P_BeamInAngle
+  Q_FwdTmp_MirPos = Q_FwdTmp_MirMtrPos - P_BeamInAngle
+  Q_FwdTmp_GrtPos = Q_FwdTmp_GrtMtrPos - P_BeamInAngle
 
   I15=kDegrees
   Q_FwdTmp_Phi = 90 - Q_FwdTmp_MirPos * P_MonoOffsetDir
@@ -118,19 +118,20 @@ Close
     // Ensure degrees
     I15 = kDegrees
 
+
     Q_InvTmp_Lambda = kEV_TO_MM / Q_Y_KinPos
     Q_Inv_Tmp1 = (Q_Z_KinPos * P_MDiffractionOrder * P_K0 * Q_InvTmp_Lambda) / (Q_Z_KinPos*Q_Z_KinPos - 1)
+    Q_Inv_Tmp3 = -Q_Inv_Tmp1 / Q_Z_KinPos
     Q_Inv_Tmp2 = SQRT(1 + Q_Inv_Tmp1*Q_Inv_Tmp1)
-    Q_Inv_Tmp1 = -(P_MDiffractionOrder * P_K0 * Q_InvTmp_Lambda) / (Q_Z_KinPos*Q_Z_KinPos - 1)
-    Q_InvTmp_SinAlpha = Q_Inv_Tmp1 + Q_Inv_Tmp2
+    Q_InvTmp_SinAlpha = Q_Inv_Tmp3 + Q_Inv_Tmp2
     Q_InvTmp_Alpha = ASIN(Q_InvTmp_SinAlpha)
     Q_InvTmp_Beta = -ACOS(Q_Z_KinPos * COS(Q_InvTmp_Alpha))
     Q_InvTmp_Phi = (Q_InvTmp_Alpha - Q_InvTmp_Beta + P_BetaPrime) / 2
 
     Q_MirPitch = P_MonoOffsetDir * (90 - Q_InvTmp_Phi)
     Q_GrtPitch = P_MonoOffsetDir * (90 + Q_InvTmp_Beta - P_BetaPrime)
-    Q_MirPitch = Q_MirPitch + P_MirrorOffset + P_BeamInAngle
-    Q_GrtPitch = Q_GrtPitch + P_GratingOffset + P_BeamInAngle
+    Q_MirPitch = Q_MirPitch + P_BeamInAngle
+    Q_GrtPitch = Q_GrtPitch + P_BeamInAngle
 
     if (P_MonoOffsetDir * Q_MirPitch !> 0) or (P_MonoOffsetDir * Q_GrtPitch !> 0)
       M_CS6Error = kTRUE

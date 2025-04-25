@@ -1,7 +1,7 @@
 #ifndef Constants_pmc
 #define Constants_pmc
 
-#define kIDFLYONLY
+//#define kIDFLYONLY
 
 
 #define kTRUE                   1
@@ -64,6 +64,10 @@
 #define kAntiParallelZ2Z3           2
 #define kAntiParallelZ1Z4           3
 
+// Fly Scan Modes (ID+PGM, ID, PGM)
+#define FlyScanModeIDPGM            0
+#define FlyScanModeIDOnly           1
+#define FlyScanModePGMOnly          2
 
 // Define PLC number names
 #define kPLC_Initialize             1

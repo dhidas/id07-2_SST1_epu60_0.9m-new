@@ -72,6 +72,7 @@
 
 #define Q_Inv_Tmp1           Q228
 #define Q_Inv_Tmp2           Q229
+#define Q_Inv_Tmp3           Q230
 
 #define Q_InvTmp_Slope       Q235
 #define Q_InvTmp_Offset      Q236

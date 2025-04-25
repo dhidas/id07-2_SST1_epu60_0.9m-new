@@ -50,11 +50,11 @@ endif
 P_MirrorMtrPosPR  = P_Mtr09_Resolution*(M_Mtr9ActPos + M_Mtr9PosBias)/(I908*32) + P_Mtr09_Offset
 P_GratingMtrPosPR = P_Mtr10_Resolution*(M_Mtr10ActPos + M_Mtr10PosBias)/(I1008*32) + P_Mtr10_Offset
 
-P_MirrorPosPR = P_MirrorMtrPosPR - P_MirrorOffset - P_BeamInAngle
-P_GratingPosPR = P_GratingMtrPosPR - P_GratingOffset - P_BeamInAngle
+P_MirrorPosPR = P_MirrorMtrPosPR - P_BeamInAngle
+P_GratingPosPR = P_GratingMtrPosPR - P_BeamInAngle
 
 I15=kDegrees
-P_PhiPR = 90 - P_MirrorMtrPosPR * P_MonoOffsetDir
+P_PhiPR = 90 - P_MirrorPosPR * P_MonoOffsetDir
 P_BetaPR = P_GratingPosPR * P_MonoOffsetDir - 90 + P_BetaPrime
 P_AlphaPR = 2 * P_PhiPR + P_BetaPR - P_BetaPrime
 P_LambdaPR = (SIN(P_AlphaPR) + SIN(P_BetaPR)) / (P_MDiffractionOrder * P_K0)

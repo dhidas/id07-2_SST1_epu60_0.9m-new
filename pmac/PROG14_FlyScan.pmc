@@ -119,11 +119,17 @@ Open PROG 14 Clear
             F(20 / P_SplineHarmonic)
 
             // Initial position
-#ifndef kIDFLYONLY
-            X(Q_eVStartID / P_SplineHarmonic)
-#else
-            X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
-#endif
+            if (P_FlyScanMode = FlyScanModeIDPGM)
+              X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+            else
+              if (P_FlyScanMode = FlyScanModeIDOnly)
+                X(Q_eVStartID / P_SplineHarmonic)
+              else
+                if (P_FlyScanMode = FlyScanModePGMOnly)
+                  Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+                endif
+              endif
+            endif
             Dwell 500
 
             // Dwell or wait for unpause signal
@@ -167,11 +173,17 @@ Open PROG 14 Clear
  
  
             // Final position
-#ifdef kIDFLYONLY
-            X(Q_eVStopID / P_SplineHarmonic)
-#else
-            X(Q_eVStopID / P_SplineHarmonic) Y(Q_eVStop) Z(Q_Z_KinDemandPos)
-#endif
+            if (P_FlyScanMode = FlyScanModeIDPGM)
+              X(Q_eVStopID / P_SplineHarmonic) Y(Q_eVStop) Z(Q_Z_KinDemandPos)
+            else
+              if (P_FlyScanMode = FlyScanModeIDOnly)
+                X(Q_eVStopID / P_SplineHarmonic)
+              else
+                if (P_FlyScanMode = FlyScanModePGMOnly)
+                  Y(Q_eVStop) Z(Q_Z_KinDemandPos)
+                endif
+              endif
+            endif
             Dwell 0
             P_TriggerArmed      = 0
             Dwell 500
@@ -193,11 +205,17 @@ Open PROG 14 Clear
         F(20 / P_SplineHarmonic)
 
         // Initial position
-#ifdef kIDFLYONLY
-        X(Q_eVStartID / P_SplineHarmonic)
-#else
-        X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
-#endif
+        if (P_FlyScanMode = FlyScanModeIDPGM)
+          X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+        else
+          if (P_FlyScanMode = FlyScanModeIDOnly)
+            X(Q_eVStartID / P_SplineHarmonic)
+          else
+            if (P_FlyScanMode = FlyScanModePGMOnly)
+              Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+            endif
+          endif
+        endif
         Dwell 500
 
         // Set feedrate to scan speed
@@ -220,11 +238,17 @@ Open PROG 14 Clear
  
  
             // Final position
-#ifdef kIDFLYONLY
-            X(Q_eVStopID / P_SplineHarmonic)
-#else
-            X(Q_eVStopID / P_SplineHarmonic) Y(Q_eVStop) Z(Q_Z_KinDemandPos)
-#endif
+            if (P_FlyScanMode = FlyScanModeIDPGM)
+              X(Q_eVStopID / P_SplineHarmonic) Y(Q_eVStop) Z(Q_Z_KinDemandPos)
+            else
+              if (P_FlyScanMode = FlyScanModeIDOnly)
+                X(Q_eVStopID / P_SplineHarmonic)
+              else
+                if (P_FlyScanMode = FlyScanModePGMOnly)
+                  Y(Q_eVStop) Z(Q_Z_KinDemandPos)
+                endif
+              endif
+            endif
             Dwell 0
             P_TriggerArmed = 0
             Dwell 500
@@ -277,11 +301,17 @@ Open PROG 14 Clear
 
 
             // Initial position
-#ifdef kIDFLYONLY
-            X(Q_eVStartID / P_SplineHarmonic)
-#else
-            X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
-#endif
+            if (P_FlyScanMode = FlyScanModeIDPGM)
+              X(Q_eVStartID / P_SplineHarmonic) Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+            else
+              if (P_FlyScanMode = FlyScanModeIDOnly)
+                X(Q_eVStartID / P_SplineHarmonic)
+              else
+                if (P_FlyScanMode = FlyScanModePGMOnly)
+                  Y(Q_eVStart) Z(Q_Z_KinDemandPos)
+                endif
+              endif
+            endif
             Dwell 0
             P_TriggerArmed      = 0
             Dwell 500

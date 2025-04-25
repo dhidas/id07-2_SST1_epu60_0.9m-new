@@ -129,12 +129,56 @@ M864->D:$00044C // #8 Position bias (1/[Ixx08*32] cts)
 M872->L:$000457 // #8 Variable jog position/distance (cts)
 
 
+// Motor 9 status bits
+M930->Y:$4C0,11
+M931->X:$4B0,21
+M932->X:$4B0,22
+M933->X:$4B0,13
+M934->*
+M935->X:$4B0,15
+M936->*
+M937->X:$4B0,17
+M938->X:$4B0,18
+M939->X:$4B0,19
+M940->Y:$4C0,0
+M941->Y:$4C0,1
+M942->Y:$4C0,2
+M943->Y:$4C0,3
+M944->Y:$4C0,13
+M945->Y:$4C0,10
+M946->Y:$4C0,6
+M947->Y:$4C0,5
+M948->Y:$4C0,8
+M949->Y:$4C0,9
+
 M962->D:$48B        // #9 Actual position (1/[Ixx08*32] cts)
-M945->Y:$4C0,10     // #9 Home-complere bit
+;M945->Y:$4C0,10     // #9 Home-complere bit
 M964->D:$4CC        // #9 Position bias (1/[Ixx08*32] cts)
 
+// Motor 10 status bits
+M1030->Y:$540,11
+M1031->X:$530,21
+M1032->X:$530,22
+M1033->X:$530,13
+M1034->*
+M1035->X:$530,15
+M1036->*
+M1037->X:$530,17
+M1038->X:$530,18
+M1039->X:$530,19
+M1040->Y:$540,0
+M1041->Y:$540,1
+M1042->Y:$540,2
+M1043->Y:$540,3
+M1044->Y:$540,13
+M1045->Y:$540,10
+M1046->Y:$540,6
+M1047->Y:$540,5
+M1048->Y:$540,8
+M1049->Y:$540,9
+
 M1062->D:$50B       // #10 Actual position (1/[Ixx08*32] cts)
-M1045->Y:$540,10    // #10 Home-complete bit
+;M1045->Y:$540,10    // #10 Home-complete bit
 M1064->D:$54C       // #10 Position bias (1/[Ixx08*32] cts)
 
 M5180->X:$002040,0,1  ; &1 Program-running bit

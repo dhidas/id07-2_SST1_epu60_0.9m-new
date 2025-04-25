@@ -113,7 +113,7 @@ I5150,2,100=1                       ; Isx50 Coordinate System x Kinematic Calcul
 
 // For kinematics for CS6 (FlyScan/FlyMove)
 I5613=10                            ; Isx13 Coordinate System x Segmentation Time
-I5620=50                            ; Isx20 Coordinate System x Lookahead Length
+I5620=25                            ; Isx20 Coordinate System x Lookahead Length
 I5650=1                             ; Isx50 Coordinate System x Kinematic Calculations Enable
 
 ; Limit feedrate for CS6 (FlyScan/FlyMove)

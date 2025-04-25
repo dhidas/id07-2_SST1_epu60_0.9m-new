@@ -98,6 +98,9 @@ P_LowerGirderMode   = kGapCoordinated
 P_PhaseModeReq = kParallelZ2Z3
 P_PhaseModeStat = kParallelZ2Z3
 
+// Default Fly Scan Mode
+P_FlyScanMode = FlyScanModeIDPGM
+
 // Make sure StopAll is NOT requested
 P_StopAllReq  = kFALSE
 
